@@ -1,7 +1,7 @@
 const converHelper = require("./common/convertHelper");
 
 require("dotenv").config({
-  path: `.env.${process.env.NODE_ENV || "development"}`,
+  path: `.env.${process.env.NODE_ENV || "development.local"}`,
 });
 
 module.exports = {
