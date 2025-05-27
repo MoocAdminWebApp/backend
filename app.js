@@ -59,13 +59,7 @@ app.get("/", (req, res) => {
   res.send("server running " + new Date().toLocaleString());
 });
 
-//config authrouter
-const authrouter = require("./router/authrouter");
-app.use("/api/auth", authrouter);
 
-//config userrouter
-const userrouter = require("./router/userrouter");
-app.use("/api/users", userrouter);
 
 //config demorouter
 const demorouter = require("./router/demorouter");
