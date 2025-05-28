@@ -47,9 +47,9 @@ module.exports = {
         allowNull: true,
         type: Sequelize.DATE,
         defaultValue: Sequelize.literal("CURRENT_TIMESTAMP"),
-      }
+      },
     });
-    
+
     console.log("Table User Created");
   },
 
@@ -60,6 +60,6 @@ module.exports = {
      * Example:
      * await queryInterface.dropTable('users');
      */
-    await queryInterface.dropTable('User');
+    await queryInterface.dropTable("User");
   },
 };

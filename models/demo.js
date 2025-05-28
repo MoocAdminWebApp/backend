@@ -2,7 +2,7 @@ const { DataTypes } = require("sequelize");
 const { sequelize } = require("../db/sequelizedb");
 
 const demo = sequelize.define(
-  "Demo",
+  "demo",
   {
     // Model attributes are defined here
     id: {
@@ -17,24 +17,24 @@ const demo = sequelize.define(
     },
     mark: {
       type: DataTypes.STRING,
-      allowNull:true,
+      allowNull: true,
     },
     count: {
       type: DataTypes.INTEGER,
-      allowNull:true,
+      allowNull: true,
     },
     acitve: {
       type: DataTypes.BOOLEAN,
       defaultValue: true,
-      allowNull:false
+      allowNull: false,
     },
-    dataTime:{
+    dataTime: {
       type: DataTypes.DATE,
       defaultValue: DataTypes.NOW,
-      allowNull:false
-    }
+      allowNull: false,
+    },
   },
-  { timestamps: false, tableName: 'Demo' }
+  { timestamps: false, tableName: "demo" }
 );
 
 module.exports = demo;
