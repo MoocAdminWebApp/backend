@@ -51,7 +51,7 @@ const { jwtConfig } = require("./appConfig");
 let { expressjwt: jwt } = require("express-jwt");
 app.use(
   jwt({ secret: jwtConfig.secret, algorithms: jwtConfig.algorithms }).unless({
-    path: ["/", , "/api-docs", "/api/auth/login", "/api/auth/loginOut"],
+    path: ["/", , "/api-docs", "/api/auth/login", "/api/auth/loginOut",/^\/api\/courseofferings(\/.*)?$/],
   })
 );
 
@@ -64,6 +64,10 @@ app.get("/", (req, res) => {
 //config demorouter
 const demorouter = require("./router/demorouter");
 app.use("/api/demos", demorouter);
+
+//config courseofferingrouter
+const courseofferingrouter = require("./router/courseofferingrouter");
+app.use("/api/courseofferings", courseofferingrouter);
 
 //config erorhandle
 const erorhandle = require("./middleware/errorhandling");

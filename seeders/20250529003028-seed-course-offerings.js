@@ -12,9 +12,9 @@ module.exports = {
      *   isBetaMember: false
      * }], {});
     */
-    await queryInterface.bulkInsert('CourseOfferings', [
+   await queryInterface.bulkInsert('CourseOfferings', [
       {
-        courseId: 1,
+        courseName: 'JavaScript Basic',
         teacherName: 'Alice Johnson',
         semester: 'Spring 2025',
         capacity: 30,
@@ -26,7 +26,7 @@ module.exports = {
         updatedAt: new Date(),
       },
       {
-        courseId: 2,
+        courseName: 'React Frontend',
         teacherName: 'Bob Smith',
         semester: 'Spring 2025',
         capacity: 25,
@@ -38,7 +38,7 @@ module.exports = {
         updatedAt: new Date(),
       },
       {
-        courseId: 3,
+        courseName: 'Node.js Backend',
         teacherName: 'Carol Lee',
         semester: 'Summer 2025',
         capacity: 40,
@@ -50,7 +50,7 @@ module.exports = {
         updatedAt: new Date(),
       },
       {
-        courseId: 4,
+        courseName: 'Java programming',
         teacherName: 'David Chen',
         semester: 'Fall 2025',
         capacity: 35,
@@ -62,7 +62,7 @@ module.exports = {
         updatedAt: new Date(),
       },
       {
-        courseId: 5,
+        courseName: 'Python programming',
         teacherName: 'Eva Wang',
         semester: 'Fall 2025',
         capacity: 50,
@@ -74,6 +74,7 @@ module.exports = {
         updatedAt: new Date(),
       }
     ], {});
+
   },
 
   async down (queryInterface, Sequelize) {

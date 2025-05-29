@@ -10,8 +10,8 @@ const CourseOffering = sequelize.define(
       autoIncrement: true,
       allowNull: false,
     },
-    courseId: {
-      type: DataTypes.INTEGER,
+    courseName: {
+      type: DataTypes.STRING,
       allowNull: false,
     },
     teacherName: {

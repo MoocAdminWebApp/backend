@@ -16,8 +16,8 @@ module.exports = {
         autoIncrement: true,
         allowNull: false,
       },
-      courseId: {
-        type: Sequelize.INTEGER,
+      courseName: {
+        type: Sequelize.STRING,
         allowNull: false,
       },
       teacherName: {
@@ -70,6 +70,6 @@ module.exports = {
      * Example:
      * await queryInterface.dropTable('users');
      */
-    await queryInterface.dropTable('CourseOffering');
+     await queryInterface.dropTable('CourseOfferings');
   }
 };
