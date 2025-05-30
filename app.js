@@ -49,11 +49,14 @@ app.use(
 //config jwt
 const { jwtConfig } = require("./appConfig");
 let { expressjwt: jwt } = require("express-jwt");
+if (process.env.NODE_ENV !== 'test') {
+
 app.use(
   jwt({ secret: jwtConfig.secret, algorithms: jwtConfig.algorithms }).unless({
     path: ["/", , "/api-docs", "/api/auth/login", "/api/auth/loginOut",/^\/api\/courseofferings(\/.*)?$/],
   })
 );
+}
 
 app.get("/", (req, res) => {
   res.send("server running " + new Date().toLocaleString());

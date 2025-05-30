@@ -51,7 +51,7 @@ router.delete('/:id', async (req, res) => {
     if (!offering) return res.status(404).json({ error: 'CourseOffering not found' });
 
     await offering.destroy();
-    res.json({ message: 'CourseOffering deleted successfully' });
+    res.status(204).json({ message: 'CourseOffering deleted successfully' });
   } catch (err) {
     console.error('Delete error:', err);
     res.status(500).json({ error: 'Internal server error' });
