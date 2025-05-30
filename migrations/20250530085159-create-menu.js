@@ -37,7 +37,7 @@ module.exports = {
         type: Sequelize.STRING(100),
         allowNull: true,
       },
-      hiddle: {
+      hidden: {
         type: Sequelize.BOOLEAN,
         defaultValue: false,
       },
