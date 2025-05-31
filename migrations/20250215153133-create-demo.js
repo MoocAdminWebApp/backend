@@ -3,7 +3,7 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable("Demo", {
+    await queryInterface.createTable("demo", {
       // Model attributes are defined here
       id: {
         type: Sequelize.INTEGER,
@@ -34,9 +34,8 @@ module.exports = {
         allowNull: false,
       },
     });
-    
-    console.log("Table Demo Created");
 
+    console.log("Table Demo Created");
   },
 
   async down(queryInterface, Sequelize) {
@@ -46,7 +45,7 @@ module.exports = {
      * Example:
      * await queryInterface.dropTable('users');
      */
-    await queryInterface.dropTable("Demo");
+    await queryInterface.dropTable("demo");
     console.log("table Demo droped");
   },
 };

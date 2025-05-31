@@ -1,6 +1,6 @@
 const express = require("express");
 //const bodyParser = require('body-parser');
-const path = require('path');
+const path = require("path");
 const appConfig = require("./appConfig");
 const app = express();
 
@@ -18,20 +18,17 @@ if (appConfig.corsConfig.origin) {
   app.use(cors());
 }
 
-app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.static(path.join(__dirname, "public")));
 
 //config commonresult
 const returnvalue = require("./middleware/returnvalue");
 app.use(returnvalue.returnvalue);
 
-
-
-
 //config josn body
 // app.use(express.json());
 // app.use(express.urlencoded({ extended: false }));
-app.use(express.json({ limit: '50mb' }));
-app.use(express.urlencoded({ extended: true, limit: '50mb' }));
+app.use(express.json({ limit: "50mb" }));
+app.use(express.urlencoded({ extended: true, limit: "50mb" }));
 
 // config Swagger
 const swaggerDocument = require("./common/swagger");
@@ -50,10 +47,11 @@ app.get("/", (req, res) => {
   res.send("server running " + new Date().toLocaleString());
 });
 
-
 //config demorouter
 const demorouter = require("./router/demorouter");
 app.use("/api/demos", demorouter);
+const roleRoutes = require("./router/rolerouter");
+app.use("/api/roles", roleRoutes);
 
 //config erorhandle
 const erorhandle = require("./middleware/errorhandling");
