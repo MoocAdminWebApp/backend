@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "cross-env NODE_ENV=test jest --detectOpenHandles",
+    "test1": "cross-env NODE_ENV=test jest --detectOpenHandles",
+    "test": "jest",
     "reset-db": "sequelize-cli db:migrate:undo:all &&  sequelize-cli db:seed:undo:all  && sequelize-cli db:migrate && sequelize-cli db:seed:all",
     "init-db": "sequelize-cli db:migrate && sequelize-cli db:seed:all",
     "dev": "nodemon server.js"

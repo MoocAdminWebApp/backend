@@ -1,4 +1,4 @@
-const { mysqlConfig } = require('../appConfig');
+const { mysqlConfig } = require("../appConfig");
 
 module.exports = {
   development: {
