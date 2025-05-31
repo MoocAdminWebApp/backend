@@ -62,7 +62,7 @@ module.exports = {
         allowNull: true,
         type: Sequelize.DATE,
         defaultValue: Sequelize.literal("CURRENT_TIMESTAMP"),
-      }
+      },
     });
     console.log("Table Menu Created");
   },

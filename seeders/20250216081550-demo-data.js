@@ -25,7 +25,7 @@ module.exports = {
       });
     }
 
-    await queryInterface.bulkInsert("Demo", demoDatas, {});
+    await queryInterface.bulkInsert("demo", demoDatas, {});
   },
 
   async down(queryInterface, Sequelize) {
@@ -36,8 +36,8 @@ module.exports = {
      * await queryInterface.bulkDelete('People', null, {});
      */
 
-    await queryInterface.bulkDelete("Demo", null, {});
+    await queryInterface.bulkDelete("demo", null, {});
     // delete table if necessary   to use reset-db command in package.json
-    await queryInterface.dropTable("Demo");
+    await queryInterface.dropTable("demo");
   },
 };

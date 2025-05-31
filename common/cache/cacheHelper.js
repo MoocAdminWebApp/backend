@@ -14,8 +14,8 @@ if (cacheConfig && cacheConfig.useReids) {
 
 /**
  * get cache value by key
- * @param {*} key 
- * @returns 
+ * @param {*} key
+ * @returns
  */
 async function getAsync(key) {
   return cache.getAsync(key);
@@ -23,10 +23,10 @@ async function getAsync(key) {
 
 /**
  * set cache value by key
- * @param {*} key 
- * @param {*} value 
+ * @param {*} key
+ * @param {*} value
  * @param {*} ttl  second
- * @returns 
+ * @returns
  */
 
 async function setAsync(key, value, ttl) {
@@ -35,8 +35,8 @@ async function setAsync(key, value, ttl) {
 
 /**
  * delete cache value by key
- * @param {*} key 
- * @returns 
+ * @param {*} key
+ * @returns
  */
 async function delAsync(key) {
   return cache.delAsync(key);
@@ -44,8 +44,8 @@ async function delAsync(key) {
 
 /**
  * check key is exists
- * @param {*} key 
- * @returns 
+ * @param {*} key
+ * @returns
  */
 async function hasAsync(key) {
   return cache.hasAsync(key);
