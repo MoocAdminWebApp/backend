@@ -25,20 +25,46 @@ module.exports = {
           model: "Category",
           key: "id",
         },
-        onDelete: "CASCADE",
       },
       isPublic: {
         type: Sequelize.BOOLEAN,
         allowNull: false,
         defaultValue: true,
       },
+      creatorId: {
+        type: Sequelize.INTEGER,
+        allowNull: false,
+        references: {
+          model: "User",
+          key: "id",
+        },
+      },
+      updaterId: {
+        type: Sequelize.INTEGER,
+        allowNull: true,
+        references: {
+          model: "User",
+          key: "id",
+        },
+      },
+      isDeleted: {
+        type: Sequelize.BOOLEAN,
+        allowNull: false,
+        defaultValue: false,
+      },
+      deletedAt: {
+        type: Sequelize.DATE,
+        allowNull: true,
+      },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE,
+        defaultValue: Sequelize.NOW,
       },
       updatedAt: {
         allowNull: false,
         type: Sequelize.DATE,
+        defaultValue: Sequelize.NOW,
       },
     });
   },

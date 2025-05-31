@@ -25,12 +25,36 @@ const Category = sequelize.define(
         model: "Category",
         key: "id",
       },
-      onDelete: "CASCADE",
     },
     isPublic: {
       type: DataTypes.BOOLEAN,
       allowNull: false,
       defaultValue: true,
+    },
+    creatorId: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      references: {
+        model: "User",
+        key: "id",
+      },
+    },
+    updaterId: {
+      type: DataTypes.INTEGER,
+      allowNull: true,
+      references: {
+        model: "User",
+        key: "id",
+      },
+    },
+    isDeleted: {
+      type: DataTypes.BOOLEAN,
+      allowNull: false,
+      defaultValue: false,
+    },
+    deletedAt: {
+      type: DataTypes.DATE,
+      allowNull: true,
     },
   },
   {
@@ -48,6 +72,16 @@ Category.associate = (models) => {
   Category.hasMany(models.Category, {
     foreignKey: "parentId",
     as: "children",
+  });
+
+  Category.belongsTo(models.User, {
+    foreignKey: "creatorId",
+    as: "creator",
+  });
+
+  Category.belongsTo(models.User, {
+    foreignKey: "updaterId",
+    as: "updater",
   });
 };
 
