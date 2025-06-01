@@ -1,4 +1,5 @@
 {
+<<<<<<< HEAD
   "keep": {
     "days": true,
     "amount": 14
@@ -13,3 +14,24 @@
   ],
   "hashType": "sha256"
 }
+=======
+    "keep": {
+        "days": true,
+        "amount": 14
+    },
+    "auditLog": "logs\\.07084223fb867cd9e5614e22790525aa2e2d57d6-audit.json",
+    "files": [
+        {
+            "date": 1746454189884,
+            "name": "logs\\warn_2025-05-06.log",
+            "hash": "876d4ff741cf171c69482ecd365e41f3c6560914b45c1b2ae8e659ac1b0195cb"
+        },
+        {
+            "date": 1747564494974,
+            "name": "logs/warn_2025-05-18.log",
+            "hash": "8d011fecdd2bf7dacd0a9a2988d0d1a43112c3bba193e314b074a2ae9b068de7"
+        }
+    ],
+    "hashType": "sha256"
+}
+>>>>>>> 37bdbe3 (feature/course-management: setup database schema with models, migrations, and seeders)
