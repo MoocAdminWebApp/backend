@@ -1,0 +1,27 @@
+# ✅ Node.js dependencies
+node_modules/
+
+# ✅ 測試覆蓋率輸出
+coverage/
+
+# ✅ 打包產物（例如 React build）
+build/
+
+# ✅ 日誌檔案
+logs/
+*.log
+*.json
+
+# ✅ macOS / Windows / 通用雜項
+.DS_Store
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# ✅ 環境變數設定
+.env
+.env.*
+!.env.example
+
+# ✅ 鎖檔（如果你沒用 package-lock.json 可刪）
+package-lock.json
