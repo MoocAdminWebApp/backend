@@ -1,94 +1,69 @@
-const { DataTypes } = require("sequelize");
-
-const { sequelize } = require("../db/sequelizedb");
-
-const Menu = sequelize.define(
-  "Menu",
-  {
-    // Model attributes are defined here
-    id: {
-      type: DataTypes.INTEGER,
-      primaryKey: true,
-      autoIncrement: true,
-    },
-    title: {
-      type: DataTypes.STRING,
-      field: "title",
-      allowNull: false,
-    },
-    permission: {
-      type: DataTypes.STRING,
-      field: "permission",
-      allowNull: true,
-    },
-    parentId: {
-      type: DataTypes.INTEGER,
-      field: "parentId",
-      allowNull: true,
-      references: {
-        model: "menu",
-        key: "id",
-      },
-      onDelete: "CASCADE",
-    },
-    route: {
-      type: DataTypes.STRING,
-      field: "route",
-      allowNull: true,
-    },
-    componentPath: {
-      type: DataTypes.STRING,
-      field: "componentPath",
-      allowNull: true,
-    },
-    orderNum: {
-      type: DataTypes.INTEGER,
-      field: "orderNum",
-      allowNull: true,
-    },
-    menuType: {
-      type: DataTypes.ENUM("Dir", "Menu", "Btn"),
-      field: "menuType",
-      allowNull: true,
-      get() {
-        const menuType = this.getDataValue("menuType");
-        const menuTypeToNumber = {
-          Dir: 1,
-          Menu: 2,
-          Btn: 3,
-        };
-        return menuTypeToNumber[menuType];
-      },
-    },
-    httpUrl: {
-      type: DataTypes.STRING,
-      field: "httpUrl",
-      allowNull: true,
-    },
-    httpMethod: {
-      type: DataTypes.STRING,
-      field: "httpMethod",
-      allowNull: true,
-    },
-  },
-  {
-    tableName: "Menu",
-    timestamps: true,
-    createdAt: "createdAt",
-    updatedAt: "updatedAt",
+"use strict";
+const { Model } = require("sequelize");
+module.exports = (sequelize, DataTypes) => {
+  class menu extends Model {
+    /**
+     * Helper method for defining associations.
+     * This method is not a part of Sequelize lifecycle.
+     * The `models/index` file will call this method automatically.
+     */
+    static associate(models) {
+      // define association here
+    }
   }
-);
-
-Menu.associate = function (models) {
-  Menu.belongsTo(models.Menu, { foreignKey: "parentId", as: "parentMenu" });
-  Menu.hasMany(models.Menu, { foreignKey: "parentId", as: "subMenus" });
-
-  Menu.belongsToMany(models.Role, {
-    foreignKey: "menuId",
-    through: "RoleMenu",
-    as: "roles",
-  });
-
+  menu.init(
+    {
+      id: {
+        type: DataTypes.INTEGER,
+        primaryKey: true,
+        autoIncrement: true,
+        allowNull: false,
+      },
+      title: {
+        type: DataTypes.STRING,
+        allowNull: false,
+      },
+      type: {
+        type: DataTypes.ENUM("directory", "menu", "button"),
+        allowNull: false,
+      },
+      parentId: {
+        type: DataTypes.INTEGER,
+        allowNull: true,
+      },
+      orderNum: {
+        type: DataTypes.INTEGER,
+        allowNull: true,
+      },
+      path: {
+        type: DataTypes.STRING,
+        allowNull: true,
+      },
+      component: {
+        type: DataTypes.STRING,
+        allowNull: true,
+      },
+      permission: {
+        type: DataTypes.STRING,
+        allowNull: true,
+      },
+      hidden: {
+        type: DataTypes.BOOLEAN,
+        allowNull: true,
+      },
+      status: {
+        type: DataTypes.BOOLEAN,
+        defaultValue: true,
+      },
+      remark: {
+        type: DataTypes.STRING,
+        defaultValue: true,
+      },
+    },
+    {
+      sequelize,
+      modelName: "menu",
+    }
+  );
+  return menu;
 };
-
-module.exports = Menu;

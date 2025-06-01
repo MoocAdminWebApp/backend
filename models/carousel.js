@@ -1,8 +1,8 @@
-const { DataTypes } = require("sequelize");
+const DataTypes = require("sequelize");
 const { sequelize } = require("../db/sequelizedb");
 
-const demo = sequelize.define(
-  "demo",
+const carousel = sequelize.define(
+  "Carousel",
   {
     // Model attributes are defined here
     id: {
@@ -15,26 +15,30 @@ const demo = sequelize.define(
       type: DataTypes.STRING,
       allowNull: false,
     },
-    mark: {
+    description: {
       type: DataTypes.STRING,
       allowNull: true,
     },
-    count: {
+    orderNum: {
       type: DataTypes.INTEGER,
       allowNull: true,
+      defaultValue: 0,
     },
-    acitve: {
+    imageUrl: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+    linkUrl: {
+      type: DataTypes.STRING,
+      allowNull: true,
+    },
+    active: {
       type: DataTypes.BOOLEAN,
       defaultValue: true,
-      allowNull: false,
-    },
-    dataTime: {
-      type: DataTypes.DATE,
-      defaultValue: DataTypes.NOW,
-      allowNull: false,
-    },
+      allowNull: false
+    }
   },
-  { timestamps: false, tableName: "demo" }
+  { timestamps: false, tableName: 'Carousel' }
 );
 
-module.exports = demo;
+module.exports = carousel;
