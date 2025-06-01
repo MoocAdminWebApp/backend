@@ -1,12 +1,12 @@
-# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
+node_modules/
 
-# dependencies
-/node_modules
-# testing
-/coverage
+coverage/
 
-# production
-/build
+build/
+
+logs/
+*.log
+*.json
 
 # misc
 .DS_Store
@@ -14,7 +14,13 @@
 .env.development.local
 .env.test.local
 .env.production.local
+
+.env
+.env.*
+!.env.example
+
 .package-lock.json
+package-lock.json
 
 npm-debug.log*
 yarn-debug.log*
