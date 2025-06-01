@@ -1,70 +1,79 @@
-const { DataTypes } = require("sequelize");
-const { sequelize } = require("../db/sequelizedb");
-
-const User = sequelize.define(
-  "User",
-  {
-    // Model attributes are defined here
-    id: {
-      type: DataTypes.INTEGER,
-      primaryKey: true,
-      autoIncrement: true,
-      allowNull: false,
-    },
-    userName: {
-      type: DataTypes.STRING,
-      allowNull: false,
-    },
-    email: {
-      type: DataTypes.STRING,
-      //allowNull:false,
-    },
-    phone: {
-      type: DataTypes.STRING,
-      //allowNull:false,
-    },
-    address: {
-      type: DataTypes.STRING,
-      //allowNull:false,
-    },
-    gender: {
-      type: DataTypes.ENUM("Other", "Male", "Female"),
-      get() {
-        const gender = this.getDataValue("gender");
-        const genderoNumber = {
-          Other: 0,
-          Male: 1,
-          Female: 2,
-        };
-        return genderoNumber[gender];
+"use strict";
+const { Model } = require("sequelize");
+module.exports = (sequelize, DataTypes) => {
+  class user extends Model {
+    /**
+     * Helper method for defining associations.
+     * This method is not a part of Sequelize lifecycle.
+     * The `models/index` file will call this method automatically.
+     */
+    static associate(models) {
+      // define association here
+      // User.belongsToMany(models.Role, {
+      //   foreignKey: "userId",
+      //   through: "UserRole",
+      //   as: "roles",
+      // });
+    }
+  }
+  user.init(
+    {
+      email: {
+        type: DataTypes.STRING(255),
+        allowNull: false,
+        unique: true,
+      },
+      password: {
+        type: DataTypes.STRING(255),
+        allowNull: false,
+      },
+      userName: {
+        type: DataTypes.STRING(255),
+        allowNull: false,
+      },
+      phone: {
+        type: DataTypes.STRING(255),
+        allowNull: true,
+      },
+      address: {
+        type: DataTypes.STRING(255),
+        allowNull: true,
+      },
+      age: {
+        type: DataTypes.INTEGER,
+        allowNull: true,
+      },
+      gender: {
+        type: DataTypes.ENUM("Other", "Male", "Female"),
+        allowNull: true,
+      },
+      avatar: {
+        type: DataTypes.STRING(255),
+        allowNull: true,
+      },
+      access: {
+        type: DataTypes.ENUM("admin", "teacher", "student"),
+        allowNull: true,
+      },
+      active: {
+        type: DataTypes.BOOLEAN,
+        defaultValue: false,
+      },
+      createdAt: {
+        type: DataTypes.DATE,
+        allowNull: false,
+        defaultValue: DataTypes.NOW,
+      },
+      updatedAt: {
+        type: DataTypes.DATE,
+        allowNull: true,
       },
     },
-    age: {
-      type: DataTypes.INTEGER,
-    },
-    password: {
-      type: DataTypes.STRING,
-      allowNull: true,
-    },
-    avatar: {
-      type: DataTypes.STRING,
-      allowNull: true,
-    },
-  },
-  {
-    tableName: "User",
-    timestamps: true,
-    createdAt: "createdAt",
-    updatedAt: "updatedAt",
-  }
-);
-
-User.associate = (models) => {
-  User.belongsToMany(models.Role, {
-    foreignKey: "userId",
-    through: "UserRole",
-    as: "roles",
-  });
+    {
+      sequelize,
+      modelName: "user",
+      tableName: "users",
+    }
+  );
+  return user;
 };
-
-module.exports = User;

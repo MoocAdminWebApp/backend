@@ -62,5 +62,5 @@ module.exports = {
   EntityNotFoundException,
   EntityAlreadyExistsException,
   UserFriendlyException,
-  ValidationException
+  ValidationException,
 };

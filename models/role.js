@@ -14,10 +14,13 @@ const Role = sequelize.define(
       type: DataTypes.STRING(50),
       unique: true,
       allowNull: false,
-      field: "roleName",
     },
-    mark: {
+    description: {
       type: DataTypes.STRING(200),
+      allowNull: true,
+    },
+    status: {
+      type: DataTypes.BOOLEAN,
       allowNull: true,
     },
   },
@@ -40,6 +43,12 @@ Role.associate = (models) => {
     foreignKey: "roleId",
     through: "RoleMenu",
     as: "menus",
+  });
+
+  Role.belongsToMany(models.Permission, {
+    foreignKey: "roleId",
+    through: "RolePermission",
+    as: "permissions",
   });
 };
 

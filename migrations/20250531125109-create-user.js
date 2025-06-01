@@ -1,15 +1,15 @@
 "use strict";
-
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable("User", {
+    await queryInterface.createTable("users", {
       id: {
-        type: Sequelize.INTEGER,
-        primaryKey: true,
+        allowNull: false,
         autoIncrement: true,
+        primaryKey: true,
+        type: Sequelize.INTEGER,
       },
-      userName: {
+      email: {
         type: Sequelize.STRING(255),
         allowNull: false,
         unique: true,
@@ -18,7 +18,7 @@ module.exports = {
         type: Sequelize.STRING(255),
         allowNull: false,
       },
-      email: {
+      userName: {
         type: Sequelize.STRING(255),
         allowNull: false,
       },
@@ -28,38 +28,41 @@ module.exports = {
       },
       address: {
         type: Sequelize.STRING(255),
+        allowNull: true,
       },
       age: {
         type: Sequelize.INTEGER,
+        allowNull: true,
       },
       gender: {
         type: Sequelize.ENUM("Other", "Male", "Female"),
+        allowNull: true,
       },
       avatar: {
-        type: Sequelize.STRING(),
+        type: Sequelize.STRING(255),
+        allowNull: true,
+      },
+      access: {
+        type: Sequelize.ENUM("admin", "teacher", "student"),
+        allowNull: true,
+      },
+      active: {
+        type: Sequelize.BOOLEAN,
+        defaultValue: false,
       },
       createdAt: {
-        allowNull: false,
         type: Sequelize.DATE,
-        defaultValue: Sequelize.literal("CURRENT_TIMESTAMP"),
+        allowNull: false,
+        defaultValue: Sequelize.NOW,
       },
       updatedAt: {
-        allowNull: true,
         type: Sequelize.DATE,
-        defaultValue: Sequelize.literal("CURRENT_TIMESTAMP"),
-      }
+        allowNull: true,
+      },
     });
-    
     console.log("Table User Created");
   },
-
   async down(queryInterface, Sequelize) {
-    /**
-     * Add reverting commands here.
-     *
-     * Example:
-     * await queryInterface.dropTable('users');
-     */
-    await queryInterface.dropTable('User');
+    await queryInterface.dropTable("users");
   },
 };

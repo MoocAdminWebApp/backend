@@ -21,7 +21,9 @@ const logger = winston.createLogger({
             message: info.message,
             ...(info.stack && { stack: info.stack }),
           };
-          return `${JSON.stringify(logEntry)}\n==============================================================\n`;
+          return `${JSON.stringify(
+            logEntry
+          )}\n==============================================================\n`;
         })
       ),
     }),
@@ -40,7 +42,9 @@ const logger = winston.createLogger({
             message: info.message,
             ...(info.stack && { stack: info.stack }),
           };
-          return `${JSON.stringify(logEntry)}\n==============================================================\n`;
+          return `${JSON.stringify(
+            logEntry
+          )}\n==============================================================\n`;
         })
       ),
     }),
@@ -59,7 +63,9 @@ const logger = winston.createLogger({
             message: info.message,
             ...(info.stack && { stack: info.stack }),
           };
-          return `${JSON.stringify(logEntry)}\n==============================================================\n`;
+          return `${JSON.stringify(
+            logEntry
+          )}\n==============================================================\n`;
         })
       ),
     }),
@@ -78,7 +84,9 @@ const logger = winston.createLogger({
             message: info.message,
             ...(info.stack && { stack: info.stack }),
           };
-          return `${JSON.stringify(logEntry)}\n==============================================================\n`;
+          return `${JSON.stringify(
+            logEntry
+          )}\n==============================================================\n`;
         })
       ),
     }),
