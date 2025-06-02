@@ -13,7 +13,7 @@ module.exports = {
      * }], {});
      */
     await queryInterface.bulkInsert(
-      "Permission",
+      "Permissions",
       [
         {
           id: 1,
@@ -48,6 +48,6 @@ module.exports = {
      * Example:
      * await queryInterface.bulkDelete('People', null, {});
      */
-    await queryInterface.bulkDelete('Permission', null, {});
+    await queryInterface.bulkDelete('Permissions', null, {});
   },
 };
