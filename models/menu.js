@@ -123,7 +123,7 @@ module.exports = (sequelize, DataTypes) => {
     {
       sequelize,
       modelName: "menu",
-      tableName: "menus",
+      tableName: "Menus",
     }
   );
   return menu;
