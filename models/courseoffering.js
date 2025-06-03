@@ -11,15 +11,15 @@ const CourseOffering = sequelize.define(
       allowNull: false,
     },
     courseName: {
-      type: DataTypes.STRING,
+      type: DataTypes.STRING(50),
       allowNull: false,
     },
     teacherName: {
-      type: DataTypes.STRING,
+      type: DataTypes.STRING(40),
       allowNull: false,
     },
     semester: {
-      type: DataTypes.STRING,
+      type: DataTypes.STRING(40),
       allowNull: false,
     },
     capacity: {
@@ -32,17 +32,21 @@ const CourseOffering = sequelize.define(
       allowNull: false,
     },
     location: {
-      type: DataTypes.STRING,
+      type: DataTypes.STRING(50),
       allowNull: false,
     },
     schedule: {
-      type: DataTypes.STRING,
+      type: DataTypes.STRING(50),
       allowNull: false,
     },
     status: {
-      type: DataTypes.STRING,
-      allowNull: false,
-    },
+    type: DataTypes.INTEGER,
+    allowNull: false,
+    defaultValue: 0,
+    validate: {
+    isIn: [[0, 1, 2]],
+  },
+},
     createdAt: {
       type: DataTypes.DATE,
       defaultValue: DataTypes.NOW,
@@ -59,5 +63,18 @@ const CourseOffering = sequelize.define(
     timestamps: false,            
   }
 );
+
+CourseOffering.statusLabels = {
+  0: 'open',
+  1: 'closed',
+  2: 'cancelled'
+};
+
+// 自訂 toJSON 方法，讓回傳時自動加上 statusText
+CourseOffering.prototype.toJSON = function () {
+  const values = { ...this.get() };
+  values.statusText = CourseOffering.statusLabels[values.status];
+  return values;
+};
 
 module.exports = CourseOffering;

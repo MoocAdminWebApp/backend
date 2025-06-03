@@ -52,6 +52,9 @@ const demorouter = require("./router/demorouter");
 app.use("/api/demos", demorouter);
 const roleRoutes = require("./router/rolerouter");
 app.use("/api/roles", roleRoutes);
+//config courseofferingrouter
+const courseofferingrouter = require("./router/courseofferingrouter");
+app.use("/api/courseofferings", courseofferingrouter);
 
 //config erorhandle
 const erorhandle = require("./middleware/errorhandling");
