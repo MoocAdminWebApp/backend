@@ -1,7 +1,7 @@
 module.exports = {
   up: async (queryInterface, Sequelize) => {
     await queryInterface.bulkInsert(
-      "menus",
+      "Menus",
       [
         {
           id: 1,
@@ -13,10 +13,12 @@ module.exports = {
           component: "",
           permission: "",
           hidden: true,
-          status: true,
-          remark: "",
+          status: "active",
+          comment: "",
           createdAt: new Date(),
           updatedAt: new Date(),
+          createdBy: null,
+          updatedBy: null,
         },
         {
           id: 2,
@@ -28,10 +30,12 @@ module.exports = {
           component: "menuListPage",
           permission: "menu:view",
           hidden: false,
-          status: true,
-          remark: "",
+          status: "active",
+          comment: "",
           createdAt: new Date(),
           updatedAt: new Date(),
+          createdBy: null,
+          updatedBy: null,
         },
         {
           id: 3,
@@ -43,10 +47,12 @@ module.exports = {
           component: "",
           permission: "menu:create",
           hidden: false,
-          status: true,
-          remark: "",
+          status: "active",
+          comment: "",
           createdAt: new Date(),
           updatedAt: new Date(),
+          createdBy: null,
+          updatedBy: null,
         },
         {
           id: 4,
@@ -58,10 +64,12 @@ module.exports = {
           component: "menuCreatePage",
           permission: "menu:create",
           hidden: false,
-          status: true,
-          remark: "",
+          status: "active",
+          comment: "",
           createdAt: new Date(),
           updatedAt: new Date(),
+          createdBy: null,
+          updatedBy: null,
         },
         {
           id: 5,
@@ -73,10 +81,12 @@ module.exports = {
           component: "",
           permission: "menu:edit",
           hidden: false,
-          status: true,
-          remark: "",
+          status: "active",
+          comment: "",
           createdAt: new Date(),
           updatedAt: new Date(),
+          createdBy: null,
+          updatedBy: null,
         },
         {
           id: 6,
@@ -88,10 +98,12 @@ module.exports = {
           component: "menuEditPage",
           permission: "menu:edit",
           hidden: false,
-          status: true,
-          remark: "",
+          status: "active",
+          comment: "",
           createdAt: new Date(),
           updatedAt: new Date(),
+          createdBy: null,
+          updatedBy: null,
         },
         {
           id: 7,
@@ -103,10 +115,12 @@ module.exports = {
           component: "menuDetailPage",
           permission: "menu:view",
           hidden: false,
-          status: true,
-          remark: "",
+          status: "active",
+          comment: "",
           createdAt: new Date(),
           updatedAt: new Date(),
+          createdBy: null,
+          updatedBy: null,
         },
         {
           id: 8,
@@ -118,10 +132,12 @@ module.exports = {
           component: "",
           permission: "menu:delete",
           hidden: false,
-          status: true,
-          remark: "",
+          status: "active",
+          comment: "",
           createdAt: new Date(),
           updatedAt: new Date(),
+          createdBy: null,
+          updatedBy: null,
         },
       ],
       {}
@@ -129,6 +145,6 @@ module.exports = {
   },
 
   down: async (queryInterface, Sequelize) => {
-    await queryInterface.bulkDelete("menus", null, {});
+    await queryInterface.bulkDelete("Menus", null, {});
   },
 };
