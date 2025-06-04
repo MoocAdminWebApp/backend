@@ -11,6 +11,8 @@ module.exports = (sequelize, DataTypes) => {
   }, {
     tableName: "RoleMenus",
     timestamps: false,
+    createdAt: "createdAt",
+    updatedAt: "updatedAt",
   });
 
   return RoleMenu;
