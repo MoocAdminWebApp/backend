@@ -31,7 +31,7 @@ const Category = sequelize.define(
       allowNull: false,
       defaultValue: true,
     },
-    creatorId: {
+    createdBy: {
       type: DataTypes.INTEGER,
       allowNull: false,
       references: {
@@ -39,7 +39,7 @@ const Category = sequelize.define(
         key: "id",
       },
     },
-    updaterId: {
+    updatedBy: {
       type: DataTypes.INTEGER,
       allowNull: true,
       references: {
@@ -66,21 +66,21 @@ const Category = sequelize.define(
 Category.associate = (models) => {
   Category.belongsTo(models.Category, {
     foreignKey: "parentId",
-    as: "parent",
+    as: "parentCategory",
   });
 
   Category.hasMany(models.Category, {
     foreignKey: "parentId",
-    as: "children",
+    as: "childCategory",
   });
 
-  Category.belongsTo(models.users, {
-    foreignKey: "creatorId",
+  Category.belongsTo(models.user, {
+    foreignKey: "createdBy",
     as: "creator",
   });
 
-  Category.belongsTo(models.users, {
-    foreignKey: "updaterId",
+  Category.belongsTo(models.user, {
+    foreignKey: "updatedBy",
     as: "updater",
   });
 };
