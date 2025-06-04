@@ -31,7 +31,7 @@ module.exports = {
         allowNull: false,
         defaultValue: true,
       },
-      creatorId: {
+      createdBy: {
         type: Sequelize.INTEGER,
         allowNull: false,
         references: {
@@ -39,7 +39,7 @@ module.exports = {
           key: "id",
         },
       },
-      updaterId: {
+      updatedBy: {
         type: Sequelize.INTEGER,
         allowNull: true,
         references: {
@@ -59,12 +59,12 @@ module.exports = {
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE,
-        defaultValue: Sequelize.NOW,
+        defaultValue: Sequelize.literal("CURRENT_TIMESTAMP"),
       },
       updatedAt: {
         allowNull: false,
         type: Sequelize.DATE,
-        defaultValue: Sequelize.NOW,
+        defaultValue: Sequelize.literal("CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP"),
       },
     });
   },
