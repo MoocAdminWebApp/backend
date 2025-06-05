@@ -42,6 +42,13 @@ module.exports = (sequelize, DataTypes) => {
 
   Profile.init(
     {
+      id: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        autoIncrement: true,
+        primaryKey: true, //默认就是unique的
+      },
+      //对应user表的id
       userId: {
         type: DataTypes.INTEGER,
         allowNull: false,
@@ -99,21 +106,12 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.INTEGER,
         allowNull: true,
       },
-      createdAt: {
-        type: DataTypes.DATE,
-        allowNull: false,
-        defaultValue: DataTypes.NOW,
-      },
-      updatedAt: {
-        type: DataTypes.DATE,
-        allowNull: false,
-        defaultValue: DataTypes.NOW,
-      },
     },
     {
       sequelize,
       modelName: "Profile",
       tableName: "profiles",
+      timestamps: true,
     }
   );
 
