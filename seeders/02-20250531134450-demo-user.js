@@ -17,8 +17,6 @@ module.exports = {
         active: true,
         createdBy: null,
         updatedBy: null,
-        createdAt: new Date(),
-        updatedAt: new Date(),
       },
       {
         email: "bob@example.com",
@@ -29,8 +27,6 @@ module.exports = {
         active: true,
         createdBy: 1,
         updatedBy: 1,
-        createdAt: new Date(),
-        updatedAt: new Date(),
       },
       {
         email: "charlie@example.com",
@@ -41,8 +37,6 @@ module.exports = {
         active: true,
         createdBy: 1,
         updatedBy: 2,
-        createdAt: new Date(),
-        updatedAt: new Date(),
       },
       {
         email: "diana@example.com",
@@ -53,8 +47,6 @@ module.exports = {
         active: false,
         createdBy: 2,
         updatedBy: 2,
-        createdAt: new Date(),
-        updatedAt: new Date(),
       },
       {
         email: "edward@example.com",
@@ -65,8 +57,6 @@ module.exports = {
         active: false,
         createdBy: 1,
         updatedBy: 3,
-        createdAt: new Date(),
-        updatedAt: new Date(),
       },
     ];
 

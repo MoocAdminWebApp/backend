@@ -19,8 +19,6 @@ module.exports = {
         bio: "Admin user Alice.",
         createdBy: null,
         updatedBy: null,
-        createdAt: new Date(),
-        updatedAt: new Date(),
       },
       {
         userId: 2,
@@ -37,8 +35,6 @@ module.exports = {
         bio: "Teacher Bob who loves coding.",
         createdBy: 1,
         updatedBy: 1,
-        createdAt: new Date(),
-        updatedAt: new Date(),
       },
       {
         userId: 3,
@@ -55,8 +51,6 @@ module.exports = {
         bio: "Student Charlie enjoys AI.",
         createdBy: 1,
         updatedBy: 2,
-        createdAt: new Date(),
-        updatedAt: new Date(),
       },
       {
         userId: 4,
@@ -73,8 +67,6 @@ module.exports = {
         bio: "Inactive teacher Diana.",
         createdBy: 2,
         updatedBy: 2,
-        createdAt: new Date(),
-        updatedAt: new Date(),
       },
       {
         userId: 5,
@@ -91,8 +83,6 @@ module.exports = {
         bio: "Student Edward from China.",
         createdBy: 1,
         updatedBy: 3,
-        createdAt: new Date(),
-        updatedAt: new Date(),
       },
     ];
 
