@@ -1,68 +1,79 @@
 "use strict";
 
+const bcrypt = require("bcryptjs");
+
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    /**
-     * Add seed commands here.
-     *
-     * Example:
-     * await queryInterface.bulkInsert('People', [{
-     *   name: 'John Doe',
-     *   isBetaMember: false
-     * }], {});
-     */
+    const saltRounds = 10;
 
-    await queryInterface.bulkInsert(
-      "users",
-      [
-        {
-          email: "alice@example.com",
-          password: "password123",
-          userName: "Alice",
-          createdAt: new Date(),
-          updatedAt: new Date(),
-        },
-        {
-          email: "bob@example.com",
-          password: "password456",
-          userName: "Bob",
-          createdAt: new Date(),
-          updatedAt: new Date(),
-        },
-        {
-          email: "charlie@example.com",
-          password: "password789",
-          userName: "Charlie",
-          createdAt: new Date(),
-          updatedAt: new Date(),
-        },
-        {
-          email: "diana@example.com",
-          password: "123password",
-          userName: "Diana",
-          createdAt: new Date(),
-          updatedAt: new Date(),
-        },
-        {
-          email: "edward@example.com",
-          password: "securePass!",
-          userName: "Edward",
-          createdAt: new Date(),
-          updatedAt: new Date(),
-        },
-      ],
-      {}
-    );
+    const users = [
+      {
+        email: "alice@example.com",
+        password: bcrypt.hashSync("password123", saltRounds),
+        firstName: "Alice",
+        lastName: "Anderson",
+        access: "admin",
+        active: true,
+        createdBy: null,
+        updatedBy: null,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      },
+      {
+        email: "bob@example.com",
+        password: bcrypt.hashSync("password456", saltRounds),
+        firstName: "Bob",
+        lastName: "Brown",
+        access: "teacher",
+        active: true,
+        createdBy: 1,
+        updatedBy: 1,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      },
+      {
+        email: "charlie@example.com",
+        password: bcrypt.hashSync("password789", saltRounds),
+        firstName: "Charlie",
+        lastName: "Clark",
+        access: "student",
+        active: true,
+        createdBy: 1,
+        updatedBy: 2,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      },
+      {
+        email: "diana@example.com",
+        password: bcrypt.hashSync("123password", saltRounds),
+        firstName: "Diana",
+        lastName: "Davis",
+        access: "teacher",
+        active: false,
+        createdBy: 2,
+        updatedBy: 2,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      },
+      {
+        email: "edward@example.com",
+        password: bcrypt.hashSync("securePass!", saltRounds),
+        firstName: "Edward",
+        lastName: "Evans",
+        access: "student",
+        active: false,
+        createdBy: 1,
+        updatedBy: 3,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      },
+    ];
+
+    await queryInterface.bulkInsert("users", users, {});
   },
 
   async down(queryInterface, Sequelize) {
-    /**
-     * Add commands to revert seed here.
-     *
-     * Example:
-     * await queryInterface.bulkDelete('People', null, {});
-     */
     await queryInterface.bulkDelete("users", null, {});
   },
 };
