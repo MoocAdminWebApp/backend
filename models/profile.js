@@ -22,6 +22,22 @@ module.exports = (sequelize, DataTypes) => {
         as: "updater",
       });
     }
+    // 添加 accessLevel 映射为数字
+    get genderNumber() {
+      const map = {
+        male: 1,
+        female: 2,
+        other: 3,
+      };
+      return map[this.gender] || 0;
+    }
+
+    // 重写 toJSON 以包含 genderNumber
+    toJSON() {
+      const values = { ...this.get() };
+      values.genderNumber = this.genderNumber;
+      return values;
+    }
   }
 
   Profile.init(

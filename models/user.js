@@ -32,7 +32,7 @@ module.exports = (sequelize, DataTypes) => {
     }
 
     // 添加 accessLevel 映射为数字
-    get accessLevel() {
+    get accessNumber() {
       const map = {
         admin: 1,
         teacher: 2,
@@ -44,7 +44,7 @@ module.exports = (sequelize, DataTypes) => {
     // 重写 toJSON 以包含 accessLevel
     toJSON() {
       const values = { ...this.get() };
-      values.accessLevel = this.accessLevel;
+      values.accessNumber = this.accessNumber;
       return values;
     }
   }
