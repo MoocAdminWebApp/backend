@@ -41,7 +41,7 @@ module.exports = {
       },
       updatedBy: {
         type: Sequelize.INTEGER,
-        allowNull: true,
+        allowNull: false,
         references: {
           model: "users",
           key: "id",
