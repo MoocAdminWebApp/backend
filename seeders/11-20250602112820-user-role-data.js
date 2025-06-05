@@ -2,23 +2,27 @@
 
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.bulkInsert("UserRoles", [
+    await queryInterface.bulkInsert('UserRoles', [
       {
+        roleId: 1,
         userId: 1,
-        roleId: 1,
+        createBy: 1,
+        updateBy: 1,
+        createdAt: new Date(),
+        updatedAt: new Date(),
       },
       {
-        userId: 2,
         roleId: 2,
-      },
-      {
-        userId: 3,
-        roleId: 1,
+        userId: 1,
+        createBy: 1,
+        updateBy: 1,
+        createdAt: new Date(),
+        updatedAt: new Date(),
       },
     ]);
   },
 
-  async down(queryInterface, Sequelize) {
-    await queryInterface.bulkDelete("UserRoles", null, {});
+  down: async (queryInterface, Sequelize) => {
+    await queryInterface.bulkDelete('UserRoles', null, {});
   },
 };

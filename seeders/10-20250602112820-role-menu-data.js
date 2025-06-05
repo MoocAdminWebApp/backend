@@ -6,19 +6,23 @@ module.exports = {
       {
         roleId: 1,
         menuId: 1,
+        createBy: 1,
+        updateBy: 1,
+        createdAt: new Date(),
+        updatedAt: new Date(),
       },
       {
         roleId: 1,
         menuId: 2,
+        createBy: 1,
+        updateBy: 1,
+        createdAt: new Date(),
+        updatedAt: new Date(),
       },
-      {
-        roleId: 2,
-        menuId: 3,
-      }
     ]);
   },
 
-  async down (queryInterface, Sequelize) {
+  down: async (queryInterface, Sequelize) => {
     await queryInterface.bulkDelete('RoleMenus', null, {});
-  }
+  },
 };

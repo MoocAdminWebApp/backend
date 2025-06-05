@@ -17,15 +17,35 @@ const Role = sequelize.define(
     },
     description: {
       type: DataTypes.STRING(200),
-      allowNull: true,
+      allowNull: false,
     },
     status: {
       type: DataTypes.BOOLEAN,
       allowNull: true,
     },
+    createBy: {
+      type: DataTypes.INTEGER,
+      allowNull: true,
+      references: {
+        model: 'User',
+        key: 'id',
+      },
+      onUpdate: 'CASCADE',
+      onDelete: 'SET NULL',
+    },
+    updateBy: {
+      type: DataTypes.INTEGER,
+      allowNull: true,
+      references: {
+        model: 'User',
+        key: 'id',
+      },
+      onUpdate: 'CASCADE',
+      onDelete: 'SET NULL',
+    },
   },
   {
-    tableName: "Role",
+    tableName: "Roles",
     timestamps: true,
     createdAt: "createdAt",
     updatedAt: "updatedAt",
