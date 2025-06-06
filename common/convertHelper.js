@@ -12,8 +12,8 @@ function stringToBoolean(str) {
 /**
  * Obtain file extension based on base64 prefix
  * For example: data:image/png; base64,  Will return. png
- * @param {*} base64String 
- * @returns 
+ * @param {*} base64String
+ * @returns
  */
 function getBase64Extension(base64String) {
   //Regular expressions are used to match MIME types in Base64 prefixes
@@ -26,7 +26,7 @@ function getBase64Extension(base64String) {
     //Return the lowercase file extension
     return `.${extension.toLowerCase()}`;
   }
- 
+
   return ".png";
 }
 module.exports = { stringToBoolean, getBase64Extension };

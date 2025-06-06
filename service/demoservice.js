@@ -161,11 +161,11 @@ const deleteAsync = async (id) => {
 
 const getByIdAsync = async (id) => {
   var demo = await Demo.findByPk(id);
-  if(!demo){
+  if (!demo) {
     throw new EntityNotFoundException("demo not exists");
   }
   return { isSuccess: true, message: "", data: demo };
-}
+};
 
 module.exports = {
   createAsync,
