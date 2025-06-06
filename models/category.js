@@ -33,11 +33,13 @@ const Category = sequelize.define(
     },
     createdBy: {
       type: DataTypes.INTEGER,
-      allowNull: false,
+      allowNull: true,
       references: {
         model: "users",
         key: "id",
       },
+      onUpdate: "CASCADE",
+      onDelete: "SET NULL",
     },
     updatedBy: {
       type: DataTypes.INTEGER,
@@ -46,6 +48,8 @@ const Category = sequelize.define(
         model: "users",
         key: "id",
       },
+      onUpdate: "CASCADE",
+      onDelete: "SET NULL",
     },
     isDeleted: {
       type: DataTypes.BOOLEAN,
