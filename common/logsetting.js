@@ -14,7 +14,7 @@ const logger = winston.createLogger({
       format: format.combine(
         format.timestamp(),
         format.errors({ stack: true }),
-        format.printf((info) => {
+        format.printf(info => {
           const logEntry = {
             timestamp: info.timestamp,
             level: info.level,
@@ -35,7 +35,7 @@ const logger = winston.createLogger({
       format: format.combine(
         format.timestamp(),
         format.errors({ stack: true }),
-        format.printf((info) => {
+        format.printf(info => {
           const logEntry = {
             timestamp: info.timestamp,
             level: info.level,
@@ -56,7 +56,7 @@ const logger = winston.createLogger({
       format: format.combine(
         format.timestamp(),
         format.errors({ stack: true }),
-        format.printf((info) => {
+        format.printf(info => {
           const logEntry = {
             timestamp: info.timestamp,
             level: info.level,
@@ -77,7 +77,7 @@ const logger = winston.createLogger({
       format: format.combine(
         format.timestamp(),
         format.errors({ stack: true }),
-        format.printf((info) => {
+        format.printf(info => {
           const logEntry = {
             timestamp: info.timestamp,
             level: info.level,

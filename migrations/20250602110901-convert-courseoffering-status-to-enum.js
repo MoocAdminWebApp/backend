@@ -1,12 +1,12 @@
-'use strict';
+"use strict";
 
 module.exports = {
   async up(queryInterface, Sequelize) {
     // 1. 新增一個暫時欄位 status_temp（INTEGER）
-    await queryInterface.addColumn('CourseOfferings', 'status_temp', {
+    await queryInterface.addColumn("CourseOfferings", "status_temp", {
       type: Sequelize.INTEGER,
       allowNull: false,
-      defaultValue: 0
+      defaultValue: 0,
     });
 
     // 2. 把原本 string 狀態轉成整數
@@ -21,18 +21,18 @@ module.exports = {
     `);
 
     // 3. 刪除原本 string 欄位
-    await queryInterface.removeColumn('CourseOfferings', 'status');
+    await queryInterface.removeColumn("CourseOfferings", "status");
 
     // 4. 將 status_temp 改名為 status
-    await queryInterface.renameColumn('CourseOfferings', 'status_temp', 'status');
+    await queryInterface.renameColumn("CourseOfferings", "status_temp", "status");
   },
 
   async down(queryInterface, Sequelize) {
     // 1. 新增 string 欄位 status_temp
-    await queryInterface.addColumn('CourseOfferings', 'status_temp', {
+    await queryInterface.addColumn("CourseOfferings", "status_temp", {
       type: Sequelize.STRING,
       allowNull: false,
-      defaultValue: 'open'
+      defaultValue: "open",
     });
 
     // 2. 把整數轉回文字
@@ -47,9 +47,9 @@ module.exports = {
     `);
 
     // 3. 刪除整數欄位
-    await queryInterface.removeColumn('CourseOfferings', 'status');
+    await queryInterface.removeColumn("CourseOfferings", "status");
 
     // 4. 改名回原欄位
-    await queryInterface.renameColumn('CourseOfferings', 'status_temp', 'status');
-  }
+    await queryInterface.renameColumn("CourseOfferings", "status_temp", "status");
+  },
 };

@@ -3,38 +3,31 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   up: async (queryInterface, Sequelize) => {
-    await queryInterface.createTable("role_permissions", {
+    await queryInterface.createTable("roles", {
       id: {
         type: Sequelize.INTEGER,
         primaryKey: true,
         autoIncrement: true,
         allowNull: false,
       },
-      roleId: {
-        type: Sequelize.INTEGER,
+      roleName: {
+        type: Sequelize.STRING(50),
         allowNull: false,
-        references: {
-          model: "roles",
-          key: "id",
-        },
-        onUpdate: "CASCADE",
-        onDelete: "CASCADE",
+        unique: true,
       },
-      permissionId: {
-        type: Sequelize.INTEGER,
+      description: {
+        type: Sequelize.STRING(200),
         allowNull: false,
-        references: {
-          model: "permissions",
-          key: "id",
-        },
-        onUpdate: "CASCADE",
-        onDelete: "CASCADE",
+      },
+      status: {
+        type: Sequelize.BOOLEAN,
+        allowNull: true,
       },
       createdBy: {
         type: Sequelize.INTEGER,
         allowNull: true,
         references: {
-          model: "users",
+          model: "Users", // ⚠️ 确保你的用户表名是 Users（区分大小写）
           key: "id",
         },
         onUpdate: "CASCADE",
@@ -44,26 +37,26 @@ module.exports = {
         type: Sequelize.INTEGER,
         allowNull: true,
         references: {
-          model: "users",
+          model: "Users",
           key: "id",
         },
         onUpdate: "CASCADE",
         onDelete: "SET NULL",
       },
       createdAt: {
-        allowNull: false,
         type: Sequelize.DATE,
+        allowNull: false,
         defaultValue: Sequelize.literal("CURRENT_TIMESTAMP"),
       },
       updatedAt: {
-        allowNull: false,
         type: Sequelize.DATE,
+        allowNull: false,
         defaultValue: Sequelize.literal("CURRENT_TIMESTAMP"),
       },
     });
   },
 
   down: async (queryInterface, Sequelize) => {
-    await queryInterface.dropTable("role_permissions");
+    await queryInterface.dropTable("roles");
   },
 };
