@@ -9,7 +9,7 @@ module.exports = {
      * Example:
      * await queryInterface.createTable('users', { id: Sequelize.INTEGER });
      */
-    await queryInterface.addColumn('courseofferings','createdBy',{
+    await queryInterface.addColumn('course_offerings','createdBy',{
       type:Sequelize.INTEGER,
       allowNull:true,
       references:{
@@ -20,7 +20,7 @@ module.exports = {
       onDelete:'SET NULL',
     });
 
-    await queryInterface.addColumn('courseofferings','updatedBy',{
+    await queryInterface.addColumn('course_offerings','updatedBy',{
       type:Sequelize.INTEGER,
       allowNull:true,
       references:{
@@ -40,7 +40,7 @@ module.exports = {
      * Example:
      * await queryInterface.dropTable('users');
      */
-    await queryInterface.removeColumn('courseofferings','createdBy');
-    await queryInterface.removeColumn('courseofferings','updatedBy');
+    await queryInterface.removeColumn('course_offerings','createdBy');
+    await queryInterface.removeColumn('course_offerings','updatedBy');
   }
 };
