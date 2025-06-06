@@ -1,22 +1,22 @@
-'use strict';
+"use strict";
 
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
-  async up (queryInterface, Sequelize) {
-    await queryInterface.createTable('Question', {
+  async up(queryInterface, Sequelize) {
+    await queryInterface.createTable("Question", {
       id: {
-          type: Sequelize.INTEGER,
-          primaryKey: true,
-          autoIncrement: true,
-          allowNull: false
+        type: Sequelize.INTEGER,
+        primaryKey: true,
+        autoIncrement: true,
+        allowNull: false,
       },
       type: {
-          type: Sequelize.ENUM('single', 'multiple', 'truefalse', 'shortanswer'),
-          allowNull: false
+        type: Sequelize.ENUM("single", "multiple", "truefalse", "shortanswer"),
+        allowNull: false,
       },
       content: {
-          type: Sequelize.STRING,
-          allowNull: false
+        type: Sequelize.STRING,
+        allowNull: false,
       },
       createdAt: {
         allowNull: false,
@@ -28,12 +28,12 @@ module.exports = {
         type: Sequelize.DATE,
         defaultValue: Sequelize.literal("CURRENT_TIMESTAMP"),
       },
-  });
+    });
 
-  console.log('Table Question created')
-},
+    console.log("Table Question created");
+  },
 
-  async down (queryInterface, Sequelize) {
-    await queryInterface.dropTable('Question')
-  }
+  async down(queryInterface, Sequelize) {
+    await queryInterface.dropTable("Question");
+  },
 };

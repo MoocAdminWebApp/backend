@@ -63,7 +63,7 @@ const Category = sequelize.define(
   }
 );
 
-Category.associate = (models) => {
+Category.associate = models => {
   Category.belongsTo(models.Category, {
     foreignKey: "parentId",
     as: "parentCategory",

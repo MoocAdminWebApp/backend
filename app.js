@@ -37,11 +37,7 @@ const swaggerUi = require("swagger-ui-express");
 const swaggerUiOptions = {
   explorer: true,
 };
-app.use(
-  "/api-docs",
-  swaggerUi.serve,
-  swaggerUi.setup(swaggerDocument, swaggerUiOptions)
-);
+app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument, swaggerUiOptions));
 
 app.get("/", (req, res) => {
   res.send("server running " + new Date().toLocaleString());

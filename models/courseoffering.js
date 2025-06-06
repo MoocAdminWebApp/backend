@@ -40,13 +40,13 @@ const CourseOffering = sequelize.define(
       allowNull: false,
     },
     status: {
-    type: DataTypes.INTEGER,
-    allowNull: false,
-    defaultValue: 0,
-    validate: {
-    isIn: [[0, 1, 2]],
-  },
-},
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      defaultValue: 0,
+      validate: {
+        isIn: [[0, 1, 2]],
+      },
+    },
     createdAt: {
       type: DataTypes.DATE,
       defaultValue: DataTypes.NOW,
@@ -59,15 +59,15 @@ const CourseOffering = sequelize.define(
     },
   },
   {
-    tableName: "CourseOfferings", 
-    timestamps: false,            
+    tableName: "CourseOfferings",
+    timestamps: false,
   }
 );
 
 CourseOffering.statusLabels = {
-  0: 'open',
-  1: 'closed',
-  2: 'cancelled'
+  0: "open",
+  1: "closed",
+  2: "cancelled",
 };
 
 // 自訂 toJSON 方法，讓回傳時自動加上 statusText
