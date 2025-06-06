@@ -27,7 +27,7 @@ module.exports = (sequelize, DataTypes) => {
         onUpdate: "CASCADE",
         onDelete: "CASCADE",
       },
-      createBy: {
+      createdBy: {
         type: DataTypes.INTEGER,
         allowNull: true,
         references: {
@@ -37,7 +37,7 @@ module.exports = (sequelize, DataTypes) => {
         onUpdate: "CASCADE",
         onDelete: "SET NULL",
       },
-      updateBy: {
+      updatedBy: {
         type: DataTypes.INTEGER,
         allowNull: true,
         references: {

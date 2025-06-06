@@ -23,7 +23,7 @@ const Role = sequelize.define(
       type: DataTypes.BOOLEAN,
       allowNull: true,
     },
-    createBy: {
+    createdBy: {
       type: DataTypes.INTEGER,
       allowNull: true,
       references: {
@@ -33,7 +33,7 @@ const Role = sequelize.define(
       onUpdate: "CASCADE",
       onDelete: "SET NULL",
     },
-    updateBy: {
+    updatedBy: {
       type: DataTypes.INTEGER,
       allowNull: true,
       references: {
