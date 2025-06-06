@@ -50,10 +50,22 @@ const CourseOffering = sequelize.define(
     createdBy: {
       type: DataTypes.INTEGER,
       allowNull: true,
+      references: {
+    model: 'users', 
+    key: 'id'
+  },
+  onUpdate: 'CASCADE',
+  onDelete: 'SET NULL',
     },
     updatedBy: {
       type: DataTypes.INTEGER,
       allowNull: true,
+      references: {
+        model: "users",
+        key: "id",
+      },
+      onUpdate: "CASCADE",
+      onDelete: "SET NULL",
     },
   },
   {
