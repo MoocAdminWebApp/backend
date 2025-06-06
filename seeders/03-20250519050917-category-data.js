@@ -4,7 +4,7 @@
 module.exports = {
   async up(queryInterface, Sequelize) {
     await queryInterface.bulkInsert(
-      "Category",
+      "categories",
       [
         {
           id: 1,
@@ -35,7 +35,7 @@ module.exports = {
           parentId: 2,
           isPublic: true,
           createdBy: 1,
-          updatedBy: null,
+          updatedBy: 1,
           isDeleted: false,
           deletedAt: null,
         },
@@ -46,7 +46,7 @@ module.exports = {
           parentId: 1,
           isPublic: true,
           createdBy: 1,
-          updatedBy: null,
+          updatedBy: 1,
           isDeleted: false,
           deletedAt: null,
         },
@@ -57,7 +57,7 @@ module.exports = {
           parentId: 1,
           isPublic: true,
           createdBy: 1,
-          updatedBy: null,
+          updatedBy: 1,
           isDeleted: false,
           deletedAt: null,
         },
@@ -79,7 +79,7 @@ module.exports = {
           parentId: 6,
           isPublic: true,
           createdBy: 1,
-          updatedBy: null,
+          updatedBy: 1,
           isDeleted: false,
           deletedAt: null,
         },
@@ -90,7 +90,7 @@ module.exports = {
           parentId: 6,
           isPublic: true,
           createdBy: 1,
-          updatedBy: null,
+          updatedBy: 1,
           isDeleted: false,
           deletedAt: null,
         },
@@ -100,6 +100,6 @@ module.exports = {
   },
 
   async down(queryInterface, Sequelize) {
-    await queryInterface.bulkDelete("Category", null, {});
+    await queryInterface.bulkDelete("categories", null, {});
   },
 };
