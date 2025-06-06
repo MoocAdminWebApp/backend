@@ -1,6 +1,6 @@
-const express = require('express');
+const express = require("express");
 const router = express.Router();
-const roleController = require('../controller/roleController');
+const roleController = require("../controller/roleController");
 
 /**
  * @swagger
@@ -25,7 +25,7 @@ const roleController = require('../controller/roleController');
  *               items:
  *                 $ref: '#/components/schemas/Role'
  */
-router.get('/', roleController.getRoles);
+router.get("/", roleController.getRoles);
 
 /**
  * @swagger
@@ -50,7 +50,7 @@ router.get('/', roleController.getRoles);
  *       404:
  *         description: Role not found
  */
-router.get('/:id', roleController.getRoleById);
+router.get("/:id", roleController.getRoleById);
 
 /**
  * @swagger
@@ -72,7 +72,7 @@ router.get('/:id', roleController.getRoleById);
  *             schema:
  *               $ref: '#/components/schemas/Role'
  */
-router.post('/', roleController.createRole);
+router.post("/", roleController.createRole);
 
 /**
  * @swagger
@@ -103,7 +103,7 @@ router.post('/', roleController.createRole);
  *       404:
  *         description: Role not found
  */
-router.put('/:id', roleController.updateRole);
+router.put("/:id", roleController.updateRole);
 
 /**
  * @swagger
@@ -124,6 +124,6 @@ router.put('/:id', roleController.updateRole);
  *       404:
  *         description: Role not found
  */
-router.delete('/:id', roleController.deleteRole);
+router.delete("/:id", roleController.deleteRole);
 
 module.exports = router;

@@ -1,12 +1,9 @@
-const Sequelize = require('sequelize');
-const sequelizeOP = require('../db/sequelizedb');
-const { Op } = require('sequelize');
-const Demo = require('../models/demo');
-const cacheHelper = require('../common/cache/cacheHelper');
-const {
-  EntityAlreadyExistsException,
-  EntityNotFoundException,
-} = require('../common/commonError');
+const Sequelize = require("sequelize");
+const sequelizeOP = require("../db/sequelizedb");
+const { Op } = require("sequelize");
+const Demo = require("../models/demo");
+const cacheHelper = require("../common/cache/cacheHelper");
+const { EntityAlreadyExistsException, EntityNotFoundException } = require("../common/commonError");
 /**
  * key
  * @returns all cache key
@@ -14,7 +11,7 @@ const {
 // 获取所有缓存的键
 function getALLCacheKey() {
   //Return all cached keys
-  return 'demo_all';
+  return "demo_all";
 }
 
 /**
@@ -33,12 +30,12 @@ const checkTitleExists = async (title, id = null) => {
 
   const existingDemo = await Demo.findOne({
     where: whereClause,
-    attributes: ['id'], // Only querying the ID field improves efficiency
+    attributes: ["id"], // Only querying the ID field improves efficiency
     raw: true, // Return pure JSON objects instead of model instances
   });
 
   if (existingDemo) {
-    throw new EntityAlreadyExistsException('title already exists');
+    throw new EntityAlreadyExistsException("title already exists");
   }
 };
 
@@ -47,7 +44,7 @@ const checkTitleExists = async (title, id = null) => {
  * @param {*} demo
  * @returns
  */
-const createAsync = async (demo) => {
+const createAsync = async demo => {
   await checkTitleExists(demo.title);
 
   var newDemo = await Demo.create({
@@ -62,7 +59,7 @@ const createAsync = async (demo) => {
 
   return {
     isSuccess: newDemo.id > 0 ? true : false,
-    message: '',
+    message: "",
     data: newDemo,
   };
 };
@@ -71,10 +68,10 @@ const createAsync = async (demo) => {
  *
  * @param {*} id
  */
-const checkDemoExists = async (id) => {
+const checkDemoExists = async id => {
   var demo = await Demo.findByPk(id);
   if (!demo) {
-    throw new EntityNotFoundException('demo not exists');
+    throw new EntityNotFoundException("demo not exists");
   }
 };
 
@@ -82,7 +79,7 @@ const checkDemoExists = async (id) => {
  *add demo
  * @param {*} demo
  */
-const updateAsync = async (demo) => {
+const updateAsync = async demo => {
   await checkDemoExists(demo.id);
 
   await checkTitleExists(demo.title, demo.id);
@@ -97,9 +94,9 @@ const updateAsync = async (demo) => {
     },
     {
       where: { id: demo.id },
-    },
+    }
   );
-  return { isSuccess: true, message: '', data: updateDemo };
+  return { isSuccess: true, message: "", data: updateDemo };
 };
 
 /**
@@ -109,13 +106,13 @@ const updateAsync = async (demo) => {
 const getAllAsync = async () => {
   let cacheValue = await cacheHelper.getAsync(getALLCacheKey());
   if (cacheValue) {
-    return { isSuccess: true, message: '', data: JSON.parse(cacheValue) };
+    return { isSuccess: true, message: "", data: JSON.parse(cacheValue) };
   }
   var allDemo = await Demo.findAll();
   if (allDemo) {
     await cacheHelper.setAsync(getALLCacheKey(), JSON.stringify(allDemo), 10);
   }
-  return { isSuccess: true, message: '', data: allDemo };
+  return { isSuccess: true, message: "", data: allDemo };
 };
 
 /**
@@ -129,7 +126,7 @@ const pageAsync = async (title, page, pageSize) => {
   const offset = (page - 1) * pageSize;
 
   const whereClause = {};
-  if (title !== undefined && title !== 'undefined' && title !== '') {
+  if (title !== undefined && title !== "undefined" && title !== "") {
     whereClause.title = {
       [Op.like]: `%${title}%`,
     };
@@ -139,10 +136,10 @@ const pageAsync = async (title, page, pageSize) => {
     where: whereClause,
     limit: pageSize,
     offset: parseInt(offset),
-    order: [['id', 'ASC']],
+    order: [["id", "ASC"]],
   });
 
-  return { isSuccess: true, message: '', data: { total: count, items: rows } };
+  return { isSuccess: true, message: "", data: { total: count, items: rows } };
 };
 
 /**
@@ -150,21 +147,21 @@ const pageAsync = async (title, page, pageSize) => {
  * @param {*} id
  * @returns
  */
-const deleteAsync = async (id) => {
+const deleteAsync = async id => {
   await checkDemoExists(id);
 
   var deleteDemo = await Demo.destroy({
     where: { id: id },
   });
-  return { isSuccess: true, message: '', data: deleteDemo };
+  return { isSuccess: true, message: "", data: deleteDemo };
 };
 
-const getByIdAsync = async (id) => {
+const getByIdAsync = async id => {
   var demo = await Demo.findByPk(id);
   if (!demo) {
-    throw new EntityNotFoundException('demo not exists');
+    throw new EntityNotFoundException("demo not exists");
   }
-  return { isSuccess: true, message: '', data: demo };
+  return { isSuccess: true, message: "", data: demo };
 };
 
 module.exports = {

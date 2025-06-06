@@ -1,9 +1,9 @@
-'use strict';
+"use strict";
 
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   up: async (queryInterface, Sequelize) => {
-    await queryInterface.bulkInsert('role_permissions', [
+    await queryInterface.bulkInsert("role_permissions", [
       {
         roleId: 1,
         permissionId: 1,
@@ -24,6 +24,6 @@ module.exports = {
   },
 
   down: async (queryInterface, Sequelize) => {
-    await queryInterface.bulkDelete('role_permissions', null, {});
+    await queryInterface.bulkDelete("role_permissions", null, {});
   },
 };

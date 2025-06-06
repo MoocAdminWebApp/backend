@@ -1,15 +1,15 @@
-const { cacheConfig } = require('../../appConfig');
-const redisHelper = require('./redisHelper');
-const nodeCacheHelper = require('./nodeCacheHelper');
+const { cacheConfig } = require("../../appConfig");
+const redisHelper = require("./redisHelper");
+const nodeCacheHelper = require("./nodeCacheHelper");
 
 let cache;
-let type = 'memory';
+let type = "memory";
 if (cacheConfig && cacheConfig.useReids) {
   cache = redisHelper;
-  type = 'redis';
+  type = "redis";
 } else {
   cache = nodeCacheHelper;
-  type = 'memory';
+  type = "memory";
 }
 
 /**

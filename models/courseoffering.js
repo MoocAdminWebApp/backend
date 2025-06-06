@@ -1,8 +1,8 @@
-const { DataTypes } = require('sequelize');
-const { sequelize } = require('../db/sequelizedb');
+const { DataTypes } = require("sequelize");
+const { sequelize } = require("../db/sequelizedb");
 
 const CourseOffering = sequelize.define(
-  'CourseOffering',
+  "CourseOffering",
   {
     id: {
       type: DataTypes.INTEGER,
@@ -59,15 +59,15 @@ const CourseOffering = sequelize.define(
     },
   },
   {
-    tableName: 'CourseOfferings',
+    tableName: "CourseOfferings",
     timestamps: false,
-  },
+  }
 );
 
 CourseOffering.statusLabels = {
-  0: 'open',
-  1: 'closed',
-  2: 'cancelled',
+  0: "open",
+  1: "closed",
+  2: "cancelled",
 };
 
 // 自訂 toJSON 方法，讓回傳時自動加上 statusText

@@ -1,6 +1,6 @@
 module.exports = (sequelize, DataTypes) => {
   const RoleMenu = sequelize.define(
-    'RoleMenu',
+    "RoleMenu",
     {
       id: {
         type: DataTypes.INTEGER,
@@ -11,47 +11,47 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.INTEGER,
         allowNull: false,
         references: {
-          model: 'roles',
-          key: 'id',
+          model: "roles",
+          key: "id",
         },
-        onUpdate: 'CASCADE',
-        onDelete: 'CASCADE',
+        onUpdate: "CASCADE",
+        onDelete: "CASCADE",
       },
       menuId: {
         type: DataTypes.INTEGER,
         allowNull: false,
         references: {
-          model: 'menus',
-          key: 'id',
+          model: "menus",
+          key: "id",
         },
-        onUpdate: 'CASCADE',
-        onDelete: 'CASCADE',
+        onUpdate: "CASCADE",
+        onDelete: "CASCADE",
       },
       createBy: {
         type: DataTypes.INTEGER,
         allowNull: true,
         references: {
-          model: 'users',
-          key: 'id',
+          model: "users",
+          key: "id",
         },
-        onUpdate: 'CASCADE',
-        onDelete: 'SET NULL',
+        onUpdate: "CASCADE",
+        onDelete: "SET NULL",
       },
       updateBy: {
         type: DataTypes.INTEGER,
         allowNull: true,
         references: {
-          model: 'users',
-          key: 'id',
+          model: "users",
+          key: "id",
         },
-        onUpdate: 'CASCADE',
-        onDelete: 'SET NULL',
+        onUpdate: "CASCADE",
+        onDelete: "SET NULL",
       },
     },
     {
-      tableName: 'role_menus',
+      tableName: "role_menus",
       timestamps: true,
-    },
+    }
   );
 
   return RoleMenu;

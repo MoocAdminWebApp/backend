@@ -1,9 +1,9 @@
-const { DataTypes } = require('sequelize');
+const { DataTypes } = require("sequelize");
 
-const { sequelize } = require('../db/sequelizedb');
+const { sequelize } = require("../db/sequelizedb");
 
 const Role = sequelize.define(
-  'Role',
+  "Role",
   {
     id: {
       type: DataTypes.INTEGER,
@@ -27,46 +27,46 @@ const Role = sequelize.define(
       type: DataTypes.INTEGER,
       allowNull: true,
       references: {
-        model: 'User',
-        key: 'id',
+        model: "User",
+        key: "id",
       },
-      onUpdate: 'CASCADE',
-      onDelete: 'SET NULL',
+      onUpdate: "CASCADE",
+      onDelete: "SET NULL",
     },
     updateBy: {
       type: DataTypes.INTEGER,
       allowNull: true,
       references: {
-        model: 'User',
-        key: 'id',
+        model: "User",
+        key: "id",
       },
-      onUpdate: 'CASCADE',
-      onDelete: 'SET NULL',
+      onUpdate: "CASCADE",
+      onDelete: "SET NULL",
     },
   },
   {
-    tableName: 'roles',
+    tableName: "roles",
     timestamps: true,
-  },
+  }
 );
 
-Role.associate = (models) => {
+Role.associate = models => {
   Role.belongsToMany(models.User, {
-    foreignKey: 'roleId',
-    through: 'UserRole',
-    as: 'users',
+    foreignKey: "roleId",
+    through: "UserRole",
+    as: "users",
   });
 
   Role.belongsToMany(models.Menu, {
-    foreignKey: 'roleId',
-    through: 'RoleMenu',
-    as: 'menus',
+    foreignKey: "roleId",
+    through: "RoleMenu",
+    as: "menus",
   });
 
   Role.belongsToMany(models.Permission, {
-    foreignKey: 'roleId',
-    through: 'RolePermission',
-    as: 'permissions',
+    foreignKey: "roleId",
+    through: "RolePermission",
+    as: "permissions",
   });
 };
 

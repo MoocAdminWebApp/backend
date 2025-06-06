@@ -1,8 +1,8 @@
-const { DataTypes, DATE } = require('sequelize');
-const { sequelize } = require('../db/sequelizedb');
+const { DataTypes, DATE } = require("sequelize");
+const { sequelize } = require("../db/sequelizedb");
 
 const Option = sequelize.define(
-  'Option',
+  "Option",
   {
     id: {
       type: DataTypes.INTEGER,
@@ -22,19 +22,19 @@ const Option = sequelize.define(
       type: DataTypes.INTEGER,
       allowNull: false,
       references: {
-        model: 'Question',
-        key: 'id',
+        model: "Question",
+        key: "id",
       },
-      onDelete: 'CASCADE',
+      onDelete: "CASCADE",
     },
   },
-  { timestamps: true, tableName: 'Option' },
+  { timestamps: true, tableName: "Option" }
 );
 
-Option.associate = (models) => {
+Option.associate = models => {
   Option.belongsTo(models.Question, {
-    foreignKey: 'questionId',
-    onDelete: 'CASCADE',
+    foreignKey: "questionId",
+    onDelete: "CASCADE",
   });
 };
 

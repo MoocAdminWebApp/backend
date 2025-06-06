@@ -1,4 +1,4 @@
-'use strict';
+"use strict";
 
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
@@ -9,7 +9,7 @@ module.exports = {
      * Example:
      * await queryInterface.createTable('users', { id: Sequelize.INTEGER });
      */
-    await queryInterface.changeColumn('CourseOfferings', 'status', {
+    await queryInterface.changeColumn("CourseOfferings", "status", {
       type: Sequelize.STRING,
       allowNull: false,
     });

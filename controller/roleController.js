@@ -1,9 +1,9 @@
-const roleService = require('../service/roleService');
+const roleService = require("../service/roleService");
 
 exports.createRole = async (req, res, next) => {
   try {
     const role = await roleService.createRole(req.body);
-    res.sendCommonValue(201, 'Role created', role);
+    res.sendCommonValue(201, "Role created", role);
   } catch (err) {
     next(err);
   }
@@ -12,7 +12,7 @@ exports.createRole = async (req, res, next) => {
 exports.updateRole = async (req, res, next) => {
   try {
     const role = await roleService.updateRole(req.params.id, req.body);
-    res.sendCommonValue(200, 'Role updated', role);
+    res.sendCommonValue(200, "Role updated", role);
   } catch (err) {
     next(err);
   }
@@ -21,7 +21,7 @@ exports.updateRole = async (req, res, next) => {
 exports.deleteRole = async (req, res, next) => {
   try {
     await roleService.deleteRole(req.params.id);
-    res.sendCommonValue(200, 'Role deleted');
+    res.sendCommonValue(200, "Role deleted");
   } catch (err) {
     next(err);
   }

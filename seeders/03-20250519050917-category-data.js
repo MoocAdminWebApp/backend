@@ -1,15 +1,15 @@
-'use strict';
+"use strict";
 
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
     await queryInterface.bulkInsert(
-      'Category',
+      "Category",
       [
         {
           id: 1,
-          name: 'Programming',
-          description: 'Programming related courses',
+          name: "Programming",
+          description: "Programming related courses",
           parentId: null,
           isPublic: true,
           createdBy: 1,
@@ -19,8 +19,8 @@ module.exports = {
         },
         {
           id: 2,
-          name: 'Frontend',
-          description: 'Frontend development courses',
+          name: "Frontend",
+          description: "Frontend development courses",
           parentId: 1,
           isPublic: true,
           createdBy: 1,
@@ -30,8 +30,8 @@ module.exports = {
         },
         {
           id: 3,
-          name: 'React',
-          description: 'React framework tutorials',
+          name: "React",
+          description: "React framework tutorials",
           parentId: 2,
           isPublic: true,
           createdBy: 1,
@@ -41,8 +41,8 @@ module.exports = {
         },
         {
           id: 4,
-          name: 'Backend',
-          description: 'Backend development topics',
+          name: "Backend",
+          description: "Backend development topics",
           parentId: 1,
           isPublic: true,
           createdBy: 1,
@@ -52,8 +52,8 @@ module.exports = {
         },
         {
           id: 5,
-          name: 'DevOps',
-          description: 'Deployment and infrastructure',
+          name: "DevOps",
+          description: "Deployment and infrastructure",
           parentId: 1,
           isPublic: true,
           createdBy: 1,
@@ -63,8 +63,8 @@ module.exports = {
         },
         {
           id: 6,
-          name: 'Design',
-          description: 'Design and creativity',
+          name: "Design",
+          description: "Design and creativity",
           parentId: null,
           isPublic: true,
           createdBy: 1,
@@ -74,8 +74,8 @@ module.exports = {
         },
         {
           id: 7,
-          name: 'UI/UX',
-          description: 'User interface and experience',
+          name: "UI/UX",
+          description: "User interface and experience",
           parentId: 6,
           isPublic: true,
           createdBy: 1,
@@ -85,8 +85,8 @@ module.exports = {
         },
         {
           id: 8,
-          name: 'Graphic Design',
-          description: 'Illustration and visual design',
+          name: "Graphic Design",
+          description: "Illustration and visual design",
           parentId: 6,
           isPublic: true,
           createdBy: 1,
@@ -95,11 +95,11 @@ module.exports = {
           deletedAt: null,
         },
       ],
-      {},
+      {}
     );
   },
 
   async down(queryInterface, Sequelize) {
-    await queryInterface.bulkDelete('Category', null, {});
+    await queryInterface.bulkDelete("Category", null, {});
   },
 };

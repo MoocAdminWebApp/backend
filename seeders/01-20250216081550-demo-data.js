@@ -1,4 +1,4 @@
-'use strict';
+"use strict";
 
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
@@ -18,14 +18,14 @@ module.exports = {
     for (let i = 1; i <= 55; i++) {
       demoDatas.push({
         title: `title${i}`,
-        mark: `mark ${i.toString().padStart(6, '0')}`,
+        mark: `mark ${i.toString().padStart(6, "0")}`,
         count: i,
         acitve: i % 2 === 0, //
         dataTime: new Date(baseTime.getTime() + i * 1000),
       });
     }
 
-    await queryInterface.bulkInsert('demo', demoDatas, {});
+    await queryInterface.bulkInsert("demo", demoDatas, {});
   },
 
   async down(queryInterface, Sequelize) {
@@ -36,8 +36,8 @@ module.exports = {
      * await queryInterface.bulkDelete('People', null, {});
      */
 
-    await queryInterface.bulkDelete('demo', null, {});
+    await queryInterface.bulkDelete("demo", null, {});
     // delete table if necessary   to use reset-db command in package.json
-    await queryInterface.dropTable('demo');
+    await queryInterface.dropTable("demo");
   },
 };

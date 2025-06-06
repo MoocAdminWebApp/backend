@@ -1,9 +1,9 @@
-'use strict';
+"use strict";
 
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('Option', {
+    await queryInterface.createTable("Option", {
       id: {
         type: Sequelize.INTEGER,
         primaryKey: true,
@@ -22,27 +22,27 @@ module.exports = {
         type: Sequelize.INTEGER,
         allowNull: false,
         references: {
-          model: 'Question',
-          key: 'id',
+          model: "Question",
+          key: "id",
         },
-        onDelete: 'CASCADE',
+        onDelete: "CASCADE",
       },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE,
-        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
+        defaultValue: Sequelize.literal("CURRENT_TIMESTAMP"),
       },
       updatedAt: {
         allowNull: false,
         type: Sequelize.DATE,
-        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
+        defaultValue: Sequelize.literal("CURRENT_TIMESTAMP"),
       },
     });
 
-    console.log('Option Table Created');
+    console.log("Option Table Created");
   },
 
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable('Option');
+    await queryInterface.dropTable("Option");
   },
 };
