@@ -17,22 +17,40 @@ const Role = sequelize.define(
     },
     description: {
       type: DataTypes.STRING(200),
-      allowNull: true,
+      allowNull: false,
     },
     status: {
       type: DataTypes.BOOLEAN,
       allowNull: true,
     },
+    createdBy: {
+      type: DataTypes.INTEGER,
+      allowNull: true,
+      references: {
+        model: "User",
+        key: "id",
+      },
+      onUpdate: "CASCADE",
+      onDelete: "SET NULL",
+    },
+    updatedBy: {
+      type: DataTypes.INTEGER,
+      allowNull: true,
+      references: {
+        model: "User",
+        key: "id",
+      },
+      onUpdate: "CASCADE",
+      onDelete: "SET NULL",
+    },
   },
   {
-    tableName: "Role",
+    tableName: "roles",
     timestamps: true,
-    createdAt: "createdAt",
-    updatedAt: "updatedAt",
   }
 );
 
-Role.associate = (models) => {
+Role.associate = models => {
   Role.belongsToMany(models.User, {
     foreignKey: "roleId",
     through: "UserRole",

@@ -1,45 +1,33 @@
 "use strict";
+
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
-  async up(queryInterface, Sequelize) {
-    await queryInterface.createTable("users", {
+  up: async (queryInterface, Sequelize) => {
+    await queryInterface.createTable("roles", {
       id: {
         type: Sequelize.INTEGER,
-        allowNull: false,
-        autoIncrement: true,
         primaryKey: true,
+        autoIncrement: true,
+        allowNull: false,
       },
-      email: {
-        type: Sequelize.STRING(255),
+      roleName: {
+        type: Sequelize.STRING(50),
         allowNull: false,
         unique: true,
       },
-      password: {
-        type: Sequelize.STRING(255),
+      description: {
+        type: Sequelize.STRING(200),
         allowNull: false,
       },
-      firstName: {
-        type: Sequelize.STRING(255),
-        allowNull: false,
-      },
-      lastName: {
-        type: Sequelize.STRING(255),
-        allowNull: false,
-      },
-      access: {
-        type: Sequelize.ENUM("admin", "teacher", "student"),
-        allowNull: true,
-      },
-      active: {
+      status: {
         type: Sequelize.BOOLEAN,
-        allowNull: false,
-        defaultValue: false,
+        allowNull: true,
       },
       createdBy: {
         type: Sequelize.INTEGER,
         allowNull: true,
         references: {
-          model: "users", // 自引用
+          model: "Users", // ⚠️ 确保你的用户表名是 Users（区分大小写）
           key: "id",
         },
         onUpdate: "CASCADE",
@@ -49,26 +37,26 @@ module.exports = {
         type: Sequelize.INTEGER,
         allowNull: true,
         references: {
-          model: "users", // 自引用
+          model: "Users",
           key: "id",
         },
         onUpdate: "CASCADE",
         onDelete: "SET NULL",
       },
       createdAt: {
-        allowNull: false,
         type: Sequelize.DATE,
+        allowNull: false,
         defaultValue: Sequelize.literal("CURRENT_TIMESTAMP"),
       },
       updatedAt: {
-        allowNull: false,
         type: Sequelize.DATE,
+        allowNull: false,
         defaultValue: Sequelize.literal("CURRENT_TIMESTAMP"),
       },
     });
-    console.log("Table User Created");
   },
-  async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable("users");
+
+  down: async (queryInterface, Sequelize) => {
+    await queryInterface.dropTable("roles");
   },
 };

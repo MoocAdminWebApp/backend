@@ -1,24 +1,28 @@
-'use strict';
+"use strict";
 
 module.exports = {
-  async up (queryInterface, Sequelize) {
-    await queryInterface.bulkInsert('RoleMenus', [
+  up: async (queryInterface, Sequelize) => {
+    await queryInterface.bulkInsert("role_menus", [
       {
         roleId: 1,
         menuId: 1,
+        createdBy: 1,
+        updatedBy: 1,
+        createdAt: new Date(),
+        updatedAt: new Date(),
       },
       {
         roleId: 1,
         menuId: 2,
+        createdBy: 1,
+        updatedBy: 1,
+        createdAt: new Date(),
+        updatedAt: new Date(),
       },
-      {
-        roleId: 2,
-        menuId: 3,
-      }
     ]);
   },
 
-  async down (queryInterface, Sequelize) {
-    await queryInterface.bulkDelete('RoleMenus', null, {});
-  }
+  down: async (queryInterface, Sequelize) => {
+    await queryInterface.bulkDelete("role_menus", null, {});
+  },
 };

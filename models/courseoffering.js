@@ -63,9 +63,9 @@ const CourseOffering = sequelize.define(
 );
 
 CourseOffering.statusLabels = {
-  0: 'open',
-  1: 'closed',
-  2: 'cancelled'
+  0: "open",
+  1: "closed",
+  2: "cancelled",
 };
 
 // 自訂 toJSON 方法，讓回傳時自動加上 statusText

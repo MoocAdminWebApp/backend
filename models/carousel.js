@@ -35,10 +35,10 @@ const carousel = sequelize.define(
     active: {
       type: DataTypes.BOOLEAN,
       defaultValue: true,
-      allowNull: false
-    }
+      allowNull: false,
+    },
   },
-  { timestamps: false, tableName: 'Carousel' }
+  { timestamps: false, tableName: "Carousel" }
 );
 
 module.exports = carousel;

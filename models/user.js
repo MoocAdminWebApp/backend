@@ -1,23 +1,62 @@
 "use strict";
 const { Model } = require("sequelize");
+
 module.exports = (sequelize, DataTypes) => {
-  class user extends Model {
-    /**
-     * Helper method for defining associations.
-     * This method is not a part of Sequelize lifecycle.
-     * The `models/index` file will call this method automatically.
-     */
+  class User extends Model {
+    // 建立模型关联
     static associate(models) {
-      // define association here
-      // User.belongsToMany(models.Role, {
-      //   foreignKey: "userId",
-      //   through: "UserRole",
-      //   as: "roles",
-      // });
+      // 自引用：创建者
+      User.belongsTo(models.User, {
+        foreignKey: "createdBy",
+        as: "creator",
+      });
+
+      // 自引用：更新者
+      User.belongsTo(models.User, {
+        foreignKey: "updatedBy",
+        as: "updater",
+      });
+
+      // User 与 Role 多对多通过UserRole关联
+      User.belongsToMany(models.Role, {
+        foreignKey: "userId",
+        through: "UserRole",
+        as: "roles",
+      });
+
+      // User 与 Profile 一对一关联
+      User.hasOne(models.Profile, {
+        foreignKey: "userId",
+        as: "profile",
+      });
+    }
+
+    // 添加 accessLevel 映射为数字
+    get accessNumber() {
+      const map = {
+        admin: 1,
+        teacher: 2,
+        student: 3,
+      };
+      return map[this.access] || 0;
+    }
+
+    // 重写 toJSON 以包含 accessLevel
+    toJSON() {
+      const values = { ...this.get() };
+      values.accessNumber = this.accessNumber;
+      return values;
     }
   }
-  user.init(
+
+  User.init(
     {
+      id: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        autoIncrement: true,
+        primaryKey: true, //默认就是unique的
+      },
       email: {
         type: DataTypes.STRING(255),
         allowNull: false,
@@ -27,29 +66,13 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.STRING(255),
         allowNull: false,
       },
-      userName: {
+      firstName: {
         type: DataTypes.STRING(255),
         allowNull: false,
       },
-      phone: {
+      lastName: {
         type: DataTypes.STRING(255),
-        allowNull: true,
-      },
-      address: {
-        type: DataTypes.STRING(255),
-        allowNull: true,
-      },
-      age: {
-        type: DataTypes.INTEGER,
-        allowNull: true,
-      },
-      gender: {
-        type: DataTypes.ENUM("Other", "Male", "Female"),
-        allowNull: true,
-      },
-      avatar: {
-        type: DataTypes.STRING(255),
-        allowNull: true,
+        allowNull: false,
       },
       access: {
         type: DataTypes.ENUM("admin", "teacher", "student"),
@@ -57,23 +80,25 @@ module.exports = (sequelize, DataTypes) => {
       },
       active: {
         type: DataTypes.BOOLEAN,
+        allowNull: false,
         defaultValue: false,
       },
-      createdAt: {
-        type: DataTypes.DATE,
-        allowNull: false,
-        defaultValue: DataTypes.NOW,
+      createdBy: {
+        type: DataTypes.INTEGER,
+        allowNull: true,
       },
-      updatedAt: {
-        type: DataTypes.DATE,
+      updatedBy: {
+        type: DataTypes.INTEGER,
         allowNull: true,
       },
     },
     {
       sequelize,
-      modelName: "user",
+      modelName: "User",
       tableName: "users",
+      timestamps: true,
     }
   );
-  return user;
+
+  return User;
 };
