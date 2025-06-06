@@ -6,7 +6,7 @@ module.exports = {
     await queryInterface.addColumn('CourseOfferings', 'status_temp', {
       type: Sequelize.INTEGER,
       allowNull: false,
-      defaultValue: 0
+      defaultValue: 0,
     });
 
     // 2. 把原本 string 狀態轉成整數
@@ -24,7 +24,11 @@ module.exports = {
     await queryInterface.removeColumn('CourseOfferings', 'status');
 
     // 4. 將 status_temp 改名為 status
-    await queryInterface.renameColumn('CourseOfferings', 'status_temp', 'status');
+    await queryInterface.renameColumn(
+      'CourseOfferings',
+      'status_temp',
+      'status',
+    );
   },
 
   async down(queryInterface, Sequelize) {
@@ -32,7 +36,7 @@ module.exports = {
     await queryInterface.addColumn('CourseOfferings', 'status_temp', {
       type: Sequelize.STRING,
       allowNull: false,
-      defaultValue: 'open'
+      defaultValue: 'open',
     });
 
     // 2. 把整數轉回文字
@@ -50,6 +54,10 @@ module.exports = {
     await queryInterface.removeColumn('CourseOfferings', 'status');
 
     // 4. 改名回原欄位
-    await queryInterface.renameColumn('CourseOfferings', 'status_temp', 'status');
-  }
+    await queryInterface.renameColumn(
+      'CourseOfferings',
+      'status_temp',
+      'status',
+    );
+  },
 };

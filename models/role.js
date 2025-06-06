@@ -1,9 +1,9 @@
-const { DataTypes } = require("sequelize");
+const { DataTypes } = require('sequelize');
 
-const { sequelize } = require("../db/sequelizedb");
+const { sequelize } = require('../db/sequelizedb');
 
 const Role = sequelize.define(
-  "Role",
+  'Role',
   {
     id: {
       type: DataTypes.INTEGER,
@@ -45,30 +45,28 @@ const Role = sequelize.define(
     },
   },
   {
-    tableName: "Roles",
+    tableName: 'roles',
     timestamps: true,
-    createdAt: "createdAt",
-    updatedAt: "updatedAt",
-  }
+  },
 );
 
 Role.associate = (models) => {
   Role.belongsToMany(models.User, {
-    foreignKey: "roleId",
-    through: "UserRole",
-    as: "users",
+    foreignKey: 'roleId',
+    through: 'UserRole',
+    as: 'users',
   });
 
   Role.belongsToMany(models.Menu, {
-    foreignKey: "roleId",
-    through: "RoleMenu",
-    as: "menus",
+    foreignKey: 'roleId',
+    through: 'RoleMenu',
+    as: 'menus',
   });
 
   Role.belongsToMany(models.Permission, {
-    foreignKey: "roleId",
-    through: "RolePermission",
-    as: "permissions",
+    foreignKey: 'roleId',
+    through: 'RolePermission',
+    as: 'permissions',
   });
 };
 

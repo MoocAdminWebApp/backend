@@ -1,35 +1,37 @@
 module.exports = (sequelize, DataTypes) => {
-  const RoleMenu = sequelize.define("RoleMenu", {
-    id: {
+  const RoleMenu = sequelize.define(
+    'RoleMenu',
+    {
+      id: {
         type: DataTypes.INTEGER,
         primaryKey: true,
         autoIncrement: true,
+      },
+      roleId: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        references: {
+          model: 'roles',
+          key: 'id',
         },
-    roleId: {
-      type: DataTypes.INTEGER,
-      allowNull: false,
-      references: {
-        model: 'Roles',
-        key: 'id',
+        onUpdate: 'CASCADE',
+        onDelete: 'CASCADE',
       },
-      onUpdate: 'CASCADE',
-      onDelete: 'CASCADE',  
-    },
-    menuId: {
-      type: DataTypes.INTEGER,
-      allowNull: false,
-      references: {
-        model: 'Menus',
-        key: 'id',
+      menuId: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        references: {
+          model: 'menus',
+          key: 'id',
+        },
+        onUpdate: 'CASCADE',
+        onDelete: 'CASCADE',
       },
-      onUpdate: 'CASCADE',
-      onDelete: 'CASCADE',
-    },
-   createBy: {
+      createBy: {
         type: DataTypes.INTEGER,
         allowNull: true,
         references: {
-          model: 'User',
+          model: 'users',
           key: 'id',
         },
         onUpdate: 'CASCADE',
@@ -39,18 +41,18 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.INTEGER,
         allowNull: true,
         references: {
-          model: 'Users',
+          model: 'users',
           key: 'id',
         },
         onUpdate: 'CASCADE',
         onDelete: 'SET NULL',
       },
-  }, {
-    tableName: "RoleMenus",
-    timestamps: false,
-    createdAt: "createdAt",
-    updatedAt: "updatedAt",
-  });
+    },
+    {
+      tableName: 'role_menus',
+      timestamps: true,
+    },
+  );
 
   return RoleMenu;
 };

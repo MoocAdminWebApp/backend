@@ -1,5 +1,5 @@
-"use strict";
-const { Model } = require("sequelize");
+'use strict';
+const { Model } = require('sequelize');
 module.exports = (sequelize, DataTypes) => {
   class user extends Model {
     /**
@@ -44,7 +44,7 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: true,
       },
       gender: {
-        type: DataTypes.ENUM("Other", "Male", "Female"),
+        type: DataTypes.ENUM('Other', 'Male', 'Female'),
         allowNull: true,
       },
       avatar: {
@@ -52,7 +52,7 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: true,
       },
       access: {
-        type: DataTypes.ENUM("admin", "teacher", "student"),
+        type: DataTypes.ENUM('admin', 'teacher', 'student'),
         allowNull: true,
       },
       active: {
@@ -71,9 +71,9 @@ module.exports = (sequelize, DataTypes) => {
     },
     {
       sequelize,
-      modelName: "user",
-      tableName: "Users",
-    }
+      modelName: 'user',
+      tableName: 'Users',
+    },
   );
   return user;
 };

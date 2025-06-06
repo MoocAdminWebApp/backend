@@ -38,11 +38,11 @@ module.exports = {
         status: 1,
         createdAt: new Date(),
         updatedAt: new Date(),
-      }
+      },
     ]);
   },
 
   async down(queryInterface, Sequelize) {
     await queryInterface.bulkDelete('CourseOfferings', null, {});
-  }
+  },
 };

@@ -1,9 +1,9 @@
-"use strict";
+'use strict';
 
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable("Carousel", {
+    await queryInterface.createTable('Carousel', {
       id: {
         type: Sequelize.INTEGER,
         primaryKey: true,
@@ -48,11 +48,11 @@ module.exports = {
       // },
     });
 
-    console.log("✅ Carousel table created.");
+    console.log('✅ Carousel table created.');
   },
 
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable("Carousel");
-    console.log("❌ Carousel table dropped.");
+    await queryInterface.dropTable('Carousel');
+    console.log('❌ Carousel table dropped.');
   },
 };

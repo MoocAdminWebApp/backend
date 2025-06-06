@@ -1,10 +1,10 @@
-"use strict";
+'use strict';
 
 module.exports = {
   up: async (queryInterface, Sequelize) => {
-    await queryInterface.bulkInsert('Roles', [
+    await queryInterface.bulkInsert('roles', [
       {
-        roleName: 'Admin',
+        roleName: 'admin',
         description: 'System Administrator',
         status: true,
         createBy: 1,
@@ -13,17 +13,8 @@ module.exports = {
         updatedAt: new Date(),
       },
       {
-        roleName: 'Editor',
-        description: 'Content Editor',
-        status: true,
-        createBy: 1,
-        updateBy: 1,
-        createdAt: new Date(),
-        updatedAt: new Date(),
-      },
-      {
-        roleName: 'Viewer',
-        description: 'Read-only user',
+        roleName: 'user',
+        description: 'Default user role',
         status: true,
         createBy: 1,
         updateBy: 1,
@@ -33,7 +24,7 @@ module.exports = {
     ]);
   },
 
-  down: async (queryInterface) => {
-    await queryInterface.bulkDelete('Roles', null, {});
+  down: async (queryInterface, Sequelize) => {
+    await queryInterface.bulkDelete('roles', null, {});
   },
 };

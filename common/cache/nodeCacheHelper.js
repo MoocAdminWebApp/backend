@@ -1,4 +1,4 @@
-const NodeCache = require("node-cache");
+const NodeCache = require('node-cache');
 
 const nodeCache = new NodeCache({
   stdTTL: 60, // stdTTL All caches expire in 60 seconds by default
@@ -12,7 +12,7 @@ const nodeCache = new NodeCache({
  * @param {*} ttl  second
  */
 const setAsync = async (key, value, ttl = null) => {
-  if (typeof value === "object") {
+  if (typeof value === 'object') {
     value = JSON.stringify(value);
   }
   return new Promise((resolve) => {

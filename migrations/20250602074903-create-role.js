@@ -1,13 +1,14 @@
-"use strict";
+'use strict';
 
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
-  async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('Roles', {
+  up: async (queryInterface, Sequelize) => {
+    await queryInterface.createTable('roles', {
       id: {
         type: Sequelize.INTEGER,
         primaryKey: true,
         autoIncrement: true,
+        allowNull: false,
       },
       roleName: {
         type: Sequelize.STRING(50),
@@ -26,7 +27,7 @@ module.exports = {
         type: Sequelize.INTEGER,
         allowNull: true,
         references: {
-          model: 'Users',
+          model: 'Users', // ⚠️ 确保你的用户表名是 Users（区分大小写）
           key: 'id',
         },
         onUpdate: 'CASCADE',
@@ -56,6 +57,6 @@ module.exports = {
   },
 
   down: async (queryInterface, Sequelize) => {
-    await queryInterface.dropTable('Roles');
+    await queryInterface.dropTable('roles');
   },
 };

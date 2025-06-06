@@ -1,5 +1,5 @@
-"use strict";
-const { Model, Sequelize } = require("sequelize");
+'use strict';
+const { Model, Sequelize } = require('sequelize');
 module.exports = (sequelize, DataTypes) => {
   class menu extends Model {
     /**
@@ -9,11 +9,11 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
-      menu.belongsTo(models.user, { foreignKey: "createdBy", targetKey: "id" });
-      menu.belongsTo(models.user, { foreignKey: "updatedBy", targetKey: "id" });
+      menu.belongsTo(models.user, { foreignKey: 'createdBy', targetKey: 'id' });
+      menu.belongsTo(models.user, { foreignKey: 'updatedBy', targetKey: 'id' });
 
-      menu.belongsTo(models.menu, { foreignKey: "parentId", as: "parent" });
-      menu.hasMany(models.menu, { foreignKey: "parentId", as: "children" });
+      menu.belongsTo(models.menu, { foreignKey: 'parentId', as: 'parent' });
+      menu.hasMany(models.menu, { foreignKey: 'parentId', as: 'children' });
     }
   }
   menu.init(
@@ -29,10 +29,10 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: false,
       },
       type: {
-        type: DataTypes.ENUM("directory", "menu", "button"),
+        type: DataTypes.ENUM('directory', 'menu', 'button'),
         allowNull: false,
         get() {
-          const type = this.getDataValue("type");
+          const type = this.getDataValue('type');
           const typeToNumber = {
             directory: 1,
             menu: 2,
@@ -45,11 +45,11 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.INTEGER,
         allowNull: true,
         references: {
-          model: "menus",
-          key: "id",
+          model: 'menus',
+          key: 'id',
         },
-        onUpdate: "CASCADE",
-        onDelete: "SET NULL",
+        onUpdate: 'CASCADE',
+        onDelete: 'SET NULL',
       },
 
       orderNum: {
@@ -73,11 +73,11 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: true,
       },
       status: {
-        type: DataTypes.ENUM("active", "inactive", "draft", "archived"),
+        type: DataTypes.ENUM('active', 'inactive', 'draft', 'archived'),
         allowNull: false,
-        defaultValue: "active",
+        defaultValue: 'active',
         get() {
-          const status = this.getDataValue("status");
+          const status = this.getDataValue('status');
           const statusToNumber = {
             active: 1,
             inactive: 2,
@@ -89,42 +89,42 @@ module.exports = (sequelize, DataTypes) => {
       },
       comment: {
         type: DataTypes.STRING,
-        defaultValue: "",
+        defaultValue: '',
       },
       createdAt: {
         type: DataTypes.DATE,
-        defaultValue: Sequelize.literal("CURRENT_TIMESTAMP"),
+        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
       },
       updatedAt: {
         type: DataTypes.DATE,
-        defaultValue: Sequelize.literal("CURRENT_TIMESTAMP"),
+        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
       },
       createdBy: {
         type: DataTypes.INTEGER,
         allowNull: true,
         references: {
-          model: "users",
-          key: "id",
+          model: 'users',
+          key: 'id',
         },
-        onDelete: "SET NULL",
-        onUpdate: "CASCADE",
+        onDelete: 'SET NULL',
+        onUpdate: 'CASCADE',
       },
       updatedBy: {
         type: DataTypes.INTEGER,
         allowNull: true,
         references: {
-          model: "users",
-          key: "id",
+          model: 'users',
+          key: 'id',
         },
-        onDelete: "SET NULL",
-        onUpdate: "CASCADE",
+        onDelete: 'SET NULL',
+        onUpdate: 'CASCADE',
       },
     },
     {
       sequelize,
-      modelName: "menu",
-      tableName: "Menus",
-    }
+      modelName: 'menu',
+      tableName: 'Menus',
+    },
   );
   return menu;
 };

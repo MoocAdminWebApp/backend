@@ -1,8 +1,8 @@
-const { DataTypes } = require("sequelize");
-const { sequelize } = require("../db/sequelizedb");
+const { DataTypes } = require('sequelize');
+const { sequelize } = require('../db/sequelizedb');
 
 const Category = sequelize.define(
-  "Category",
+  'Category',
   {
     id: {
       type: DataTypes.INTEGER,
@@ -22,8 +22,8 @@ const Category = sequelize.define(
       type: DataTypes.INTEGER,
       allowNull: true,
       references: {
-        model: "Category",
-        key: "id",
+        model: 'Category',
+        key: 'id',
       },
     },
     isPublic: {
@@ -35,16 +35,16 @@ const Category = sequelize.define(
       type: DataTypes.INTEGER,
       allowNull: false,
       references: {
-        model: "users",
-        key: "id",
+        model: 'users',
+        key: 'id',
       },
     },
     updatedBy: {
       type: DataTypes.INTEGER,
       allowNull: true,
       references: {
-        model: "users",
-        key: "id",
+        model: 'users',
+        key: 'id',
       },
     },
     isDeleted: {
@@ -59,29 +59,29 @@ const Category = sequelize.define(
   },
   {
     timestamps: true,
-    tableName: "Category",
-  }
+    tableName: 'Category',
+  },
 );
 
 Category.associate = (models) => {
   Category.belongsTo(models.Category, {
-    foreignKey: "parentId",
-    as: "parentCategory",
+    foreignKey: 'parentId',
+    as: 'parentCategory',
   });
 
   Category.hasMany(models.Category, {
-    foreignKey: "parentId",
-    as: "childCategory",
+    foreignKey: 'parentId',
+    as: 'childCategory',
   });
 
   Category.belongsTo(models.user, {
-    foreignKey: "createdBy",
-    as: "creator",
+    foreignKey: 'createdBy',
+    as: 'creator',
   });
 
   Category.belongsTo(models.user, {
-    foreignKey: "updatedBy",
-    as: "updater",
+    foreignKey: 'updatedBy',
+    as: 'updater',
   });
 };
 

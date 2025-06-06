@@ -5,7 +5,7 @@ const returnvalue = (req, res, next) => {
     if (httpStatus >= 200 && httpStatus <= 204) {
       isSuccess = true;
     }
-    if (typeof httpStatus !== "undefined") {
+    if (typeof httpStatus !== 'undefined') {
       res.status(httpStatus).json({
         isSuccess,
         status,

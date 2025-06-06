@@ -1,8 +1,8 @@
-const { DataTypes } = require("sequelize");
-const { sequelize } = require("../db/sequelizedb");
+const { DataTypes } = require('sequelize');
+const { sequelize } = require('../db/sequelizedb');
 
 const demo = sequelize.define(
-  "demo",
+  'demo',
   {
     // Model attributes are defined here
     id: {
@@ -34,7 +34,7 @@ const demo = sequelize.define(
       allowNull: false,
     },
   },
-  { timestamps: false, tableName: "demo" }
+  { timestamps: false, tableName: 'demo' },
 );
 
 module.exports = demo;

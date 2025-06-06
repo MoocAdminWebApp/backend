@@ -1,4 +1,4 @@
-const { validationResult } = require("express-validator");
+const { validationResult } = require('express-validator');
 
 const commonValidate = (validations) => {
   return async (req, res, next) => {

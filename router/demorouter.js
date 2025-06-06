@@ -1,10 +1,10 @@
-var express = require("express");
+var express = require('express');
 var router = express.Router();
 
-const { body, query, param } = require("express-validator");
-const { commonValidate } = require("../middleware/expressValidator");
+const { body, query, param } = require('express-validator');
+const { commonValidate } = require('../middleware/expressValidator');
 
-const democontroller = require("../controller/democontroller");
+const democontroller = require('../controller/democontroller');
 
 /**
  * @openapi
@@ -53,9 +53,9 @@ const democontroller = require("../controller/democontroller");
  *        description: Server Error
  */
 router.post(
-  "",
-  commonValidate([body("title").notEmpty().withMessage("Not a valid title")]),
-  democontroller.createAsync
+  '',
+  commonValidate([body('title').notEmpty().withMessage('Not a valid title')]),
+  democontroller.createAsync,
 );
 
 /**
@@ -109,16 +109,16 @@ router.post(
  *        description: Server Error
  */
 router.put(
-  "",
+  '',
   commonValidate([
-    body("id")
+    body('id')
       .notEmpty()
-      .withMessage("id is required")
+      .withMessage('id is required')
       .isInt({ min: 1 })
-      .withMessage("ID must be a valid integer"),
-    body("title").notEmpty().withMessage("Not a valid title"),
+      .withMessage('ID must be a valid integer'),
+    body('title').notEmpty().withMessage('Not a valid title'),
   ]),
-  democontroller.updateAsync
+  democontroller.updateAsync,
 );
 
 /**
@@ -142,7 +142,7 @@ router.put(
  *      500:
  *        description: Server Error
  */
-router.get("/getAll", democontroller.getAllAsync);
+router.get('/getAll', democontroller.getAllAsync);
 
 /**
  * @openapi
@@ -179,19 +179,19 @@ router.get("/getAll", democontroller.getAllAsync);
  *        description: Server Error
  */
 router.get(
-  "/:page/:pageSize",
+  '/:page/:pageSize',
   commonValidate([
-    param("page")
+    param('page')
       .notEmpty()
       .isInt({ allow_leading_zeroes: false, min: 1 })
-      .withMessage("Not a valid page"),
-    param("pageSize")
+      .withMessage('Not a valid page'),
+    param('pageSize')
       .notEmpty()
       .isInt({ allow_leading_zeroes: false, min: 1 })
-      .withMessage("Not a valid pageSize"),
-    query("title").optional().isString().trim().escape(),
+      .withMessage('Not a valid pageSize'),
+    query('title').optional().isString().trim().escape(),
   ]),
-  democontroller.pageAsync
+  democontroller.pageAsync,
 );
 
 /**
@@ -221,14 +221,14 @@ router.get(
  *        description: Server Error
  */
 router.delete(
-  "/:id",
+  '/:id',
   param([
-    param("id")
+    param('id')
       .notEmpty()
       .isInt({ allow_leading_zeroes: false, min: 1 })
-      .withMessage("Not a valid id"),
+      .withMessage('Not a valid id'),
   ]),
-  democontroller.deleteAsync
+  democontroller.deleteAsync,
 );
 
 /**
@@ -258,13 +258,13 @@ router.delete(
  *        description: Server Error
  */
 router.get(
-  "/:id",
+  '/:id',
   param([
-    param("id")
+    param('id')
       .notEmpty()
       .isInt({ allow_leading_zeroes: false, min: 1 })
-      .withMessage("Not a valid id"),
+      .withMessage('Not a valid id'),
   ]),
-  democontroller.getByIdAsync
+  democontroller.getByIdAsync,
 );
 module.exports = router;

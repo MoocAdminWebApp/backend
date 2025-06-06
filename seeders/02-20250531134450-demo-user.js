@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
@@ -14,45 +14,45 @@ module.exports = {
      */
 
     await queryInterface.bulkInsert(
-      "users",
+      'users',
       [
         {
-          email: "alice@example.com",
-          password: "password123",
-          userName: "Alice",
+          email: 'alice@example.com',
+          password: 'password123',
+          userName: 'Alice',
           createdAt: new Date(),
           updatedAt: new Date(),
         },
         {
-          email: "bob@example.com",
-          password: "password456",
-          userName: "Bob",
+          email: 'bob@example.com',
+          password: 'password456',
+          userName: 'Bob',
           createdAt: new Date(),
           updatedAt: new Date(),
         },
         {
-          email: "charlie@example.com",
-          password: "password789",
-          userName: "Charlie",
+          email: 'charlie@example.com',
+          password: 'password789',
+          userName: 'Charlie',
           createdAt: new Date(),
           updatedAt: new Date(),
         },
         {
-          email: "diana@example.com",
-          password: "123password",
-          userName: "Diana",
+          email: 'diana@example.com',
+          password: '123password',
+          userName: 'Diana',
           createdAt: new Date(),
           updatedAt: new Date(),
         },
         {
-          email: "edward@example.com",
-          password: "securePass!",
-          userName: "Edward",
+          email: 'edward@example.com',
+          password: 'securePass!',
+          userName: 'Edward',
           createdAt: new Date(),
           updatedAt: new Date(),
         },
       ],
-      {}
+      {},
     );
   },
 
@@ -63,6 +63,6 @@ module.exports = {
      * Example:
      * await queryInterface.bulkDelete('People', null, {});
      */
-    await queryInterface.bulkDelete("users", null, {});
+    await queryInterface.bulkDelete('users', null, {});
   },
 };

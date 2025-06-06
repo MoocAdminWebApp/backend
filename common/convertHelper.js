@@ -4,9 +4,9 @@
  * @returns
  */
 function stringToBoolean(str) {
-  if (typeof str === "boolean") return str;
-  if (typeof str !== "string") return false;
-  return str.toLowerCase() === "true";
+  if (typeof str === 'boolean') return str;
+  if (typeof str !== 'string') return false;
+  return str.toLowerCase() === 'true';
 }
 
 /**
@@ -27,6 +27,6 @@ function getBase64Extension(base64String) {
     return `.${extension.toLowerCase()}`;
   }
 
-  return ".png";
+  return '.png';
 }
 module.exports = { stringToBoolean, getBase64Extension };

@@ -1,5 +1,5 @@
-const { createClient } = require("redis");
-const { cacheConfig } = require("../../appConfig");
+const { createClient } = require('redis');
+const { cacheConfig } = require('../../appConfig');
 let client;
 const redisClient = async () => {
   if (client) return;
@@ -7,7 +7,7 @@ const redisClient = async () => {
   client = await createClient({
     url: `redis://${cacheConfig.host}:${cacheConfig.port}`,
   })
-    .on("error", (err) => console.log("Redis Client Error", err))
+    .on('error', (err) => console.log('Redis Client Error', err))
     .connect();
 };
 
@@ -20,7 +20,7 @@ const redisClient = async () => {
 const setAsync = async (key, value, ttl = null) => {
   if (!client) await redisClient();
 
-  if (typeof value === "object") {
+  if (typeof value === 'object') {
     value = JSON.stringify(value);
   }
 

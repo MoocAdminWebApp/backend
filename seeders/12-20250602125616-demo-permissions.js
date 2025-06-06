@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
@@ -13,31 +13,31 @@ module.exports = {
      * }], {});
      */
     await queryInterface.bulkInsert(
-      "Permissions",
+      'Permissions',
       [
         {
           id: 1,
-          permissionName:"admin permission",
-          description:"admin's permission",
+          permissionName: 'admin permission',
+          description: "admin's permission",
           createdAt: new Date(),
-          updatedAt:new Date(),
+          updatedAt: new Date(),
         },
         {
           id: 2,
-          permissionName:"teacher permission",
-          description:"teacher's permission",
+          permissionName: 'teacher permission',
+          description: "teacher's permission",
           createdAt: new Date(),
-          updatedAt:new Date(),
+          updatedAt: new Date(),
         },
         {
           id: 3,
-          permissionName:"student permission",
-          description:"student's permission",
+          permissionName: 'student permission',
+          description: "student's permission",
           createdAt: new Date(),
-          updatedAt:new Date(),
+          updatedAt: new Date(),
         },
       ],
-      {}
+      {},
     );
   },
 

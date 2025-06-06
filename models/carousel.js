@@ -1,8 +1,8 @@
-const DataTypes = require("sequelize");
-const { sequelize } = require("../db/sequelizedb");
+const DataTypes = require('sequelize');
+const { sequelize } = require('../db/sequelizedb');
 
 const carousel = sequelize.define(
-  "Carousel",
+  'Carousel',
   {
     // Model attributes are defined here
     id: {
@@ -35,10 +35,10 @@ const carousel = sequelize.define(
     active: {
       type: DataTypes.BOOLEAN,
       defaultValue: true,
-      allowNull: false
-    }
+      allowNull: false,
+    },
   },
-  { timestamps: false, tableName: 'Carousel' }
+  { timestamps: false, tableName: 'Carousel' },
 );
 
 module.exports = carousel;

@@ -1,8 +1,8 @@
-"use strict";
+'use strict';
 
 module.exports = {
-  async up(queryInterface, Sequelize) {
-    await queryInterface.bulkInsert('UserRoles', [
+  up: async (queryInterface, Sequelize) => {
+    await queryInterface.bulkInsert('user_roles', [
       {
         roleId: 1,
         userId: 1,
@@ -13,7 +13,7 @@ module.exports = {
       },
       {
         roleId: 2,
-        userId: 1,
+        userId: 2,
         createBy: 1,
         updateBy: 1,
         createdAt: new Date(),
@@ -23,6 +23,6 @@ module.exports = {
   },
 
   down: async (queryInterface, Sequelize) => {
-    await queryInterface.bulkDelete('UserRoles', null, {});
+    await queryInterface.bulkDelete('user_roles', null, {});
   },
 };

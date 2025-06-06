@@ -1,35 +1,37 @@
 module.exports = (sequelize, DataTypes) => {
-  const RolePermission = sequelize.define("RolePermission", {
-    id: {
+  const RolePermission = sequelize.define(
+    'role_permissions',
+    {
+      id: {
         type: DataTypes.INTEGER,
         primaryKey: true,
         autoIncrement: true,
+      },
+      roleId: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        references: {
+          model: 'roles',
+          key: 'id',
         },
-        roleId: {
-          type: DataTypes.INTEGER,
-          allowNull: false,
-          references: {
-            model: 'Roles',
-            key: 'id',
-          },
-          onUpdate: 'CASCADE',
-          onDelete: 'CASCADE',  
+        onUpdate: 'CASCADE',
+        onDelete: 'CASCADE',
+      },
+      permissionId: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        references: {
+          model: 'permissions',
+          key: 'id',
         },
-        permissionId: {
-          type: DataTypes.INTEGER,
-          allowNull: false,
-          references: {
-            model: 'Permissions',
-            key: 'id',
-          },
-          onUpdate: 'CASCADE',
-          onDelete: 'CASCADE',
-        },
-   createBy: {
+        onUpdate: 'CASCADE',
+        onDelete: 'CASCADE',
+      },
+      createBy: {
         type: DataTypes.INTEGER,
         allowNull: true,
         references: {
-          model: 'Users',
+          model: 'users',
           key: 'id',
         },
         onUpdate: 'CASCADE',
@@ -39,18 +41,18 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.INTEGER,
         allowNull: true,
         references: {
-          model: 'Users',
+          model: 'users',
           key: 'id',
         },
         onUpdate: 'CASCADE',
         onDelete: 'SET NULL',
       },
-  }, {
-    tableName: "RolePermissions",
-    timestamps: false,
-    createdAt: "createdAt",
-    updatedAt: "updatedAt",
-  });
+    },
+    {
+      tableName: 'role_permissions',
+      timestamps: true,
+    },
+  );
 
   return RolePermission;
 };

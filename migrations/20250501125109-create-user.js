@@ -1,8 +1,8 @@
-"use strict";
+'use strict';
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable("users", {
+    await queryInterface.createTable('users', {
       id: {
         allowNull: false,
         autoIncrement: true,
@@ -35,7 +35,7 @@ module.exports = {
         allowNull: true,
       },
       gender: {
-        type: Sequelize.ENUM("Other", "Male", "Female"),
+        type: Sequelize.ENUM('Other', 'Male', 'Female'),
         allowNull: true,
       },
       avatar: {
@@ -43,7 +43,7 @@ module.exports = {
         allowNull: true,
       },
       access: {
-        type: Sequelize.ENUM("admin", "teacher", "student"),
+        type: Sequelize.ENUM('admin', 'teacher', 'student'),
         allowNull: true,
       },
       active: {
@@ -60,9 +60,9 @@ module.exports = {
         allowNull: true,
       },
     });
-    console.log("Table User Created");
+    console.log('Table User Created');
   },
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable("users");
+    await queryInterface.dropTable('users');
   },
 };
