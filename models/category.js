@@ -59,7 +59,7 @@ const Category = sequelize.define(
   },
   {
     timestamps: true,
-    tableName: "Category",
+    tableName: "categories",
   }
 );
 
@@ -74,12 +74,12 @@ Category.associate = models => {
     as: "childCategory",
   });
 
-  Category.belongsTo(models.user, {
+  Category.belongsTo(models.User, {
     foreignKey: "createdBy",
     as: "creator",
   });
 
-  Category.belongsTo(models.user, {
+  Category.belongsTo(models.User, {
     foreignKey: "updatedBy",
     as: "updater",
   });

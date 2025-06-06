@@ -3,7 +3,7 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable("Category", {
+    await queryInterface.createTable("categories", {
       id: {
         type: Sequelize.INTEGER,
         primaryKey: true,
@@ -22,7 +22,7 @@ module.exports = {
         type: Sequelize.INTEGER,
         allowNull: true,
         references: {
-          model: "Category",
+          model: "categories",
           key: "id",
         },
       },
@@ -33,19 +33,23 @@ module.exports = {
       },
       createdBy: {
         type: Sequelize.INTEGER,
-        allowNull: false,
+        allowNull: true,
         references: {
           model: "users",
           key: "id",
         },
+        onUpdate: "CASCADE",
+        onDelete: "SET NULL",
       },
       updatedBy: {
         type: Sequelize.INTEGER,
-        allowNull: false,
+        allowNull: true,
         references: {
           model: "users",
           key: "id",
         },
+        onUpdate: "CASCADE",
+        onDelete: "SET NULL",
       },
       isDeleted: {
         type: Sequelize.BOOLEAN,
@@ -70,6 +74,6 @@ module.exports = {
   },
 
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable("Category");
+    await queryInterface.dropTable("categories");
   },
 };
