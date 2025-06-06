@@ -47,20 +47,18 @@ const CourseOffering = sequelize.define(
     isIn: [[0, 1, 2]],
   },
 },
-    createdAt: {
-      type: DataTypes.DATE,
-      defaultValue: DataTypes.NOW,
-      allowNull: false,
+    createdBy: {
+      type: DataTypes.INTEGER,
+      allowNull: true,
     },
-    updatedAt: {
-      type: DataTypes.DATE,
-      defaultValue: DataTypes.NOW,
-      allowNull: false,
+    updatedBy: {
+      type: DataTypes.INTEGER,
+      allowNull: true,
     },
   },
   {
-    tableName: "CourseOfferings", 
-    timestamps: false,            
+    tableName: "courseOfferings", 
+    timestamps: true,            
   }
 );
 
