@@ -9,7 +9,7 @@ module.exports = {
      * Example:
      * await queryInterface.createTable('users', { id: Sequelize.INTEGER });
      */
-    await queryInterface.changeColumn("CourseOfferings", "status", {
+    await queryInterface.changeColumn("course_offerings", "status", {
       type: Sequelize.STRING,
       allowNull: false,
     });
