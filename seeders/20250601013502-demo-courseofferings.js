@@ -2,7 +2,7 @@
 
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.bulkInsert("CourseOfferings", [
+    await queryInterface.bulkInsert("course_offerings", [
       {
         courseName: "Introduction to Programming",
         teacherName: "Alice Smith",
@@ -12,8 +12,8 @@ module.exports = {
         location: "Room 201",
         schedule: "Monday 9:00-11:00",
         status: 0,
-        createdAt: new Date(),
-        updatedAt: new Date(),
+        createdBy: 1,
+        updatedBy: 1
       },
       {
         courseName: "Advanced Database Systems",
@@ -24,8 +24,8 @@ module.exports = {
         location: "Room 305",
         schedule: "Wednesday 13:00-15:00",
         status: 0,
-        createdAt: new Date(),
-        updatedAt: new Date(),
+        createdBy: 1,
+        updatedBy: 1
       },
       {
         courseName: "Web Development Basics",
@@ -36,13 +36,13 @@ module.exports = {
         location: "Lab A",
         schedule: "Friday 10:00-12:00",
         status: 1,
-        createdAt: new Date(),
-        updatedAt: new Date(),
-      },
+        createdBy: 1,
+        updatedBy: 1
+      }
     ]);
   },
 
   async down(queryInterface, Sequelize) {
-    await queryInterface.bulkDelete("CourseOfferings", null, {});
-  },
+    await queryInterface.bulkDelete('course_offerings', null, {});
+  }
 };

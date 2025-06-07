@@ -40,27 +40,37 @@ const CourseOffering = sequelize.define(
       allowNull: false,
     },
     status: {
+    type: DataTypes.INTEGER,
+    allowNull: false,
+    defaultValue: 0,
+    validate: {
+    isIn: [[0, 1, 2]],
+  },
+},
+    createdBy: {
       type: DataTypes.INTEGER,
-      allowNull: false,
-      defaultValue: 0,
-      validate: {
-        isIn: [[0, 1, 2]],
+      allowNull: true,
+      references: {
+    model: 'users', 
+    key: 'id'
+  },
+  onUpdate: 'CASCADE',
+  onDelete: 'SET NULL',
+    },
+    updatedBy: {
+      type: DataTypes.INTEGER,
+      allowNull: true,
+      references: {
+        model: "users",
+        key: "id",
       },
-    },
-    createdAt: {
-      type: DataTypes.DATE,
-      defaultValue: DataTypes.NOW,
-      allowNull: false,
-    },
-    updatedAt: {
-      type: DataTypes.DATE,
-      defaultValue: DataTypes.NOW,
-      allowNull: false,
+      onUpdate: "CASCADE",
+      onDelete: "SET NULL",
     },
   },
   {
-    tableName: "CourseOfferings",
-    timestamps: false,
+    tableName: "course_offerings", 
+    timestamps: true,            
   }
 );
 
