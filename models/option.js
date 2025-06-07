@@ -28,7 +28,7 @@ const Option = sequelize.define(
       onDelete: "CASCADE",
     },
 		createdBy: {
-			type: Sequelize.INTEGER,
+			type: DataTypes.INTEGER,
 			allowNull: true,
 			references: {
 				model: "users",
@@ -38,7 +38,7 @@ const Option = sequelize.define(
 			onDelete: "SET NULL",
 		},
 		updatedBy: {
-			type: Sequelize.INTEGER,
+			type: DataTypes.INTEGER,
 			allowNull: true,
 			references: {
 				model: "users",

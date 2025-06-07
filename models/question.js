@@ -19,7 +19,7 @@ const Question = sequelize.define(
       allowNull: false,
     },
 		createdBy: {
-			type: Sequelize.INTEGER,
+			type: DataTypes.INTEGER,
 			allowNull: true,
 			references: {
 				model: "users",
@@ -29,7 +29,7 @@ const Question = sequelize.define(
 			onDelete: "SET NULL",
 		},
 		updatedBy: {
-			type: Sequelize.INTEGER,
+			type: DataTypes.INTEGER,
 			allowNull: true,
 			references: {
 				model: "users",
