@@ -18,8 +18,29 @@ const Question = sequelize.define(
       type: DataTypes.TEXT,
       allowNull: false,
     },
+		createdBy: {
+			type: Sequelize.INTEGER,
+			allowNull: true,
+			references: {
+				model: "users",
+				key: "id",
+			},
+			onUpdate: "CASCADE",
+			onDelete: "SET NULL",
+		},
+		updatedBy: {
+			type: Sequelize.INTEGER,
+			allowNull: true,
+			references: {
+				model: "users",
+				key: "id",
+			},
+			onUpdate: "CASCADE",
+			onDelete: "SET NULL",
+		},
   },
-  { timestamps: true, tableName: "Question" }
+  { timestamps: true, 
+		tableName: "questions" }
 );
 
 Question.associate = models => {

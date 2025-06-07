@@ -3,7 +3,7 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable("Question", {
+    await queryInterface.createTable("questions", {
       id: {
         type: Sequelize.INTEGER,
         primaryKey: true,
@@ -18,6 +18,26 @@ module.exports = {
         type: Sequelize.STRING,
         allowNull: false,
       },
+      createdBy: {
+        type: Sequelize.INTEGER,
+        allowNull: true,
+        references: {
+          model: "users",
+          key: "id",
+        },
+        onUpdate: "CASCADE",
+        onDelete: "SET NULL",
+      },
+      updatedBy: {
+        type: Sequelize.INTEGER,
+        allowNull: true,
+        references: {
+          model: "users",
+          key: "id",
+        },
+        onUpdate: "CASCADE",
+        onDelete: "SET NULL",
+      },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE,
@@ -30,10 +50,10 @@ module.exports = {
       },
     });
 
-    console.log("Table Question created");
+    console.log("Table questions created");
   },
 
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable("Question");
+    await queryInterface.dropTable("questions");
   },
 };
