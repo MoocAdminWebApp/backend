@@ -8,7 +8,8 @@
     "reset-db": "sequelize-cli db:migrate:undo:all &&  sequelize-cli db:seed:undo:all  && sequelize-cli db:migrate && sequelize-cli db:seed:all",
     "init-db": "sequelize-cli db:migrate && sequelize-cli db:seed:all",
     "dev": "nodemon server.js",
-    "format": "prettier --write ."
+    "format": "prettier --write .",
+     "test-db:init:test": "NODE_ENV=test sequelize-cli db:create --env test && NODE_ENV=test sequelize-cli db:migrate --env test && NODE_ENV=test sequelize-cli db:seed:all --env test"
   },
   "keywords": [],
   "author": "",
