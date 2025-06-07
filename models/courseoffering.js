@@ -87,4 +87,13 @@ CourseOffering.prototype.toJSON = function () {
   return values;
 };
 
+// 关联题库
+CourseOffering.associate = function(models) {
+  CourseOffering.belongsToMany(models.Question, {
+    through: 'QuestionCourse',
+    foreignKey: 'courseId',
+    otherKey: 'questionId'
+  });
+};
+
 module.exports = CourseOffering;

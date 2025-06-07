@@ -50,7 +50,7 @@ Question.associate = models => {
   });
 
   Question.belongsToMany(models.Course, {
-    through: "CourseQuestion",
+    through: "QuestionCourse",
     foreignKey: "questionId",
     otherKey: "courseId",
   });
