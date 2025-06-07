@@ -3,7 +3,7 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable("Option", {
+    await queryInterface.createTable("options", {
       id: {
         type: Sequelize.INTEGER,
         primaryKey: true,
@@ -22,10 +22,30 @@ module.exports = {
         type: Sequelize.INTEGER,
         allowNull: false,
         references: {
-          model: "Question",
+          model: "questions",
           key: "id",
         },
         onDelete: "CASCADE",
+      },
+      createdBy: {
+        type: Sequelize.INTEGER,
+        allowNull: true,
+        references: {
+          model: "users",
+          key: "id",
+        },
+        onUpdate: "CASCADE",
+        onDelete: "SET NULL",
+      },
+      updatedBy: {
+        type: Sequelize.INTEGER,
+        allowNull: true,
+        references: {
+          model: "users",
+          key: "id",
+        },
+        onUpdate: "CASCADE",
+        onDelete: "SET NULL",
       },
       createdAt: {
         allowNull: false,
@@ -39,10 +59,10 @@ module.exports = {
       },
     });
 
-    console.log("Option Table Created");
+    console.log("Table options created");
   },
 
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable("Option");
+    await queryInterface.dropTable("options");
   },
 };

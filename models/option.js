@@ -22,13 +22,34 @@ const Option = sequelize.define(
       type: DataTypes.INTEGER,
       allowNull: false,
       references: {
-        model: "Question",
+        model: "questions",
         key: "id",
       },
       onDelete: "CASCADE",
     },
+		createdBy: {
+			type: Sequelize.INTEGER,
+			allowNull: true,
+			references: {
+				model: "users",
+				key: "id",
+			},
+			onUpdate: "CASCADE",
+			onDelete: "SET NULL",
+		},
+		updatedBy: {
+			type: Sequelize.INTEGER,
+			allowNull: true,
+			references: {
+				model: "users",
+				key: "id",
+			},
+			onUpdate: "CASCADE",
+			onDelete: "SET NULL",
+		},
   },
-  { timestamps: true, tableName: "Option" }
+  { timestamps: true, 
+		tableName: "options" }
 );
 
 Option.associate = models => {
