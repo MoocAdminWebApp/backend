@@ -12,42 +12,27 @@ module.exports = {
      *   isBetaMember: false
      * }], {});
      */
-
     await queryInterface.bulkInsert(
-      "users",
+      "Permissions",
       [
         {
-          email: "alice@example.com",
-          password: "password123",
-          userName: "Alice",
+          id: 1,
+          permissionName: "admin permission",
+          description: "admin's permission",
           createdAt: new Date(),
           updatedAt: new Date(),
         },
         {
-          email: "bob@example.com",
-          password: "password456",
-          userName: "Bob",
+          id: 2,
+          permissionName: "teacher permission",
+          description: "teacher's permission",
           createdAt: new Date(),
           updatedAt: new Date(),
         },
         {
-          email: "charlie@example.com",
-          password: "password789",
-          userName: "Charlie",
-          createdAt: new Date(),
-          updatedAt: new Date(),
-        },
-        {
-          email: "diana@example.com",
-          password: "123password",
-          userName: "Diana",
-          createdAt: new Date(),
-          updatedAt: new Date(),
-        },
-        {
-          email: "edward@example.com",
-          password: "securePass!",
-          userName: "Edward",
+          id: 3,
+          permissionName: "student permission",
+          description: "student's permission",
           createdAt: new Date(),
           updatedAt: new Date(),
         },
@@ -63,6 +48,6 @@ module.exports = {
      * Example:
      * await queryInterface.bulkDelete('People', null, {});
      */
-    await queryInterface.bulkDelete("users", null, {});
+    await queryInterface.bulkDelete("Permissions", null, {});
   },
 };

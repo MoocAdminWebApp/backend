@@ -1,151 +1,187 @@
-'use strict';
+"use strict";
 
 module.exports = {
   async up(queryInterface, Sequelize) {
     const now = new Date();
 
-    await queryInterface.bulkInsert('Option', [
+    await queryInterface.bulkInsert("options", [
       // Question ID 1 - What is the capital of Australia?
       {
-        content: 'Canberra',
+        content: "Canberra",
         isCorrect: true,
         questionId: 1,
+        createdBy: 4,
+        updatedBy: 4,
         createdAt: now,
-        updatedAt: now
+        updatedAt: now,
       },
       {
-        content: 'Sydney',
+        content: "Sydney",
         isCorrect: false,
         questionId: 1,
+        createdBy: 4,
+        updatedBy: 4,
         createdAt: now,
-        updatedAt: now
+        updatedAt: now,
       },
       {
-        content: 'Melbourne',
+        content: "Melbourne",
         isCorrect: false,
         questionId: 1,
+        createdBy: 4,
+        updatedBy: 4,
         createdAt: now,
-        updatedAt: now
+        updatedAt: now,
       },
 
       // Question ID 2 - Which planet is known as the Red Planet?
       {
-        content: 'Mars',
+        content: "Mars",
         isCorrect: true,
         questionId: 2,
+        createdBy: 4,
+        updatedBy: 4,
         createdAt: now,
-        updatedAt: now
+        updatedAt: now,
       },
       {
-        content: 'Jupiter',
+        content: "Jupiter",
         isCorrect: false,
         questionId: 2,
+        createdBy: 4,
+        updatedBy: 4,
         createdAt: now,
-        updatedAt: now
+        updatedAt: now,
       },
       {
-        content: 'Venus',
+        content: "Venus",
         isCorrect: false,
         questionId: 2,
+        createdBy: 5,
+        updatedBy: 5,
         createdAt: now,
-        updatedAt: now
+        updatedAt: now,
       },
 
       // Question ID 3 - How many continents are there on Earth?
       {
-        content: '7',
+        content: "7",
         isCorrect: true,
         questionId: 3,
+        createdBy: 5,
+        updatedBy: 5,
         createdAt: now,
-        updatedAt: now
+        updatedAt: now,
       },
       {
-        content: '5',
+        content: "5",
         isCorrect: false,
         questionId: 3,
+        createdBy: 5,
+        updatedBy: 5,
         createdAt: now,
-        updatedAt: now
+        updatedAt: now,
       },
       {
-        content: '6',
+        content: "6",
         isCorrect: false,
         questionId: 3,
+        createdBy: 5,
+        updatedBy: 5,
         createdAt: now,
-        updatedAt: now
+        updatedAt: now,
       },
 
       // Question ID 4 - Which of the following are programming languages?
       {
-        content: 'Python',
+        content: "Python",
         isCorrect: true,
         questionId: 4,
+        createdBy: 5,
+        updatedBy: 5,
         createdAt: now,
-        updatedAt: now
+        updatedAt: now,
       },
       {
-        content: 'JavaScript',
+        content: "JavaScript",
         isCorrect: true,
         questionId: 4,
+        createdBy: 5,
+        updatedBy: 5,
         createdAt: now,
-        updatedAt: now
+        updatedAt: now,
       },
       {
-        content: 'HTML',
+        content: "HTML",
         isCorrect: false,
         questionId: 4,
+        createdBy: 1,
+        updatedBy: 1,
         createdAt: now,
-        updatedAt: now
+        updatedAt: now,
       },
 
       // Question ID 5 - Which countries are part of North America?
       {
-        content: 'Canada',
+        content: "Canada",
         isCorrect: true,
         questionId: 5,
+        createdBy: 1,
+        updatedBy: 1,
         createdAt: now,
-        updatedAt: now
+        updatedAt: now,
       },
       {
-        content: 'Mexico',
+        content: "Mexico",
         isCorrect: true,
         questionId: 5,
+        createdBy: 1,
+        updatedBy: 1,
         createdAt: now,
-        updatedAt: now
+        updatedAt: now,
       },
       {
-        content: 'Germany',
+        content: "Germany",
         isCorrect: false,
         questionId: 5,
+        createdBy: 1,
+        updatedBy: 1,
         createdAt: now,
-        updatedAt: now
+        updatedAt: now,
       },
 
       // Question ID 6 - Which animals are mammals?
       {
-        content: 'Whale',
+        content: "Whale",
         isCorrect: true,
         questionId: 6,
+        createdBy: 1,
+        updatedBy: 1,
         createdAt: now,
-        updatedAt: now
+        updatedAt: now,
       },
       {
-        content: 'Dolphin',
+        content: "Dolphin",
         isCorrect: true,
         questionId: 6,
+        createdBy: 1,
+        updatedBy: 1,
         createdAt: now,
-        updatedAt: now
+        updatedAt: now,
       },
       {
-        content: 'Shark',
+        content: "Shark",
         isCorrect: false,
         questionId: 6,
+        createdBy: 2,
+        updatedBy: 2,
         createdAt: now,
-        updatedAt: now
-      }
+        updatedAt: now,
+      },
     ]);
   },
 
   async down(queryInterface, Sequelize) {
-    await queryInterface.bulkDelete('Options', null, {});
-  }
+    await queryInterface.bulkDelete("options", null, {});
+  },
 };

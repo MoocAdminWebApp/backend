@@ -31,21 +31,25 @@ const Category = sequelize.define(
       allowNull: false,
       defaultValue: true,
     },
-    creatorId: {
-      type: DataTypes.INTEGER,
-      allowNull: false,
-      references: {
-        model: "users",
-        key: "id",
-      },
-    },
-    updaterId: {
+    createdBy: {
       type: DataTypes.INTEGER,
       allowNull: true,
       references: {
         model: "users",
         key: "id",
       },
+      onUpdate: "CASCADE",
+      onDelete: "SET NULL",
+    },
+    updatedBy: {
+      type: DataTypes.INTEGER,
+      allowNull: true,
+      references: {
+        model: "users",
+        key: "id",
+      },
+      onUpdate: "CASCADE",
+      onDelete: "SET NULL",
     },
     isDeleted: {
       type: DataTypes.BOOLEAN,
@@ -59,28 +63,28 @@ const Category = sequelize.define(
   },
   {
     timestamps: true,
-    tableName: "Category",
+    tableName: "categories",
   }
 );
 
-Category.associate = (models) => {
+Category.associate = models => {
   Category.belongsTo(models.Category, {
     foreignKey: "parentId",
-    as: "parent",
+    as: "parentCategory",
   });
 
   Category.hasMany(models.Category, {
     foreignKey: "parentId",
-    as: "children",
+    as: "childCategory",
   });
 
-  Category.belongsTo(models.users, {
-    foreignKey: "creatorId",
+  Category.belongsTo(models.User, {
+    foreignKey: "createdBy",
     as: "creator",
   });
 
-  Category.belongsTo(models.users, {
-    foreignKey: "updaterId",
+  Category.belongsTo(models.User, {
+    foreignKey: "updatedBy",
     as: "updater",
   });
 };

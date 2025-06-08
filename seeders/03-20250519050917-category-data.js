@@ -4,7 +4,7 @@
 module.exports = {
   async up(queryInterface, Sequelize) {
     await queryInterface.bulkInsert(
-      "Category",
+      "categories",
       [
         {
           id: 1,
@@ -12,12 +12,10 @@ module.exports = {
           description: "Programming related courses",
           parentId: null,
           isPublic: true,
-          creatorId: 1,
-          updaterId: 1,
+          createdBy: 1,
+          updatedBy: 1,
           isDeleted: false,
           deletedAt: null,
-          createdAt: new Date(),
-          updatedAt: new Date(),
         },
         {
           id: 2,
@@ -25,12 +23,10 @@ module.exports = {
           description: "Frontend development courses",
           parentId: 1,
           isPublic: true,
-          creatorId: 1,
-          updaterId: 1,
+          createdBy: 1,
+          updatedBy: 1,
           isDeleted: false,
           deletedAt: null,
-          createdAt: new Date(),
-          updatedAt: new Date(),
         },
         {
           id: 3,
@@ -38,12 +34,10 @@ module.exports = {
           description: "React framework tutorials",
           parentId: 2,
           isPublic: true,
-          creatorId: 1,
-          updaterId: null,
+          createdBy: 1,
+          updatedBy: 1,
           isDeleted: false,
           deletedAt: null,
-          createdAt: new Date(),
-          updatedAt: new Date(),
         },
         {
           id: 4,
@@ -51,12 +45,10 @@ module.exports = {
           description: "Backend development topics",
           parentId: 1,
           isPublic: true,
-          creatorId: 1,
-          updaterId: null,
+          createdBy: 1,
+          updatedBy: 1,
           isDeleted: false,
           deletedAt: null,
-          createdAt: new Date(),
-          updatedAt: new Date(),
         },
         {
           id: 5,
@@ -64,12 +56,10 @@ module.exports = {
           description: "Deployment and infrastructure",
           parentId: 1,
           isPublic: true,
-          creatorId: 1,
-          updaterId: null,
+          createdBy: 1,
+          updatedBy: 1,
           isDeleted: false,
           deletedAt: null,
-          createdAt: new Date(),
-          updatedAt: new Date(),
         },
         {
           id: 6,
@@ -77,12 +67,10 @@ module.exports = {
           description: "Design and creativity",
           parentId: null,
           isPublic: true,
-          creatorId: 1,
-          updaterId: 1,
+          createdBy: 1,
+          updatedBy: 1,
           isDeleted: false,
           deletedAt: null,
-          createdAt: new Date(),
-          updatedAt: new Date(),
         },
         {
           id: 7,
@@ -90,12 +78,10 @@ module.exports = {
           description: "User interface and experience",
           parentId: 6,
           isPublic: true,
-          creatorId: 1,
-          updaterId: null,
+          createdBy: 1,
+          updatedBy: 1,
           isDeleted: false,
           deletedAt: null,
-          createdAt: new Date(),
-          updatedAt: new Date(),
         },
         {
           id: 8,
@@ -103,12 +89,10 @@ module.exports = {
           description: "Illustration and visual design",
           parentId: 6,
           isPublic: true,
-          creatorId: 1,
-          updaterId: null,
+          createdBy: 1,
+          updatedBy: 1,
           isDeleted: false,
           deletedAt: null,
-          createdAt: new Date(),
-          updatedAt: new Date(),
         },
       ],
       {}
@@ -116,6 +100,6 @@ module.exports = {
   },
 
   async down(queryInterface, Sequelize) {
-    await queryInterface.bulkDelete("Category", null, {});
+    await queryInterface.bulkDelete("categories", null, {});
   },
 };

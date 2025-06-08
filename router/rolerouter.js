@@ -126,4 +126,7 @@ router.put("/:id", roleController.updateRole);
  */
 router.delete("/:id", roleController.deleteRole);
 
+
+router.put("/:id/assign", roleController.assignMenuAndPermission)
+
 module.exports = router;
