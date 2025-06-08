@@ -1,6 +1,13 @@
-module.exports = (sequelize, DataTypes) => {
-  const RolePermission = sequelize.define(
-    "role_permissions",
+const { Model, DataTypes } = require("sequelize");
+
+module.exports = (sequelize) => {
+  class RolePermission extends Model {
+    static associate(models) {
+      // 通常中间表不需要定义关联
+    }
+  }
+
+  RolePermission.init(
     {
       id: {
         type: DataTypes.INTEGER,
@@ -49,6 +56,8 @@ module.exports = (sequelize, DataTypes) => {
       },
     },
     {
+      sequelize,
+      modelName: "RolePermission",
       tableName: "role_permissions",
       timestamps: true,
     }

@@ -1,81 +1,44 @@
-const DataTypes = require("sequelize");
-const { sequelize } = require("../db/sequelizedb");
-
-const Carousel = sequelize.define(
-  "Carousel",
-  {
-    // Model attributes are defined here
-    id: {
-      type: DataTypes.INTEGER,
-      primaryKey: true,
-      autoIncrement: true,
-      allowNull: false,
-    },
-    title: {
-      type: DataTypes.STRING(50),
-      allowNull: false,
-    },
-    description: {
-      type: DataTypes.STRING(255),
-      allowNull: true,
-    },
-    orderNum: {
-      type: DataTypes.INTEGER,
-      allowNull: true,
-      defaultValue: 0,
-    },
-    imageUrl: {
-      type: DataTypes.STRING(500),
-      allowNull: false,
-    },
-    linkUrl: {
-      type: DataTypes.STRING(500),
-      allowNull: true,
-    },
-    active: {
-      type: DataTypes.BOOLEAN,
-      defaultValue: true,
-      allowNull: false,
-    },
-    createdBy: {
+const { DataTypes } = require("sequelize");
+module.exports = (sequelize) => {
+  return sequelize.define(
+    "Carousel",
+    {
+      id: {
+        type: DataTypes.INTEGER,
+        primaryKey: true,
+        autoIncrement: true,
+        allowNull: false,
+      },
+      title: {
+        type: DataTypes.STRING,
+        allowNull: false,
+      },
+      description: {
+        type: DataTypes.STRING,
+        allowNull: true,
+      },
+      orderNum: {
         type: DataTypes.INTEGER,
         allowNull: true,
-        references: {
-        model: "users",
-        key: "id",
-        },
-        onUpdate: "CASCADE",
-        onDelete: "SET NULL",
+        defaultValue: 0,
       },
-    updatedBy: {
-        type: DataTypes.INTEGER,
+      imageUrl: {
+        type: DataTypes.STRING,
+        allowNull: false,
+      },
+      linkUrl: {
+        type: DataTypes.STRING,
         allowNull: true,
-        references: {
-        model: "users",
-        key: "id",
-        },
-        onUpdate: "CASCADE",
-        onDelete: "SET NULL",
       },
-      
-  },
-  { 
-    sequelize,
-    modelName: "Carousel",
-    tableName: "carousel",
-    timestamps: true,
-   }
-);
-
-Carousel.associate = (models) => {
-  Carousel.belongsTo(models.User, {
-    foreignKey: "createdBy",
-    as: "creator",
-  });
-  Carousel.belongsTo(models.User, {
-    foreignKey: "updatedBy",
-    as: "updater",
-  });
+      active: {
+        type: DataTypes.BOOLEAN,
+        defaultValue: true,
+        allowNull: false,
+      },
+    },
+    {
+      timestamps: false,
+      tableName: "carousels",
+    }
+  );
 };
-
-module.exports = Carousel;

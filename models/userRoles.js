@@ -1,6 +1,13 @@
-module.exports = (sequelize, DataTypes) => {
-  const UserRole = sequelize.define(
-    "user_roles",
+const { Model, DataTypes } = require("sequelize");
+
+module.exports = (sequelize) => {
+  class UserRole extends Model {
+    static associate(models) {
+      // 中间表一般不需要单独关联，关联写在 User 和 Role 里即可
+    }
+  }
+
+  UserRole.init(
     {
       id: {
         type: DataTypes.INTEGER,
@@ -49,6 +56,8 @@ module.exports = (sequelize, DataTypes) => {
       },
     },
     {
+      sequelize,
+      modelName: "UserRole",
       tableName: "user_roles",
       timestamps: true,
     }
