@@ -1,7 +1,7 @@
 "use strict";
 const { Model, Sequelize } = require("sequelize");
 module.exports = (sequelize, DataTypes) => {
-  class menu extends Model {
+  class Menu extends Model {
     /**
      * Helper method for defining associations.
      * This method is not a part of Sequelize lifecycle.
@@ -9,14 +9,14 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
-      menu.belongsTo(models.user, { foreignKey: "createdBy", targetKey: "id" });
-      menu.belongsTo(models.user, { foreignKey: "updatedBy", targetKey: "id" });
+      Menu.belongsTo(models.User, { foreignKey: "createdBy", targetKey: "id" });
+      Menu.belongsTo(models.User, { foreignKey: "updatedBy", targetKey: "id" });
 
-      menu.belongsTo(models.menu, { foreignKey: "parentId", as: "parent" });
-      menu.hasMany(models.menu, { foreignKey: "parentId", as: "children" });
+      Menu.belongsTo(models.Menu, { foreignKey: "parentId", as: "parent" });
+      Menu.hasMany(models.Menu, { foreignKey: "parentId", as: "children" });
     }
   }
-  menu.init(
+  Menu.init(
     {
       id: {
         type: DataTypes.INTEGER,
@@ -122,9 +122,9 @@ module.exports = (sequelize, DataTypes) => {
     },
     {
       sequelize,
-      modelName: "menu",
+      modelName: "Menu",
       tableName: "Menus",
     }
   );
-  return menu;
+  return Menu;
 };
