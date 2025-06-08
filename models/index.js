@@ -35,7 +35,8 @@ fs.readdirSync(__dirname)
   })
   .forEach((file) => {
     try {
-      const model = require(path.join(__dirname, file));
+      const modelDefiner = require(path.join(__dirname, file));
+      const model = modelDefiner(sequelize, Sequelize.DataTypes);     
       if (model && model.name) {
         db[model.name] = model;
       } else {
