@@ -1,6 +1,6 @@
 const roleService = require("../service/roleService");
 
-exports.createRole = async (req, res, next) => {
+const createRole = async (req, res, next) => {
   try {
     const role = await roleService.createRole(req.body);
     res.sendCommonValue(201, "Role created", role);
@@ -9,7 +9,7 @@ exports.createRole = async (req, res, next) => {
   }
 };
 
-exports.updateRole = async (req, res, next) => {
+const updateRole = async (req, res, next) => {
   try {
     const role = await roleService.updateRole(req.params.id, req.body);
     res.sendCommonValue(200, "Role updated", role);
@@ -18,7 +18,7 @@ exports.updateRole = async (req, res, next) => {
   }
 };
 
-exports.deleteRole = async (req, res, next) => {
+const deleteRole = async (req, res, next) => {
   try {
     await roleService.deleteRole(req.params.id);
     res.sendCommonValue(200, "Role deleted");
@@ -27,7 +27,7 @@ exports.deleteRole = async (req, res, next) => {
   }
 };
 
-exports.getRoles = async (req, res, next) => {
+const getRoles = async (req, res, next) => {
   try {
     const roles = await roleService.getAllRoles();
     res.json(roles);
@@ -36,7 +36,7 @@ exports.getRoles = async (req, res, next) => {
   }
 };
 
-exports.getRoleById = async (req, res, next) => {
+const getRoleById = async (req, res, next) => {
   try {
     const role = await roleService.getRoleById(req.params.id);
     res.json(role);
@@ -45,7 +45,7 @@ exports.getRoleById = async (req, res, next) => {
   }
 };
 
-exports.assignMenuAndPermission =async (req,res,next)=>{
+const assignMenuAndPermission = async (req, res, next) => {
   const roleId = req.params.id;
   const { menuIds = [], permissionIds = [] } = req.body;
 
@@ -64,6 +64,15 @@ exports.assignMenuAndPermission =async (req,res,next)=>{
     const updatedRole = await roleService.assignMenusAndPermissions(roleId, menuIds, permissionIds);
     return res.status(200).json({ message: "Assigned successfully", data: updatedRole });
   } catch (err) {
-    next(err)
+    next(err);
   }
-}
+};
+
+module.exports = {
+  createRole,
+  updateRole,
+  deleteRole,
+  getRoles,
+  getRoleById,
+  assignMenuAndPermission,
+};
