@@ -1,6 +1,13 @@
-module.exports = (sequelize, DataTypes) => {
-  const RoleMenu = sequelize.define(
-    "RoleMenu",
+const { Model, DataTypes } = require("sequelize");
+
+module.exports = (sequelize) => {
+  class RoleMenu extends Model {
+    static associate(models) {
+      // 中间表通常不需要设置 associate，除非你有特殊需求
+    }
+  }
+
+  RoleMenu.init(
     {
       id: {
         type: DataTypes.INTEGER,
@@ -49,6 +56,8 @@ module.exports = (sequelize, DataTypes) => {
       },
     },
     {
+      sequelize,
+      modelName: "RoleMenu",
       tableName: "role_menus",
       timestamps: true,
     }

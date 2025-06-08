@@ -1,90 +1,88 @@
-const { DataTypes } = require("sequelize");
-const { sequelize } = require("../db/sequelizedb");
-
-const CourseOffering = sequelize.define(
-  "CourseOffering",
-  {
-    id: {
-      type: DataTypes.INTEGER,
-      primaryKey: true,
-      autoIncrement: true,
-      allowNull: false,
-    },
-    courseName: {
-      type: DataTypes.STRING(50),
-      allowNull: false,
-    },
-    teacherName: {
-      type: DataTypes.STRING(40),
-      allowNull: false,
-    },
-    semester: {
-      type: DataTypes.STRING(40),
-      allowNull: false,
-    },
-    capacity: {
-      type: DataTypes.INTEGER,
-      allowNull: false,
-    },
-    enrolledCount: {
-      type: DataTypes.INTEGER,
-      defaultValue: 0,
-      allowNull: false,
-    },
-    location: {
-      type: DataTypes.STRING(50),
-      allowNull: false,
-    },
-    schedule: {
-      type: DataTypes.STRING(50),
-      allowNull: false,
-    },
-    status: {
-    type: DataTypes.INTEGER,
-    allowNull: false,
-    defaultValue: 0,
-    validate: {
-    isIn: [[0, 1, 2]],
-  },
-},
-    createdBy: {
-      type: DataTypes.INTEGER,
-      allowNull: true,
-      references: {
-    model: 'users', 
-    key: 'id'
-  },
-  onUpdate: 'CASCADE',
-  onDelete: 'SET NULL',
-    },
-    updatedBy: {
-      type: DataTypes.INTEGER,
-      allowNull: true,
-      references: {
-        model: "users",
-        key: "id",
+module.exports = (sequelize, DataTypes) => {
+  const CourseOffering = sequelize.define(
+    "CourseOffering",
+    {
+      id: {
+        type: DataTypes.INTEGER,
+        primaryKey: true,
+        autoIncrement: true,
+        allowNull: false,
       },
-      onUpdate: "CASCADE",
-      onDelete: "SET NULL",
+      courseName: {
+        type: DataTypes.STRING(50),
+        allowNull: false,
+      },
+      teacherName: {
+        type: DataTypes.STRING(40),
+        allowNull: false,
+      },
+      semester: {
+        type: DataTypes.STRING(40),
+        allowNull: false,
+      },
+      capacity: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+      },
+      enrolledCount: {
+        type: DataTypes.INTEGER,
+        defaultValue: 0,
+        allowNull: false,
+      },
+      location: {
+        type: DataTypes.STRING(50),
+        allowNull: false,
+      },
+      schedule: {
+        type: DataTypes.STRING(50),
+        allowNull: false,
+      },
+      status: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        defaultValue: 0,
+        validate: {
+          isIn: [[0, 1, 2]],
+        },
+      },
+      createdBy: {
+        type: DataTypes.INTEGER,
+        allowNull: true,
+        references: {
+          model: "users",
+          key: "id",
+        },
+        onUpdate: "CASCADE",
+        onDelete: "SET NULL",
+      },
+      updatedBy: {
+        type: DataTypes.INTEGER,
+        allowNull: true,
+        references: {
+          model: "users",
+          key: "id",
+        },
+        onUpdate: "CASCADE",
+        onDelete: "SET NULL",
+      },
     },
-  },
-  {
-    tableName: "course_offerings", 
-    timestamps: true,            
-  }
-);
+    {
+      tableName: "course_offerings",
+      timestamps: true,
+    }
+  );
 
-CourseOffering.statusLabels = {
-  0: "open",
-  1: "closed",
-  2: "cancelled",
+  CourseOffering.statusLabels = {
+    0: "open",
+    1: "closed",
+    2: "cancelled",
+  };
+
+  CourseOffering.prototype.toJSON = function () {
+    const values = { ...this.get() };
+    values.statusText = CourseOffering.statusLabels[values.status];
+    return values;
+  };
+
+  return CourseOffering;
 };
-
-// 自訂 toJSON 方法，讓回傳時自動加上 statusText
-CourseOffering.prototype.toJSON = function () {
-  const values = { ...this.get() };
-  values.statusText = CourseOffering.statusLabels[values.status];
-  return values;
-};
-
-module.exports = CourseOffering;
