@@ -12,8 +12,8 @@ module.exports = {
           imageUrl: "https://www.notion.so/images/page-cover/nasa_the_blue_marble.jpg",
           linkUrl: "https://example.com/page1",
           active: true,
-          // createdAt: new Date(),
-          // updatedAt: new Date(),
+          createdBy: 1,
+          updatedBy: 1,
         },
         {
           title: "Second Slide",
@@ -22,8 +22,8 @@ module.exports = {
           imageUrl: "https://www.notion.so/images/page-cover/nasa_the_blue_marble.jpg",
           linkUrl: "https://example.com/page2",
           active: true,
-          // createdAt: new Date(),
-          // updatedAt: new Date(),
+          createdBy: 1,
+          updatedBy: 2,   
         },
       ],
       {}
