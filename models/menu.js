@@ -14,6 +14,13 @@ module.exports = (sequelize, DataTypes) => {
 
       Menu.belongsTo(models.Menu, { foreignKey: "parentId", as: "parent" });
       Menu.hasMany(models.Menu, { foreignKey: "parentId", as: "children" });
+      
+      Menu.belongsToMany(models.Role, {
+        foreignKey: "menuId",
+        otherKey: "roleId",
+        through: "role_menus",
+        as: "roles",
+      });
     }
   }
   Menu.init(
