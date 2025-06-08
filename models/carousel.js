@@ -1,7 +1,7 @@
 const DataTypes = require("sequelize");
 const { sequelize } = require("../db/sequelizedb");
 
-const carousel = sequelize.define(
+const Carousel = sequelize.define(
   "Carousel",
   {
     // Model attributes are defined here
@@ -12,11 +12,11 @@ const carousel = sequelize.define(
       allowNull: false,
     },
     title: {
-      type: DataTypes.STRING,
+      type: DataTypes.STRING(50),
       allowNull: false,
     },
     description: {
-      type: DataTypes.STRING,
+      type: DataTypes.STRING(255),
       allowNull: true,
     },
     orderNum: {
@@ -25,11 +25,11 @@ const carousel = sequelize.define(
       defaultValue: 0,
     },
     imageUrl: {
-      type: DataTypes.STRING,
+      type: DataTypes.STRING(500),
       allowNull: false,
     },
     linkUrl: {
-      type: DataTypes.STRING,
+      type: DataTypes.STRING(500),
       allowNull: true,
     },
     active: {
@@ -37,8 +37,45 @@ const carousel = sequelize.define(
       defaultValue: true,
       allowNull: false,
     },
+    createdBy: {
+        type: DataTypes.INTEGER,
+        allowNull: true,
+        references: {
+        model: "users",
+        key: "id",
+        },
+        onUpdate: "CASCADE",
+        onDelete: "SET NULL",
+      },
+    updatedBy: {
+        type: DataTypes.INTEGER,
+        allowNull: true,
+        references: {
+        model: "users",
+        key: "id",
+        },
+        onUpdate: "CASCADE",
+        onDelete: "SET NULL",
+      },
+      
   },
-  { timestamps: false, tableName: "Carousel" }
+  { 
+    sequelize,
+    modelName: "Carousel",
+    tableName: "carousel",
+    timestamps: true,
+   }
 );
 
-module.exports = carousel;
+Carousel.associate = (models) => {
+  Carousel.belongsTo(models.User, {
+    foreignKey: "createdBy",
+    as: "creator",
+  });
+  Carousel.belongsTo(models.User, {
+    foreignKey: "updatedBy",
+    as: "updater",
+  });
+};
+
+module.exports = Carousel;
