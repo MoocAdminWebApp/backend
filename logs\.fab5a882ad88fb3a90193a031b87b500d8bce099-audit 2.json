@@ -1,0 +1,37 @@
+{
+<<<<<<< HEAD
+  "keep": {
+    "days": true,
+    "amount": 14
+  },
+  "auditLog": "logs\\.fab5a882ad88fb3a90193a031b87b500d8bce099-audit.json",
+  "files": [
+    {
+      "date": 1748259740927,
+      "name": "logs/debug_2025-05-26.log",
+      "hash": "de57c2f74a580c1d474fb639a3a7b3adc57585e53d584f7fb6bf28983f1ab426"
+    }
+  ],
+  "hashType": "sha256"
+}
+=======
+    "keep": {
+        "days": true,
+        "amount": 14
+    },
+    "auditLog": "logs\\.fab5a882ad88fb3a90193a031b87b500d8bce099-audit.json",
+    "files": [
+        {
+            "date": 1746454189894,
+            "name": "logs\\debug_2025-05-06.log",
+            "hash": "7381c47f2edf0a1f8587b34816921dbb6097eda1a51f9ff9d28a6ca2971918ba"
+        },
+        {
+            "date": 1747564494978,
+            "name": "logs/debug_2025-05-18.log",
+            "hash": "bb4dd655e5c92c4426769851d9d494ec7cbf7610e76a0aa04976f8e8477dfff9"
+        }
+    ],
+    "hashType": "sha256"
+}
+>>>>>>> 37bdbe3 (feature/course-management: setup database schema with models, migrations, and seeders)

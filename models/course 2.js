@@ -68,18 +68,10 @@ const Course = sequelize.define(
     coverImage: {
       type: DataTypes.STRING,
     },
-    createdBy: {
-      type: DataTypes.INTEGER,
-      allowNull: true,
-    },
-    updatedBy: {
-      type: DataTypes.INTEGER,
-      allowNull: true,
-    },
   },
   {
-    tableName: "courses",
-    timestamps: false,
+    tableName: "course",
+    timestamps: true,
     underscored: true,
   }
 );

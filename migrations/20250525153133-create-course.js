@@ -1,7 +1,5 @@
 "use strict";
 
-const { up } = require("./20250215153133-create-demo");
-
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
@@ -16,11 +14,11 @@ module.exports = {
         type: Sequelize.STRING,
         allowNull: false,
       },
-      categoryId: {
+      category_id: {
         type: Sequelize.INTEGER,
         allowNull: false,
       },
-      instructorId: {
+      instructor_id: {
         type: Sequelize.INTEGER,
         allowNull: false,
       },
@@ -51,7 +49,7 @@ module.exports = {
       description: {
         type: Sequelize.TEXT,
       },
-      enrolmentCount: {
+      enrolment_count: {
         type: Sequelize.INTEGER,
         defaultValue: 0,
       },
@@ -59,7 +57,7 @@ module.exports = {
         type: Sequelize.FLOAT,
         defaultValue: 0,
       },
-      isFeatured: {
+      is_featured: {
         type: Sequelize.BOOLEAN,
         defaultValue: false,
       },
@@ -67,25 +65,37 @@ module.exports = {
         type: Sequelize.ENUM("draft", "published", "updated", "disabled"),
         defaultValue: "draft",
       },
-      coverImage: {
+      cover_image: {
         type: Sequelize.STRING,
+      },
+      createdBy: {
+        type: Sequelize.INTEGER,
+        allowNull: true,
+        onUpdate: "CASCADE",
+        onDelete: "SET NULL",
+      },
+      updatedBy: {
+        type: Sequelize.INTEGER,
+        allowNull: true,
+        onUpdate: "CASCADE",
+        onDelete: "SET NULL",
       },
       created_at: {
         type: Sequelize.DATE,
         allowNull: false,
-        defaultValue: Sequelize.NOW,
+        defaultValue: Sequelize.literal("CURRENT_TIMESTAMP"),
       },
       updated_at: {
         type: Sequelize.DATE,
         allowNull: false,
-        defaultValue: Sequelize.NOW,
+        defaultValue: Sequelize.literal("CURRENT_TIMESTAMP"),
       },
     });
     console.log("Course table created.");
   },
 
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable("Course");
+    await queryInterface.dropTable("courses");
     console.log("Course table dropped.");
   },
 };
