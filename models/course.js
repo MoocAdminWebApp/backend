@@ -78,6 +78,8 @@ const Course = sequelize.define(
     },
   },
   {
+    sequelize,
+    modelName:"Course",
     tableName: "courses",
     timestamps: false,
     underscored: true,
