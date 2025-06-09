@@ -18,6 +18,11 @@ module.exports = {
         type: Sequelize.TEXT,
         allowNull: true,
       },
+      icon: {
+        type: Sequelize.STRING(255),
+        allowNull: true,
+        defaultValue: null,
+      },
       parentId: {
         type: Sequelize.INTEGER,
         allowNull: true,
@@ -71,6 +76,7 @@ module.exports = {
         defaultValue: Sequelize.literal("CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP"),
       },
     });
+    console.log("Table categories Created");
   },
 
   async down(queryInterface, Sequelize) {
