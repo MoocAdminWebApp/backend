@@ -1,64 +1,60 @@
-const { CourseOffering } = require("../models");
+const courseofferingService = require("../service/courseofferingservice");
 
-exports.getAll = async (req, res) => {
-  try {
-    const offerings = await CourseOffering.findAll();
-    res.json(offerings);
-  } catch (err) {
-    res.status(500).json({ error: "Internal server error" });
+const getAll = async (req, res) => {
+  const result = await courseofferingService.getAllAsync();
+  if (result.isSuccess) {
+    res.sendCommonValue(200, "success", result.data);
+  } else {
+    res.sendCommonValue(500, "fail", result.message);
   }
 };
 
-exports.getById = async (req, res) => {
-  try {
-    const offering = await CourseOffering.findByPk(req.params.id);
-    if (!offering) return res.status(404).json({ error: "Not found" });
-    res.json(offering);
-  } catch (err) {
-    res.status(500).json({ error: "Internal server error" });
+const getById = async (req, res) => {
+  const id = req.params.id;
+  const result = await courseofferingService.getByIdAsync(id);
+  if (result.isSuccess) {
+    res.sendCommonValue(200, "success", result.data);
+  } else {
+    res.sendCommonValue(404, "fail", result.message);
   }
 };
 
-exports.create = async (req, res) => {
-  try {
-    const newOffering = await CourseOffering.create(req.body);
-    res.status(201).json(newOffering);
-  } catch (err) {
-    res.status(400).json({ error: "Bad request" });
+const create = async (req, res) => {
+  const payload = req.body;
+  const result = await courseofferingService.createAsync(payload);
+  if (result.isSuccess) {
+    res.sendCommonValue(201, "success", result.data);
+  } else {
+    res.sendCommonValue(400, "fail", result.message);
   }
 };
 
-exports.update = async (req, res) => {
-  try {
-    const offering = await CourseOffering.findByPk(req.params.id);
-    if (!offering) return res.status(404).json({ error: "Not found" });
-
-    await offering.update({
-      courseName: req.body.courseName ?? offering.courseName,
-      teacherName: req.body.teacherName ?? offering.teacherName,
-      semester: req.body.semester ?? offering.semester,
-      capacity: req.body.capacity ?? offering.capacity,
-      enrolledCount: req.body.enrolledCount ?? offering.enrolledCount,
-      location: req.body.location ?? offering.location,
-      schedule: req.body.schedule ?? offering.schedule,
-      status: req.body.status ?? offering.status,
-      updatedBy: req.body.updatedBy ?? offering.updatedBy,
-    });
-
-    res.json(offering);
-  } catch (err) {
-    console.error("Update error:", err);
-    res.status(400).json({ error: "Bad request" });
+const update = async (req, res) => {
+  const id = req.params.id;
+  const payload = req.body;
+  const result = await courseofferingService.updateAsync(id, payload);
+  if (result.isSuccess) {
+    res.sendCommonValue(200, "success", result.data);
+  } else {
+    res.sendCommonValue(result.statusCode || 400, "fail", result.message);
   }
 };
 
-exports.remove = async (req, res) => {
-  try {
-    const offering = await CourseOffering.findByPk(req.params.id);
-    if (!offering) return res.status(404).json({ error: "Not found" });
-    await offering.destroy();
-    res.status(204).send();
-  } catch (err) {
-    res.status(500).json({ error: "Internal server error" });
+const remove = async (req, res) => {
+  const id = req.params.id;
+  const result = await courseofferingService.deleteAsync(id);
+  if (result.isSuccess) {
+    res.sendCommonValue(200, "success", result.data);
+  } else {
+    res.sendCommonValue(result.statusCode || 400, "fail", result.message);
   }
 };
+
+module.exports = {
+  getAll,
+  getById,
+  create,
+  update,
+  remove,
+};
+

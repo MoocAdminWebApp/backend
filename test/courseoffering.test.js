@@ -41,8 +41,8 @@ describe('CourseOffering API CRUD', () => {
     });
 
     expect(res.statusCode).toBe(201);
-    expect(res.body).toHaveProperty('id');
-    createdId = res.body.id;
+    expect(res.body.data).toHaveProperty('id');
+    createdId = res.body.data.id;
   });
 
   test('PUT /api/courseofferings/:id - should update offering', async () => {
@@ -52,26 +52,28 @@ describe('CourseOffering API CRUD', () => {
     });
 
     expect(res.statusCode).toBe(200);
-    expect(res.body.courseName).toBe('Node.js Advanced');
+    expect(res.body.data.courseName).toBe('Node.js Advanced');
   });
 
   test('GET /api/courseofferings - should return all offerings', async () => {
     const res = await request(app).get('/api/courseofferings');
 
     expect(res.statusCode).toBe(200);
-    expect(Array.isArray(res.body)).toBe(true);
-    expect(res.body.length).toBeGreaterThan(0);
+    expect(Array.isArray(res.body.data)).toBe(true);
+    expect(res.body.data.length).toBeGreaterThan(0);
   });
 
   test('GET /api/courseofferings/:id - should return offering by id', async () => {
     const res = await request(app).get(`/api/courseofferings/${createdId}`);
 
     expect(res.statusCode).toBe(200);
-    expect(res.body).toHaveProperty('id', createdId);
+    expect(res.body.data).toHaveProperty('id', createdId);
   });
 
   test('DELETE /api/courseofferings/:id - should delete offering', async () => {
     const res = await request(app).delete(`/api/courseofferings/${createdId}`);
-    expect(res.statusCode).toBe(204);
+    expect(res.statusCode).toBe(200); 
   });
 });
+
+
