@@ -3,45 +3,45 @@ const { Model } = require("sequelize");
 
 module.exports = (sequelize, DataTypes) => {
   class User extends Model {
-    // 建立模型关联
+    // establish associations
     static associate(models) {
-      // 自引用：创建者
+      // reference to self
       User.belongsTo(models.User, {
         foreignKey: "createdBy",
         as: "creator",
       });
 
-      // 自引用：更新者
+      // reference to self
       User.belongsTo(models.User, {
         foreignKey: "updatedBy",
         as: "updater",
       });
 
-      // User 与 Role 多对多通过UserRole关联
+      // User and Role are many-to-many relationship
       User.belongsToMany(models.Role, {
         foreignKey: "userId",
         through: "UserRole",
         as: "roles",
       });
 
-      // User 与 Profile 一对一关联
+      // User and Profile are one-to-one relationship
       User.hasOne(models.Profile, {
         foreignKey: "userId",
         as: "profile",
       });
     }
 
-    // 添加 accessLevel 映射为数字
+    // map access ENUM to number
     get accessNumber() {
       const map = {
-        admin: 1,
-        teacher: 2,
-        student: 3,
+        ADMIN: 1,
+        TEACHER: 2,
+        STUDENT: 3,
       };
       return map[this.access] || 0;
     }
 
-    // 重写 toJSON 以包含 accessLevel
+    // rewrite toJSON to include accessNumber
     toJSON() {
       const values = { ...this.get() };
       values.accessNumber = this.accessNumber;
@@ -55,7 +55,7 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.INTEGER,
         allowNull: false,
         autoIncrement: true,
-        primaryKey: true, //默认就是unique的
+        primaryKey: true, //primarykey is unique by default
       },
       email: {
         type: DataTypes.STRING(255),
@@ -75,7 +75,7 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: false,
       },
       access: {
-        type: DataTypes.ENUM("admin", "teacher", "student"),
+        type: DataTypes.ENUM("ADMIN", "TEACHER", "STUDENT"),
         allowNull: true,
       },
       active: {
