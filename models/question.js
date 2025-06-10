@@ -6,12 +6,22 @@ module.exports = (sequelize, DataTypes) => {
       autoIncrement: true,
     },
     type: {
-      type: DataTypes.ENUM("single", "multiple", "truefalse", "shortanswer"),
+      type: DataTypes.STRING(20),
+      validate: {
+        isIn: [["Single", "Multiple", "TrueFalse", "ShortAnswer"]]
+      },
       allowNull: false,
     },
     content: {
       type: DataTypes.TEXT,
       allowNull: false,
+    },
+    difficulty: {
+      type: DataTypes.STRING(20),
+      validate: {
+        isIn: [["Easy", "Medium", "Hard"]]
+      },
+      allowNull: true,
     },
     createdBy: {
       type: DataTypes.INTEGER,
@@ -44,7 +54,16 @@ module.exports = (sequelize, DataTypes) => {
       onDelete: "CASCADE",
     });
 
-    
+    Question.hasMany(models.StudentAnswer, {
+      foreignKey: "studentAnswerId",
+      onDelete: "CASCADE"
+    })
+
+    Question.belongsToMany(models.QuestionSet, {
+      through: "question_set_questions",
+      foreignKey: "questionId",
+      otherKey: "questionSetId",
+    });
   };
 
   return Question;
