@@ -3,6 +3,7 @@ const express = require("express");
 const path = require("path");
 const appConfig = require("./appConfig");
 const app = express();
+const authRouter = require("./router/authRouter");
 
 //config cors
 const cors = require("cors");
@@ -51,6 +52,9 @@ app.use("/api/roles", roleRoutes);
 //config courseofferingrouter
 const courseofferingrouter = require("./router/courseofferingrouter");
 app.use("/api/courseofferings", courseofferingrouter);
+
+//config authRouter
+app.use("/api", authRouter);
 
 //config erorhandle
 const erorhandle = require("./middleware/errorhandling");
