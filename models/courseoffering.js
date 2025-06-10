@@ -80,9 +80,21 @@ module.exports = (sequelize, DataTypes) => {
 
   CourseOffering.prototype.toJSON = function () {
     const values = { ...this.get() };
-    values.statusText = CourseOffering.statusLabels[values.status];
+    values.statusText = CourseOffering.statusLabels?.[values.status] || null;
     return values;
   };
+  CourseOffering.associate = (models) => {
+    CourseOffering.belongsTo(models.User, {
+      foreignKey: 'createdBy',
+      as: 'creator',
+    });
+
+    CourseOffering.belongsTo(models.User, {
+      foreignKey: 'updatedBy',
+      as: 'updater',
+    });
+  };
+
 
   return CourseOffering;
 };
