@@ -44,11 +44,7 @@ module.exports = (sequelize, DataTypes) => {
       onDelete: "CASCADE",
     });
 
-    Question.belongsToMany(models.CourseOffering, {
-      through: "CourseOffering",
-      foreignKey: "questionId",
-      otherKey: "courseId",
-    });
+    
   };
 
   return Question;
