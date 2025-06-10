@@ -1,7 +1,5 @@
-const { DataTypes } = require("sequelize");
-const { sequelize } = require("../db/sequelizedb");
-
-const CoursePermission = sequelize.define(
+module.exports = (sequelize, DataTypes) => {
+  const CoursePermission = sequelize.define(
   "CoursePermission",
   {
     id: {
@@ -52,7 +50,7 @@ const CoursePermission = sequelize.define(
   }
 );
 
-CoursePermission.associate = function (models) {
+CoursePermission.associate = (models) => {
   CoursePermission.belongsTo(models.Course, { 
     foreignKey: "courseId", 
     as: "course" 
@@ -69,4 +67,5 @@ CoursePermission.associate = function (models) {
   });
 };
 
-module.exports = CoursePermission;
+return CoursePermission;
+};

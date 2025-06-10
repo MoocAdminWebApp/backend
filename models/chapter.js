@@ -38,8 +38,8 @@ module.exports = (sequelize, DataTypes) => {
   Chapter.associate = models => {
     Chapter.belongsTo(models.Course, { foreignKey: 'courseId' });
 
-    Chapter.hasMany(models.Section, { foreignKey: 'chapterId' });
-  };
+  //   Chapter.hasMany(models.Section, { foreignKey: 'chapterId' });
+   };
 
   return Chapter;
 };
