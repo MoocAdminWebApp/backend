@@ -6,7 +6,7 @@ module.exports = (sequelize, DataTypes) => {
       autoIncrement: true
     },
     courseId: {
-      field: 'course_id',
+      field: 'course_Id',
       type: DataTypes.INTEGER,
       allowNull: false
     },

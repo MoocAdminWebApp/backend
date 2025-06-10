@@ -48,6 +48,21 @@ const Media = sequelize.define(
       allowNull: false,
       field: "mediaType",
     },
+    resourceType: {
+      type: DataTypes.ENUM('course', 'chapter', 'section'),
+      allowNull: false,
+      field: "resourceType",
+    },
+    resourceId: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      field: "resourceId",
+    },
+    duration: {
+      type: DataTypes.INTEGER,
+      allowNull: true,
+      field: "duration",
+    },
     duration: {
       type: DataTypes.INTEGER,
       allowNull: true,
@@ -62,6 +77,23 @@ const Media = sequelize.define(
         key: "id",
       },
     },
+    status: {
+      type: DataTypes.ENUM('uploading', 'processing', 'ready', 'error'),
+      allowNull: false,
+      defaultValue: 'uploading',
+      field: "status",
+    },
+    thumbnail: {
+      type: DataTypes.STRING(500),
+      allowNull: true,
+      field: "thumbnail",
+    },
+    isProcessed: {
+      type: DataTypes.BOOLEAN,
+      allowNull: false,
+      defaultValue: false,
+      field: "isProcessed",
+    },
   },
   {
     tableName: "Media",
@@ -72,14 +104,27 @@ const Media = sequelize.define(
 );
 
 Media.associate = function (models) {
-  Media.belongsTo(models.Chapter, { 
-    foreignKey: "chapterId", 
-    as: "chapter" 
+  Media.belongsTo(models.Chapter, {
+    foreignKey: "resourceId",
+    constraints: false,
+    scope: {
+      resourceType: 'chapter'
+    },
+    as: "chapter"
   });
   
-  Media.belongsTo(models.User, { 
-    foreignKey: "uploadedBy", 
-    as: "uploader" 
+  Media.belongsTo(models.Course, {
+    foreignKey: "resourceId", 
+    constraints: false,
+    scope: {
+      resourceType: 'course'
+    },
+    as: "course"
+  });
+
+  Media.belongsTo(models.User, {
+    foreignKey: "uploadedBy",
+    as: "uploader"
   });
 };
 
