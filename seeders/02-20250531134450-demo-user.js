@@ -9,8 +9,8 @@ module.exports = {
 
     const users = [
       {
-        email: "alice@example.com",
-        password: bcrypt.hashSync("password123", saltRounds),
+        email: "alice@gmail.com",
+        password: bcrypt.hashSync("password12", saltRounds),
         firstName: "Alice",
         lastName: "Anderson",
         access: "admin",
@@ -19,8 +19,8 @@ module.exports = {
         updatedBy: null,
       },
       {
-        email: "bob@example.com",
-        password: bcrypt.hashSync("password456", saltRounds),
+        email: "bob@gmail.com",
+        password: bcrypt.hashSync("password34", saltRounds),
         firstName: "Bob",
         lastName: "Brown",
         access: "teacher",
@@ -29,8 +29,8 @@ module.exports = {
         updatedBy: 1,
       },
       {
-        email: "charlie@example.com",
-        password: bcrypt.hashSync("password789", saltRounds),
+        email: "charlie@gmail.com",
+        password: bcrypt.hashSync("password56", saltRounds),
         firstName: "Charlie",
         lastName: "Clark",
         access: "student",
@@ -39,8 +39,8 @@ module.exports = {
         updatedBy: 2,
       },
       {
-        email: "diana@example.com",
-        password: bcrypt.hashSync("123password", saltRounds),
+        email: "diana@gmail.com",
+        password: bcrypt.hashSync("password78", saltRounds),
         firstName: "Diana",
         lastName: "Davis",
         access: "teacher",
@@ -49,8 +49,8 @@ module.exports = {
         updatedBy: 2,
       },
       {
-        email: "edward@example.com",
-        password: bcrypt.hashSync("securePass!", saltRounds),
+        email: "edward@gmail.com",
+        password: bcrypt.hashSync("password90", saltRounds),
         firstName: "Edward",
         lastName: "Evans",
         access: "student",
