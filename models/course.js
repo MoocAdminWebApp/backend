@@ -1,7 +1,5 @@
-const { DataTypes } = require("sequelize");
-const { sequelize } = require("../db/sequelizedb");
-
-const Course = sequelize.define(
+module.exports = (sequelize, DataTypes) => {
+  const Course = sequelize.define(
   "Course",
   {
     id: {
@@ -86,4 +84,5 @@ const Course = sequelize.define(
   }
 );
 
-module.exports = Course;
+return Course;
+};

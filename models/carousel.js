@@ -1,7 +1,5 @@
-const DataTypes = require("sequelize");
-const { sequelize } = require("../db/sequelizedb");
-
-const Carousel = sequelize.define(
+module.exports = (sequelize, DataTypes) => {
+  const Carousel = sequelize.define(
   "Carousel",
   {
     // Model attributes are defined here
@@ -78,4 +76,5 @@ Carousel.associate = (models) => {
   });
 };
 
-module.exports = Carousel;
+return Carousel;
+};

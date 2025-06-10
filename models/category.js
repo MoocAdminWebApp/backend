@@ -1,7 +1,5 @@
-const { DataTypes } = require("sequelize");
-const { sequelize } = require("../db/sequelizedb");
-
-const Category = sequelize.define(
+module.exports = (sequelize, DataTypes) => {
+  const Category = sequelize.define(
   "Category",
   {
     id: {
@@ -89,4 +87,5 @@ Category.associate = models => {
   });
 };
 
-module.exports = Category;
+return Category;
+};

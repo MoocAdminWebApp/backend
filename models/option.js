@@ -1,62 +1,60 @@
-const { DataTypes, DATE } = require("sequelize");
-const { sequelize } = require("../db/sequelizedb");
-
-const Option = sequelize.define(
-  "Option",
-  {
-    id: {
-      type: DataTypes.INTEGER,
-      primaryKey: true,
-      autoIncrement: true,
-      allowNull: false,
-    },
-    content: {
-      type: DataTypes.STRING,
-      allowNull: false,
-    },
-    isCorrect: {
-      type: DataTypes.BOOLEAN,
-      defaultValue: false,
-    },
-    questionId: {
-      type: DataTypes.INTEGER,
-      allowNull: false,
-      references: {
-        model: "questions",
-        key: "id",
+module.exports = (sequelize, DataTypes) => {
+  const Option = sequelize.define(
+    "Option",
+    {
+      id: {
+        type: DataTypes.INTEGER,
+        primaryKey: true,
+        autoIncrement: true,
+        allowNull: false,
       },
-      onDelete: "CASCADE",
+      content: {
+        type: DataTypes.STRING,
+        allowNull: false,
+      },
+      isCorrect: {
+        type: DataTypes.BOOLEAN,
+        defaultValue: false,
+      },
+      questionId: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        references: {
+          model: "questions",
+          key: "id",
+        },
+        onDelete: "CASCADE",
+      },
+      createdBy: {
+        type: DataTypes.INTEGER,
+        allowNull: true,
+        references: {
+          model: "users",
+          key: "id",
+        },
+        onUpdate: "CASCADE",
+        onDelete: "SET NULL",
+      },
+      updatedBy: {
+        type: DataTypes.INTEGER,
+        allowNull: true,
+        references: {
+          model: "users",
+          key: "id",
+        },
+        onUpdate: "CASCADE",
+        onDelete: "SET NULL",
+      },
     },
-		createdBy: {
-			type: Sequelize.INTEGER,
-			allowNull: true,
-			references: {
-				model: "users",
-				key: "id",
-			},
-			onUpdate: "CASCADE",
-			onDelete: "SET NULL",
-		},
-		updatedBy: {
-			type: Sequelize.INTEGER,
-			allowNull: true,
-			references: {
-				model: "users",
-				key: "id",
-			},
-			onUpdate: "CASCADE",
-			onDelete: "SET NULL",
-		},
-  },
-  { timestamps: true, 
-		tableName: "options" }
-);
+    { timestamps: true, tableName: "options" }
+  );
 
-Option.associate = models => {
-  Option.belongsTo(models.Question, {
-    foreignKey: "questionId",
-    onDelete: "CASCADE",
-  });
+  Option.associate = (models) => {
+    Option.belongsTo(models.Question, {
+      foreignKey: "questionId",
+      onDelete: "CASCADE",
+    });
+  };
+
+  return Option;
 };
-
-module.exports = Option;

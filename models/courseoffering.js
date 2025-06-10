@@ -1,7 +1,5 @@
-const { DataTypes } = require("sequelize");
-const { sequelize } = require("../db/sequelizedb");
-
-const CourseOffering = sequelize.define(
+module.exports = (sequelize, DataTypes) => {
+  const CourseOffering = sequelize.define(
   "CourseOffering",
   {
     id: {
@@ -87,4 +85,5 @@ CourseOffering.prototype.toJSON = function () {
   return values;
 };
 
-module.exports = CourseOffering;
+return CourseOffering;
+};
