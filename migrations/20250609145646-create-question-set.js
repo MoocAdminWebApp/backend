@@ -1,22 +1,25 @@
-"use strict";
+'use strict';
 
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
-  async up(queryInterface, Sequelize) {
-    await queryInterface.createTable("questions", {
+  async up (queryInterface, Sequelize) {
+    await queryInterface.createTable("question_sets", {
       id: {
         type: Sequelize.INTEGER,
         primaryKey: true,
         autoIncrement: true,
-        allowNull: false,
       },
-      type: {
-        type: Sequelize.ENUM("single", "multiple", "truefalse", "shortanswer"),
-        allowNull: false,
+      title: {
+        type: Sequelize.STRING(100),
+        allowNull: false
       },
-      content: {
-        type: Sequelize.STRING,
-        allowNull: false,
+      description: {
+        type: Sequelize.TEXT,
+        allowNull: true,
+      },
+      courseId: {
+        type: Sequelize.INTEGER,
+        allowNull: false
       },
       createdBy: {
         type: Sequelize.INTEGER,
@@ -50,10 +53,10 @@ module.exports = {
       },
     });
 
-    console.log("Table questions created");
+    console.log("Table question_sets created");
   },
 
-  async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable("questions");
-  },
+  async down (queryInterface, Sequelize) {
+    await queryInterface.dropTable("question_sets")
+  }
 };

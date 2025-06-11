@@ -3,45 +3,29 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable("course_offerings", {
+    await queryInterface.createTable("options", {
       id: {
-        allowNull: false,
-        autoIncrement: true,
+        type: Sequelize.INTEGER,
         primaryKey: true,
-        type: Sequelize.INTEGER,
-      },
-      courseName: {
-        type: Sequelize.STRING(50),
+        autoIncrement: true,
         allowNull: false,
       },
-      teacherName: {
-        type: Sequelize.STRING(40),
+      content: {
+        type: Sequelize.TEXT,
         allowNull: false,
       },
-      semester: {
-        type: Sequelize.STRING(40),
-        allowNull: false,
+      isCorrect: {
+        type: Sequelize.BOOLEAN,
+        defaultValue: false,
       },
-      capacity: {
+      questionId: {
         type: Sequelize.INTEGER,
         allowNull: false,
-      },
-      enrolledCount: {
-        type: Sequelize.INTEGER,
-        allowNull: false,
-      },
-      location: {
-        type: Sequelize.STRING(50),
-        allowNull: false,
-      },
-      schedule: {
-        type: Sequelize.STRING(50),
-        allowNull: false,
-      },
-      status: {
-        type: Sequelize.INTEGER, // 0=open, 1=closed, 2=cancelled
-        allowNull: false,
-        defaultValue: 0,
+        references: {
+          model: "questions",
+          key: "id",
+        },
+        onDelete: "CASCADE",
       },
       createdBy: {
         type: Sequelize.INTEGER,
@@ -74,17 +58,11 @@ module.exports = {
         defaultValue: Sequelize.literal("CURRENT_TIMESTAMP"),
       },
     });
+
+    console.log("Table options created");
   },
 
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable("course_offerings");
+    await queryInterface.dropTable("options");
   },
 };
-
-
-
-
-
-
-
-

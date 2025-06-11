@@ -3,49 +3,43 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable("options", {
+    await queryInterface.createTable("CoursePermission", {
       id: {
         type: Sequelize.INTEGER,
         primaryKey: true,
         autoIncrement: true,
         allowNull: false,
       },
-      content: {
-        type: Sequelize.STRING,
-        allowNull: false,
-      },
-      isCorrect: {
-        type: Sequelize.BOOLEAN,
-        defaultValue: false,
-      },
-      questionId: {
+      courseId: {
         type: Sequelize.INTEGER,
         allowNull: false,
         references: {
-          model: "questions",
-          key: "id",
+          model: 'Course',
+          key: 'id',
         },
-        onDelete: "CASCADE",
+        onDelete: 'CASCADE',
       },
-      createdBy: {
+      userId: {
         type: Sequelize.INTEGER,
-        allowNull: true,
+        allowNull: false,
         references: {
-          model: "users",
-          key: "id",
+          model: 'User',
+          key: 'id',
         },
-        onUpdate: "CASCADE",
-        onDelete: "SET NULL",
+        onDelete: 'CASCADE',
       },
-      updatedBy: {
+      permission: {
+        type: Sequelize.ENUM("View", "Edit", "Manage", "Admin"),
+        allowNull: false,
+        defaultValue: "View",
+      },
+      grantedBy: {
         type: Sequelize.INTEGER,
-        allowNull: true,
+        allowNull: false,
         references: {
-          model: "users",
-          key: "id",
+          model: 'User',
+          key: 'id',
         },
-        onUpdate: "CASCADE",
-        onDelete: "SET NULL",
       },
       createdAt: {
         allowNull: false,
@@ -53,16 +47,22 @@ module.exports = {
         defaultValue: Sequelize.literal("CURRENT_TIMESTAMP"),
       },
       updatedAt: {
-        allowNull: false,
+        allowNull: true,
         type: Sequelize.DATE,
         defaultValue: Sequelize.literal("CURRENT_TIMESTAMP"),
-      },
+      }
     });
 
-    console.log("Table options created");
+    await queryInterface.addIndex("CoursePermission", {
+      fields: ['courseId', 'userId'],
+      unique: true,
+      name: 'unique_course_user_permission'
+    });
+
+    console.log("Table CoursePermission Created");
   },
 
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable("options");
+    await queryInterface.dropTable("CoursePermission");
   },
 };

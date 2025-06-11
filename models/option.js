@@ -46,7 +46,10 @@ module.exports = (sequelize, DataTypes) => {
         onDelete: "SET NULL",
       },
     },
-    { timestamps: true, tableName: "options" }
+    {
+      timestamps: true,
+      tableName: "options",
+    }
   );
 
   Option.associate = (models) => {

@@ -1,47 +1,34 @@
-"use strict";
+'use strict';
 
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
-  async up(queryInterface, Sequelize) {
-    await queryInterface.createTable("course_offerings", {
+  async up (queryInterface, Sequelize) {
+    await queryInterface.createTable("question_set_questions", {
       id: {
-        allowNull: false,
-        autoIncrement: true,
+        type: Sequelize.INTEGER,
         primaryKey: true,
-        type: Sequelize.INTEGER,
-      },
-      courseName: {
-        type: Sequelize.STRING(50),
+        autoIncrement: true,
         allowNull: false,
       },
-      teacherName: {
-        type: Sequelize.STRING(40),
-        allowNull: false,
-      },
-      semester: {
-        type: Sequelize.STRING(40),
-        allowNull: false,
-      },
-      capacity: {
+      questionSetId: {
         type: Sequelize.INTEGER,
         allowNull: false,
+        reference: {
+          model: "question_sets",
+          key: "id"
+        },
+        onUpdate: "CASCADE",
+        onDelete: "CASCADE",
       },
-      enrolledCount: {
+      questionId: {
         type: Sequelize.INTEGER,
         allowNull: false,
-      },
-      location: {
-        type: Sequelize.STRING(50),
-        allowNull: false,
-      },
-      schedule: {
-        type: Sequelize.STRING(50),
-        allowNull: false,
-      },
-      status: {
-        type: Sequelize.INTEGER, // 0=open, 1=closed, 2=cancelled
-        allowNull: false,
-        defaultValue: 0,
+        reference: {
+          model: "questions",
+          key: "id"
+        },
+        onUpdate: "CASCADE",
+        onDelete: "CASCADE",
       },
       createdBy: {
         type: Sequelize.INTEGER,
@@ -69,22 +56,16 @@ module.exports = {
         defaultValue: Sequelize.literal("CURRENT_TIMESTAMP"),
       },
       updatedAt: {
-        allowNull: false,
+        allowNull: true,
         type: Sequelize.DATE,
         defaultValue: Sequelize.literal("CURRENT_TIMESTAMP"),
       },
     });
+
+    console.log("Table question_sets created");
   },
 
-  async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable("course_offerings");
-  },
+  async down (queryInterface, Sequelize) {
+    await queryInterface.dropTable("question_set_questions")
+  }
 };
-
-
-
-
-
-
-
-

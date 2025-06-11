@@ -27,7 +27,7 @@ module.exports = {
         allowNull: false,
       },
       access: {
-        type: Sequelize.ENUM("admin", "teacher", "student"),
+        type: Sequelize.ENUM("ADMIN", "TEACHER", "STUDENT"),
         allowNull: true,
       },
       active: {
@@ -39,7 +39,7 @@ module.exports = {
         type: Sequelize.INTEGER,
         allowNull: true,
         references: {
-          model: "users", // 自引用
+          model: "users", // reference to self
           key: "id",
         },
         onUpdate: "CASCADE",
@@ -49,7 +49,7 @@ module.exports = {
         type: Sequelize.INTEGER,
         allowNull: true,
         references: {
-          model: "users", // 自引用
+          model: "users", // reference to self
           key: "id",
         },
         onUpdate: "CASCADE",

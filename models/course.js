@@ -1,88 +1,69 @@
 module.exports = (sequelize, DataTypes) => {
   const Course = sequelize.define(
-  "Course",
-  {
-    id: {
-      type: DataTypes.INTEGER,
-      primaryKey: true,
-      autoIncrement: true,
-      allowNull: false,
-    },
-    name: {
-      type: DataTypes.STRING,
-      allowNull: false,
-    },
-    categoryId: {
-      type: DataTypes.INTEGER,
-      allowNull: false,
-    },
-    instructorId: {
-      type: DataTypes.INTEGER,
-      allowNull: false,
-    },
-    price: {
-      type: DataTypes.DECIMAL(10, 2),
-      allowNull: true,
-    },
-    duration: {
-      type: DataTypes.INTEGER,
-      allowNull: false,
-    },
-    level: {
-      type: DataTypes.ENUM("elementary", "intermediate", "advanced"),
-      defaultValue: "elementary",
-    },
-    tags: {
-      type: DataTypes.JSON,
-      allowNull: true,
-    },
-    language: {
-      type: DataTypes.STRING,
-      defaultValue: "English",
-    },
-    certificate: {
-      type: DataTypes.BOOLEAN,
-      defaultValue: false,
-    },
-    description: {
-      type: DataTypes.TEXT,
-    },
-    enrolmentCount: {
-      type: DataTypes.INTEGER,
-      defaultValue: 0,
-    },
-    rating: {
-      type: DataTypes.FLOAT,
-      defaultValue: 0,
-    },
-    isFeatured: {
-      type: DataTypes.BOOLEAN,
-      defaultValue: false,
-    },
-    status: {
-      type: DataTypes.ENUM("draft", "published", "updated", "disabled"),
-      defaultValue: "draft",
-    },
-    coverImage: {
-      type: DataTypes.STRING,
-    },
-    createdBy: {
-      type: DataTypes.INTEGER,
-      allowNull: true,
-    },
-    updatedBy: {
-      type: DataTypes.INTEGER,
-      allowNull: true,
-    },
-  },
-  {
-    sequelize,
-    modelName:"Course",
-    tableName: "courses",
-    timestamps: false,
-    underscored: true,
-  }
-);
+    'Course',
+    {
+      id: {
+        type: DataTypes.INTEGER,
+        primaryKey: true,
+        autoIncrement: true,
+        allowNull: false,
+      },
+      courseName: {
+        type: DataTypes.STRING(200),
+        allowNull: false,
+        validate: {
+          notEmpty: true,
+          len: [1, 200] 
+        }
+      },
+      courseDescription: {
+        type: DataTypes.TEXT,
+        allowNull: true,
+      },
 
-return Course;
+      instructorId: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        references: {
+          model: 'User',
+          key: 'id',
+        },
+      },
+      status: {
+        type: DataTypes.ENUM('Draft', 'Published', 'Archived'),
+        defaultValue: 'Draft',
+        allowNull: false,
+      },
+    },
+    {
+      tableName: 'Courses',
+      timestamps: true,
+      createdAt: 'createdAt',
+      updatedAt: 'updatedAt',
+    }
+  );
+
+  Course.associate = (models) => {
+    Course.belongsTo(models.User, {
+      foreignKey: 'instructorId',
+      as: 'instructor',
+    });
+
+    Course.hasMany(models.Chapter, {
+      foreignKey: 'courseId',
+      as: 'chapters',
+    });
+
+    Course.hasMany(models.CoursePermission, {
+      foreignKey: 'courseId',
+      as: 'permissions',
+    });
+
+    Course.hasMany(models.CourseOffering, {
+      foreignKey: 'courseId',
+      as: 'offerings',
+    });
+  };
+
+  return Course;
 };

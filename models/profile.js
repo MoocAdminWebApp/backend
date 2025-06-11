@@ -4,35 +4,36 @@ const { Model } = require("sequelize");
 module.exports = (sequelize, DataTypes) => {
   class Profile extends Model {
     static associate(models) {
-      // 关联到 User（每个 Profile 属于一个 User）
+      // each profile belongs to one user
       Profile.belongsTo(models.User, {
         foreignKey: "userId",
         as: "user",
       });
 
-      // 创建者（User -> Profile 多个创建记录）
+      // each profile is created by one user
       Profile.belongsTo(models.User, {
         foreignKey: "createdBy",
         as: "creator",
       });
 
-      // 更新者
+      // each profile is updated by one user
       Profile.belongsTo(models.User, {
         foreignKey: "updatedBy",
         as: "updater",
       });
     }
-    // 添加 accessLevel 映射为数字
+    // map gender ENUM to number
     get genderNumber() {
       const map = {
-        male: 1,
-        female: 2,
-        other: 3,
+        MALE: 1,
+        FEMALE: 2,
+        OTHER: 3,
+        PREFER_NOT_TO_SAY: 4
       };
       return map[this.gender] || 0;
     }
 
-    // 重写 toJSON 以包含 genderNumber
+    // rewrite toJSON to include genderNumber
     toJSON() {
       const values = { ...this.get() };
       values.genderNumber = this.genderNumber;
@@ -46,9 +47,8 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.INTEGER,
         allowNull: false,
         autoIncrement: true,
-        primaryKey: true, //默认就是unique的
-      },
-      //对应user表的id
+        primaryKey: true, //primarykey is unique by default
+      },     
       userId: {
         type: DataTypes.INTEGER,
         allowNull: false,
@@ -87,7 +87,7 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: true,
       },
       gender: {
-        type: DataTypes.ENUM("Male", "Female", "Other"),
+        type: DataTypes.ENUM("MALE", "FEMALE", "OTHER","PREFER_NOT_TO_SAY"),
         allowNull: true,
       },
       avatar: {

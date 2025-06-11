@@ -12,7 +12,7 @@ module.exports = {
       userId: {
         type: Sequelize.INTEGER,
         allowNull: false,
-        unique: true, // 每个用户只有一个 Profile
+        unique: true, // each user can only have one profile
         references: {
           model: "users",
           key: "id",
@@ -21,7 +21,7 @@ module.exports = {
         onDelete: "CASCADE",
       },
       countryCode: {
-        type: Sequelize.STRING(5), // 例如 '+86', '+1'
+        type: Sequelize.STRING(5), // e.g. '+86', '+61'
         allowNull: true,
       },
       phoneNumber: {
@@ -53,7 +53,7 @@ module.exports = {
         allowNull: true,
       },
       gender: {
-        type: Sequelize.ENUM("Male", "Female", "Other"),
+        type: Sequelize.ENUM("MALE", "FEMALE", "OTHER", "PREFER_NOT_TO_SAY"),
         allowNull: true,
       },
       avatar: {
@@ -68,7 +68,7 @@ module.exports = {
         type: Sequelize.INTEGER,
         allowNull: true,
         references: {
-          model: "users", // 引用users
+          model: "users", // reference to the "users" table
           key: "id",
         },
         onUpdate: "CASCADE",
@@ -78,7 +78,7 @@ module.exports = {
         type: Sequelize.INTEGER,
         allowNull: true,
         references: {
-          model: "users", // 引用users
+          model: "users", // reference to the "users" table
           key: "id",
         },
         onUpdate: "CASCADE",
