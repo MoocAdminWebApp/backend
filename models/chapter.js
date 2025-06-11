@@ -5,40 +5,70 @@ module.exports = (sequelize, DataTypes) => {
       primaryKey: true,
       autoIncrement: true
     },
-    courseId: {
-      field: 'course_Id',
+     courseId: {
       type: DataTypes.INTEGER,
-      allowNull: false
+      allowNull: false,
+      references: {
+        model: 'Course', 
+        key: 'id',
+      },
     },
     title: {
       type: DataTypes.STRING(255),
-      allowNull: false
+      allowNull: false,
     },
     description: {
       type: DataTypes.TEXT,
-      allowNull: true
+      allowNull: true,
     },
     orderIndex: {
-      field: 'order_index',
       type: DataTypes.INTEGER,
       allowNull: false,
-      defaultValue: 0
+      defaultValue: 0,
     },
     isPublished: {
-      field: 'is_published',
       type: DataTypes.BOOLEAN,
       allowNull: false,
-      defaultValue: false
-    } }, {
+      defaultValue: false,
+    },
+    content: {
+      type: DataTypes.TEXT,
+      allowNull: true,
+    },
+    videoUrl: {
+      type: DataTypes.STRING(500),
+      allowNull: true,
+    },
+    duration: {
+      type: DataTypes.INTEGER, 
+      allowNull: true,
+    },
+    createdBy: {
+      type: DataTypes.INTEGER,
+      allowNull: true,
+      references: {
+        model: 'User',
+        key: 'id',
+      },
+    },
+    updatedBy: {
+      type: DataTypes.INTEGER,
+      allowNull: true,
+      references: {
+        model: 'User',
+        key: 'id',
+      },
+    },
+  }, {
     tableName: 'chapters',
-    underscored: true,
-    timestamps: true  
+    underscored: true, 
+    timestamps: true, 
   });
 
   Chapter.associate = models => {
-    Chapter.belongsTo(models.Course, { foreignKey: 'courseId' });
+    Chapter.belongsTo(models.Course, { foreignKey: 'courseId', as: "course" });
 
-  //   Chapter.hasMany(models.Section, { foreignKey: 'chapterId' });
+   Chapter.hasMany(models.Media, { foreignKey: "chapterId", as: "mediaFiles" });
    };
 
   return Chapter;

@@ -11,23 +11,19 @@ module.exports = (sequelize, DataTypes) => {
       courseName: {
         type: DataTypes.STRING(200),
         allowNull: false,
-        field: 'courseName',
       },
       courseDescription: {
         type: DataTypes.TEXT,
         allowNull: true,
-        field: 'courseDescription',
       },
       courseCode: {
         type: DataTypes.STRING(50),
         allowNull: false,
         unique: true,
-        field: 'courseCode',
       },
       instructorId: {
         type: DataTypes.INTEGER,
         allowNull: false,
-        field: 'instructorId',
         references: {
           model: 'User',
           key: 'id',
@@ -37,7 +33,6 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.ENUM('Draft', 'Published', 'Archived'),
         defaultValue: 'Draft',
         allowNull: false,
-        field: 'status',
       },
     },
     {
@@ -53,12 +48,12 @@ module.exports = (sequelize, DataTypes) => {
       foreignKey: 'instructorId',
       as: 'instructor',
     });
-
+    
     Course.hasMany(models.Chapter, {
       foreignKey: 'courseId',
       as: 'chapters',
     });
-
+    
     Course.hasMany(models.CoursePermission, {
       foreignKey: 'courseId',
       as: 'permissions',
