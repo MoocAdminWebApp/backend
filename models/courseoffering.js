@@ -1,6 +1,6 @@
 module.exports = (sequelize, DataTypes) => {
-  const CoursePermission = sequelize.define(
-    "CoursePermission",
+  const CourseOffering = sequelize.define(
+    'CourseOffering',
     {
       id: {
         type: DataTypes.INTEGER,
@@ -8,87 +8,68 @@ module.exports = (sequelize, DataTypes) => {
         autoIncrement: true,
         allowNull: false,
       },
-      userId: {
+      courseCode: {
+        type: DataTypes.STRING(50),
+        allowNull: false,
+        unique: true,
+        validate: {
+          notEmpty: true,
+          len: [3, 50]
+        }
+      },
+      courseId: {
         type: DataTypes.INTEGER,
         allowNull: false,
         references: {
-          model: 'users', 
+          model: 'Course',
           key: 'id',
         },
-        onUpdate: 'CASCADE',
-        onDelete: 'CASCADE'
       },
-   
-      courseOfferingId: {
+      semester: {
+        type: DataTypes.STRING(20),
+        allowNull: false,
+      },
+      year: {
         type: DataTypes.INTEGER,
         allowNull: false,
-        references: {
-          model: 'course_offerings', 
-          key: 'id',
-        },
-        onUpdate: 'CASCADE',
-        onDelete: 'CASCADE'
       },
-
-      roleId: {
-        type: DataTypes.INTEGER,
-        allowNull: false,
-        references: {
-          model: 'roles', 
-          key: 'id',
-        },
-        onUpdate: 'CASCADE',
-        onDelete: 'RESTRICT' 
-      },
-      enrollmentDate: {
+      startDate: {
         type: DataTypes.DATE,
         allowNull: false,
-        defaultValue: DataTypes.NOW,
       },
-      status: {
-        type: DataTypes.ENUM('Active', 'Inactive', 'Pending', 'Completed', 'Dropped'),
-        defaultValue: 'Pending',
+      endDate: {
+        type: DataTypes.DATE,
         allowNull: false,
       },
-   
+      maxStudents: {
+        type: DataTypes.INTEGER,
+        allowNull: true,
+      },
+      status: {
+        type: DataTypes.ENUM('Planning', 'Open', 'InProgress', 'Completed', 'Cancelled'),
+        defaultValue: 'Planning',
+        allowNull: false,
+      },
     },
     {
-      tableName: 'course_permissions',
+      tableName: 'CourseOfferings',
       timestamps: true,
       createdAt: 'createdAt',
       updatedAt: 'updatedAt',
-      indexes: [
-        {
-          unique: true,
-          fields: ['userId', 'courseOfferingId'],
-          name: 'unique_user_course_offering'
-        },
-        {
-          fields: ['roleId'] 
-        },
-        {
-          fields: ['status']
-        }
-      ]
     }
   );
 
-  CoursePermission.associate = (models) => {
-    CoursePermission.belongsTo(models.User, {
-      foreignKey: 'userId',
-      as: 'user',
+  CourseOffering.associate = (models) => {
+    CourseOffering.belongsTo(models.Course, {
+      foreignKey: 'courseId',
+      as: 'course',
     });
 
-    CoursePermission.belongsTo(models.CourseOffering, {
+    CourseOffering.hasMany(models.CoursePermission, {
       foreignKey: 'courseOfferingId',
-      as: 'courseOffering',
-    });
-
-    CoursePermission.belongsTo(models.Role, {
-      foreignKey: 'roleId',
-      as: 'role',
+      as: 'permissions',
     });
   };
 
-  return CoursePermission;
+  return CourseOffering;
 };
