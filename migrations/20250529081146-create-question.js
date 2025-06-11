@@ -3,45 +3,31 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable("course_offerings", {
+    const now = new Date();
+    
+    await queryInterface.createTable("questions", {
       id: {
-        allowNull: false,
-        autoIncrement: true,
+        type: Sequelize.INTEGER,
         primaryKey: true,
-        type: Sequelize.INTEGER,
+        autoIncrement: true,
       },
-      courseName: {
-        type: Sequelize.STRING(50),
+      type: {
+        type: Sequelize.STRING(20),
+        validate: {
+          isIn: [["Single", "Multiple", "TrueFalse", "ShortAnswer"]]
+        },
         allowNull: false,
       },
-      teacherName: {
-        type: Sequelize.STRING(40),
+      content: {
+        type: Sequelize.TEXT,
         allowNull: false,
       },
-      semester: {
-        type: Sequelize.STRING(40),
-        allowNull: false,
-      },
-      capacity: {
-        type: Sequelize.INTEGER,
-        allowNull: false,
-      },
-      enrolledCount: {
-        type: Sequelize.INTEGER,
-        allowNull: false,
-      },
-      location: {
-        type: Sequelize.STRING(50),
-        allowNull: false,
-      },
-      schedule: {
-        type: Sequelize.STRING(50),
-        allowNull: false,
-      },
-      status: {
-        type: Sequelize.INTEGER, // 0=open, 1=closed, 2=cancelled
-        allowNull: false,
-        defaultValue: 0,
+      difficulty: {
+        type: Sequelize.STRING(20),
+        validate: {
+          isIn: [["Easy", "Medium", "Hard"]]
+        },
+        allowNull: true,
       },
       createdBy: {
         type: Sequelize.INTEGER,
@@ -69,22 +55,16 @@ module.exports = {
         defaultValue: Sequelize.literal("CURRENT_TIMESTAMP"),
       },
       updatedAt: {
-        allowNull: false,
+        allowNull: true,
         type: Sequelize.DATE,
         defaultValue: Sequelize.literal("CURRENT_TIMESTAMP"),
       },
     });
+
+    console.log("Table questions created");
   },
 
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable("course_offerings");
+    await queryInterface.dropTable("questions");
   },
 };
-
-
-
-
-
-
-
-

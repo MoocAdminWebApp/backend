@@ -9,7 +9,7 @@
     "init-db": "sequelize-cli db:migrate && sequelize-cli db:seed:all",
     "dev": "nodemon server.js",
     "format": "prettier --write .",
-     "test-db:init:test": "NODE_ENV=test sequelize-cli db:create --env test && NODE_ENV=test sequelize-cli db:migrate --env test && NODE_ENV=test sequelize-cli db:seed:all --env test"
+    "test-db:init:test": "NODE_ENV=test sequelize-cli db:create --env test && NODE_ENV=test sequelize-cli db:migrate --env test && NODE_ENV=test sequelize-cli db:seed:all --env test"
   },
   "keywords": [],
   "author": "",
@@ -25,7 +25,7 @@
     "jsonwebtoken": "^9.0.2",
     "morgan": "^1.10.0",
     "mysql": "^2.18.1",
-    "mysql2": "^3.9.2",
+    "mysql2": "^3.14.1",
     "node-cache": "^5.1.2",
     "nodemon": "^3.1.9",
     "path-to-regexp": "^8.2.0",
