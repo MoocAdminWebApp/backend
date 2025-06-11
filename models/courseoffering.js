@@ -1,6 +1,6 @@
 module.exports = (sequelize, DataTypes) => {
-  const CourseOffering = sequelize.define(
-    "CourseOffering",
+  const CoursePermission = sequelize.define(
+    "CoursePermission",
     {
       id: {
         type: DataTypes.INTEGER,
@@ -8,81 +8,87 @@ module.exports = (sequelize, DataTypes) => {
         autoIncrement: true,
         allowNull: false,
       },
-      courseName: {
-        type: DataTypes.STRING(50),
-        allowNull: false,
-      },
-      teacherName: {
-        type: DataTypes.STRING(40),
-        allowNull: false,
-      },
-      semester: {
-        type: DataTypes.STRING(40),
-        allowNull: false,
-      },
-      capacity: {
+      userId: {
         type: DataTypes.INTEGER,
         allowNull: false,
+        references: {
+          model: 'users', 
+          key: 'id',
+        },
+        onUpdate: 'CASCADE',
+        onDelete: 'CASCADE'
       },
-      enrolledCount: {
+   
+      courseOfferingId: {
         type: DataTypes.INTEGER,
-        defaultValue: 0,
         allowNull: false,
+        references: {
+          model: 'course_offerings', 
+          key: 'id',
+        },
+        onUpdate: 'CASCADE',
+        onDelete: 'CASCADE'
       },
-      location: {
-        type: DataTypes.STRING(50),
+
+      roleId: {
+        type: DataTypes.INTEGER,
         allowNull: false,
+        references: {
+          model: 'roles', 
+          key: 'id',
+        },
+        onUpdate: 'CASCADE',
+        onDelete: 'RESTRICT' 
       },
-      schedule: {
-        type: DataTypes.STRING(50),
+      enrollmentDate: {
+        type: DataTypes.DATE,
         allowNull: false,
+        defaultValue: DataTypes.NOW,
       },
       status: {
-        type: DataTypes.INTEGER,
+        type: DataTypes.ENUM('Active', 'Inactive', 'Pending', 'Completed', 'Dropped'),
+        defaultValue: 'Pending',
         allowNull: false,
-        defaultValue: 0,
-        validate: {
-          isIn: [[0, 1, 2]],
-        },
       },
-      createdBy: {
-        type: DataTypes.INTEGER,
-        allowNull: true,
-        references: {
-          model: "users",
-          key: "id",
-        },
-        onUpdate: "CASCADE",
-        onDelete: "SET NULL",
-      },
-      updatedBy: {
-        type: DataTypes.INTEGER,
-        allowNull: true,
-        references: {
-          model: "users",
-          key: "id",
-        },
-        onUpdate: "CASCADE",
-        onDelete: "SET NULL",
-      },
+   
     },
     {
-      tableName: "course_offerings",
+      tableName: 'course_permissions',
       timestamps: true,
+      createdAt: 'createdAt',
+      updatedAt: 'updatedAt',
+      indexes: [
+        {
+          unique: true,
+          fields: ['userId', 'courseOfferingId'],
+          name: 'unique_user_course_offering'
+        },
+        {
+          fields: ['roleId'] 
+        },
+        {
+          fields: ['status']
+        }
+      ]
     }
   );
 
-  CourseOffering.statusLabels = {
-    0: "open",
-    1: "closed",
-    2: "cancelled",
+  CoursePermission.associate = (models) => {
+    CoursePermission.belongsTo(models.User, {
+      foreignKey: 'userId',
+      as: 'user',
+    });
+
+    CoursePermission.belongsTo(models.CourseOffering, {
+      foreignKey: 'courseOfferingId',
+      as: 'courseOffering',
+    });
+
+    CoursePermission.belongsTo(models.Role, {
+      foreignKey: 'roleId',
+      as: 'role',
+    });
   };
 
-  CourseOffering.prototype.toJSON = function () {
-    const values = { ...this.get() };
-    values.statusText = CourseOffering.statusLabels[values.status];
-    return values;
-  };
-
-  return CourseOffering;
+  return CoursePermission;
 };

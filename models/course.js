@@ -11,16 +11,16 @@ module.exports = (sequelize, DataTypes) => {
       courseName: {
         type: DataTypes.STRING(200),
         allowNull: false,
+        validate: {
+          notEmpty: true,
+          len: [1, 200] 
+        }
       },
       courseDescription: {
         type: DataTypes.TEXT,
         allowNull: true,
       },
-      courseCode: {
-        type: DataTypes.STRING(50),
-        allowNull: false,
-        unique: true,
-      },
+
       instructorId: {
         type: DataTypes.INTEGER,
         allowNull: false,
@@ -48,15 +48,20 @@ module.exports = (sequelize, DataTypes) => {
       foreignKey: 'instructorId',
       as: 'instructor',
     });
-    
+
     Course.hasMany(models.Chapter, {
       foreignKey: 'courseId',
       as: 'chapters',
     });
-    
+
     Course.hasMany(models.CoursePermission, {
       foreignKey: 'courseId',
       as: 'permissions',
+    });
+
+    Course.hasMany(models.CourseOffering, {
+      foreignKey: 'courseId',
+      as: 'offerings',
     });
   };
 
