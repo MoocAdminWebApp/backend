@@ -1,0 +1,14 @@
+# 忽略日誌檔案
+logs/
+*.log
+
+# 忽略環境變數設定
+.env
+.env.*
+
+# 忽略 node_modules 套件
+node_modules/
+
+# 忽略本機設定
+.DS_Store
+.vscode/
