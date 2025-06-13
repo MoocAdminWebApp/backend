@@ -1,6 +1,6 @@
 module.exports = (sequelize, DataTypes) => {
   const CourseOffering = sequelize.define(
-    'CourseOffering',
+    "CourseOffering",
     {
       id: {
         type: DataTypes.INTEGER,
@@ -8,73 +8,80 @@ module.exports = (sequelize, DataTypes) => {
         autoIncrement: true,
         allowNull: false,
       },
-      courseCode: {
+      courseName: {
         type: DataTypes.STRING(50),
         allowNull: false,
-        unique: true,
-        validate: {
-          notEmpty: true,
-          len: [3, 50]
-        }
       },
-      courseId: {
-        type: DataTypes.INTEGER,
+      teacherName: {
+        type: DataTypes.STRING(40),
         allowNull: false,
-        references: {
-          model: 'Course',
-          key: 'id',
-        },
       },
       semester: {
-        type: DataTypes.STRING(20),
+        type: DataTypes.STRING(40),
         allowNull: false,
       },
-      year: {
+      capacity: {
         type: DataTypes.INTEGER,
         allowNull: false,
       },
-      startDate: {
-        type: DataTypes.DATE,
-        allowNull: false,
-      },
-      endDate: {
-        type: DataTypes.DATE,
-        allowNull: false,
-      },
-      maxStudents: {
+      enrolledCount: {
         type: DataTypes.INTEGER,
-        allowNull: true,
+        defaultValue: 0,
+        allowNull: false,
+      },
+      location: {
+        type: DataTypes.STRING(50),
+        allowNull: false,
+      },
+      schedule: {
+        type: DataTypes.STRING(50),
+        allowNull: false,
       },
       status: {
-        type: DataTypes.ENUM('Planning', 'Open', 'InProgress', 'Completed', 'Cancelled'),
-        defaultValue: 'Planning',
+        type: DataTypes.INTEGER,
         allowNull: false,
+        defaultValue: 0,
+        validate: {
+          isIn: [[0, 1, 2]],
+        },
+      },
+      createdBy: {
+        type: DataTypes.INTEGER,
+        allowNull: true,
+        references: {
+          model: "users",
+          key: "id",
+        },
+        onUpdate: "CASCADE",
+        onDelete: "SET NULL",
+      },
+      updatedBy: {
+        type: DataTypes.INTEGER,
+        allowNull: true,
+        references: {
+          model: "users",
+          key: "id",
+        },
+        onUpdate: "CASCADE",
+        onDelete: "SET NULL",
       },
     },
     {
-      tableName: 'CourseOfferings',
+      tableName: "course_offerings",
       timestamps: true,
-      createdAt: 'createdAt',
-      updatedAt: 'updatedAt',
     }
   );
 
-  CourseOffering.associate = (models) => {
-    CourseOffering.belongsTo(models.Course, {
-      foreignKey: 'courseId',
-      as: 'course',
-    });
+  CourseOffering.statusLabels = {
+    0: "open",
+    1: "closed",
+    2: "cancelled",
+  };
 
-    CourseOffering.hasMany(models.CoursePermission, {
-      foreignKey: 'courseOfferingId',
-      as: 'permissions',
-    });
-    
   CourseOffering.prototype.toJSON = function () {
     const values = { ...this.get() };
     values.statusText = CourseOffering.statusLabels?.[values.status] || null;
     return values;
-
   };
   CourseOffering.associate = (models) => {
     CourseOffering.belongsTo(models.User, {

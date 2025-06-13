@@ -1,10 +1,5 @@
-const { DataTypes } = require("sequelize");
-const { sequelize } = require("../db/sequelizedb");
-
-const demo = sequelize.define(
-  "demo",
-  {
-    // Model attributes are defined here
+module.exports = (sequelize, DataTypes) => {
+  const Demo = sequelize.define("demo", {
     id: {
       type: DataTypes.INTEGER,
       primaryKey: true,
@@ -33,8 +28,10 @@ const demo = sequelize.define(
       defaultValue: DataTypes.NOW,
       allowNull: false,
     },
-  },
-  { timestamps: false, tableName: "demo" }
-);
+  }, {
+    timestamps: false,
+    tableName: "demo",
+  });
 
-module.exports = demo;
+  return Demo;
+};
