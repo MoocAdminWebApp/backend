@@ -4,10 +4,12 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "jest",
     "reset-db": "sequelize-cli db:migrate:undo:all &&  sequelize-cli db:seed:undo:all  && sequelize-cli db:migrate && sequelize-cli db:seed:all",
     "init-db": "sequelize-cli db:migrate && sequelize-cli db:seed:all",
-    "dev": "nodemon server.js"
+    "dev": "nodemon server.js",
+    "format": "prettier --write .",
+    "test-db:init:test": "NODE_ENV=test sequelize-cli db:create --env test && NODE_ENV=test sequelize-cli db:migrate --env test && NODE_ENV=test sequelize-cli db:seed:all --env test"
   },
   "keywords": [],
   "author": "",
@@ -23,7 +25,7 @@
     "jsonwebtoken": "^9.0.2",
     "morgan": "^1.10.0",
     "mysql": "^2.18.1",
-    "mysql2": "^3.9.2",
+    "mysql2": "^3.14.1",
     "node-cache": "^5.1.2",
     "nodemon": "^3.1.9",
     "path-to-regexp": "^8.2.0",
@@ -31,10 +33,14 @@
     "sequelize": "^6.37.5",
     "swagger-jsdoc": "^6.2.8",
     "swagger-ui-express": "^5.0.0",
+    "umzug": "^3.8.2",
     "winston": "^3.11.0",
     "winston-daily-rotate-file": "^5.0.0"
   },
   "devDependencies": {
-    "sequelize-cli": "^6.6.2"
+    "jest": "^29.7.0",
+    "prettier": "^3.5.3",
+    "sequelize-cli": "^6.6.2",
+    "supertest": "^7.1.1"
   }
 }

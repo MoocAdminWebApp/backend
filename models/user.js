@@ -1,70 +1,104 @@
-const { DataTypes } = require("sequelize");
-const { sequelize } = require("../db/sequelizedb");
+"use strict";
+const { Model } = require("sequelize");
 
-const User = sequelize.define(
-  "User",
-  {
-    // Model attributes are defined here
-    id: {
-      type: DataTypes.INTEGER,
-      primaryKey: true,
-      autoIncrement: true,
-      allowNull: false,
-    },
-    userName: {
-      type: DataTypes.STRING,
-      allowNull: false,
-    },
-    email: {
-      type: DataTypes.STRING,
-      //allowNull:false,
-    },
-    phone: {
-      type: DataTypes.STRING,
-      //allowNull:false,
-    },
-    address: {
-      type: DataTypes.STRING,
-      //allowNull:false,
-    },
-    gender: {
-      type: DataTypes.ENUM("Other", "Male", "Female"),
-      get() {
-        const gender = this.getDataValue("gender");
-        const genderoNumber = {
-          Other: 0,
-          Male: 1,
-          Female: 2,
-        };
-        return genderoNumber[gender];
+module.exports = (sequelize, DataTypes) => {
+  class User extends Model {
+    // establish associations
+    static associate(models) {
+      // reference to self
+      User.belongsTo(models.User, {
+        foreignKey: "createdBy",
+        as: "creator",
+      });
+
+      // reference to self
+      User.belongsTo(models.User, {
+        foreignKey: "updatedBy",
+        as: "updater",
+      });
+
+      // User and Role are many-to-many relationship
+      User.belongsToMany(models.Role, {
+        foreignKey: "userId",
+        through: "UserRole",
+        as: "roles",
+      });
+
+      // User and Profile are one-to-one relationship
+      User.hasOne(models.Profile, {
+        foreignKey: "userId",
+        as: "profile",
+      });
+    }
+
+    // map access ENUM to number
+    get accessNumber() {
+      const map = {
+        ADMIN: 1,
+        TEACHER: 2,
+        STUDENT: 3,
+      };
+      return map[this.access] || 0;
+    }
+
+    // rewrite toJSON to include accessNumber
+    toJSON() {
+      const values = { ...this.get() };
+      values.accessNumber = this.accessNumber;
+      return values;
+    }
+  }
+
+  User.init(
+    {
+      id: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        autoIncrement: true,
+        primaryKey: true, //primarykey is unique by default
+      },
+      email: {
+        type: DataTypes.STRING(255),
+        allowNull: false,
+        unique: true,
+      },
+      password: {
+        type: DataTypes.STRING(255),
+        allowNull: false,
+      },
+      firstName: {
+        type: DataTypes.STRING(255),
+        allowNull: false,
+      },
+      lastName: {
+        type: DataTypes.STRING(255),
+        allowNull: false,
+      },
+      access: {
+        type: DataTypes.ENUM("ADMIN", "TEACHER", "STUDENT"),
+        allowNull: true,
+      },
+      active: {
+        type: DataTypes.BOOLEAN,
+        allowNull: false,
+        defaultValue: false,
+      },
+      createdBy: {
+        type: DataTypes.INTEGER,
+        allowNull: true,
+      },
+      updatedBy: {
+        type: DataTypes.INTEGER,
+        allowNull: true,
       },
     },
-    age: {
-      type: DataTypes.INTEGER,
-    },
-    password: {
-      type: DataTypes.STRING,
-      allowNull: true,
-    },
-    avatar: {
-      type: DataTypes.STRING,
-      allowNull: true,
-    },
-  },
-  {
-    tableName: "User",
-    timestamps: true,
-    createdAt: "createdAt",
-    updatedAt: "updatedAt",
-  }
-);
+    {
+      sequelize,
+      modelName: "User",
+      tableName: "users",
+      timestamps: true,
+    }
+  );
 
-User.associate = (models) => {
-  User.belongsToMany(models.Role, {
-    foreignKey: "userId",
-    through: "UserRole",
-    as: "roles",
-  });
+  return User;
 };
-
-module.exports = User;

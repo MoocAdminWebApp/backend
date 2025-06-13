@@ -18,6 +18,27 @@ const options = {
           value: "Bearer <JWT token here>",
         },
       },
+      schemas: {
+        Role: {
+          type: "object",
+          properties: {
+            id: { type: "integer", example: 1 },
+            roleName: { type: "string", example: "admin" },
+            description: { type: "string", example: "Administrator role" },
+            status: { type: "boolean", example: true },
+            createdAt: {
+              type: "string",
+              format: "date-time",
+              example: "2025-05-27T10:00:00Z",
+            },
+            updatedAt: {
+              type: "string",
+              format: "date-time",
+              example: "2025-05-27T10:00:00Z",
+            },
+          },
+        },
+      },
     },
   },
   apis: [path.join(__dirname, "../router/*.js")],

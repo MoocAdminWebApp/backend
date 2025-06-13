@@ -1,0 +1,113 @@
+"use strict";
+
+/** @type {import('sequelize-cli').Migration} */
+module.exports = {
+  async up(queryInterface, Sequelize) {
+    await queryInterface.bulkInsert(
+      "categories",
+      [
+        {
+          id: 1,
+          name: "Programming",
+          description: "Programming related courses",
+          icon: "https://example.com/icons/frontend.png",
+          parentId: null,
+          isPublic: true,
+          createdBy: 1,
+          updatedBy: 1,
+          isDeleted: false,
+          deletedAt: null,
+        },
+        {
+          id: 2,
+          name: "Frontend",
+          description: "Frontend development courses",
+          icon: "https://example.com/icons/frontend.png",
+          parentId: 1,
+          isPublic: true,
+          createdBy: 1,
+          updatedBy: 1,
+          isDeleted: false,
+          deletedAt: null,
+        },
+        {
+          id: 3,
+          name: "React",
+          description: "React framework tutorials",
+          icon: "https://example.com/icons/frontend.png",
+          parentId: 2,
+          isPublic: true,
+          createdBy: 1,
+          updatedBy: 1,
+          isDeleted: false,
+          deletedAt: null,
+        },
+        {
+          id: 4,
+          name: "Backend",
+          description: "Backend development topics",
+          icon: "https://example.com/icons/frontend.png",
+          parentId: 1,
+          isPublic: true,
+          createdBy: 1,
+          updatedBy: 1,
+          isDeleted: false,
+          deletedAt: null,
+        },
+        {
+          id: 5,
+          name: "DevOps",
+          description: "Deployment and infrastructure",
+          icon: "https://example.com/icons/frontend.png",
+          parentId: 1,
+          isPublic: true,
+          createdBy: 1,
+          updatedBy: 1,
+          isDeleted: false,
+          deletedAt: null,
+        },
+        {
+          id: 6,
+          name: "Design",
+          description: "Design and creativity",
+          icon: "https://example.com/icons/frontend.png",
+          parentId: null,
+          isPublic: true,
+          createdBy: 1,
+          updatedBy: 1,
+          isDeleted: false,
+          deletedAt: null,
+        },
+        {
+          id: 7,
+          name: "UI/UX",
+          description: "User interface and experience",
+          icon: "https://example.com/icons/frontend.png",
+          parentId: 6,
+          isPublic: true,
+          createdBy: 1,
+          updatedBy: 1,
+          isDeleted: false,
+          deletedAt: null,
+        },
+        {
+          id: 8,
+          name: "Graphic Design",
+          description: "Illustration and visual design",
+          icon: "https://example.com/icons/frontend.png",
+          parentId: 6,
+          isPublic: true,
+          createdBy: 1,
+          updatedBy: 1,
+          isDeleted: false,
+          deletedAt: null,
+        },
+      ],
+      {}
+    );
+  },
+
+  async down(queryInterface, Sequelize) {
+    await queryInterface.bulkDelete("categories", null, {});
+  },
+};

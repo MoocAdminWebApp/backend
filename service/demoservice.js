@@ -3,10 +3,7 @@ const sequelizeOP = require("../db/sequelizedb");
 const { Op } = require("sequelize");
 const Demo = require("../models/demo");
 const cacheHelper = require("../common/cache/cacheHelper");
-const {
-  EntityAlreadyExistsException,
-  EntityNotFoundException,
-} = require("../common/commonError");
+const { EntityAlreadyExistsException, EntityNotFoundException } = require("../common/commonError");
 /**
  * key
  * @returns all cache key
@@ -47,7 +44,7 @@ const checkTitleExists = async (title, id = null) => {
  * @param {*} demo
  * @returns
  */
-const createAsync = async (demo) => {
+const createAsync = async demo => {
   await checkTitleExists(demo.title);
 
   var newDemo = await Demo.create({
@@ -71,7 +68,7 @@ const createAsync = async (demo) => {
  *
  * @param {*} id
  */
-const checkDemoExists = async (id) => {
+const checkDemoExists = async id => {
   var demo = await Demo.findByPk(id);
   if (!demo) {
     throw new EntityNotFoundException("demo not exists");
@@ -82,7 +79,7 @@ const checkDemoExists = async (id) => {
  *add demo
  * @param {*} demo
  */
-const updateAsync = async (demo) => {
+const updateAsync = async demo => {
   await checkDemoExists(demo.id);
 
   await checkTitleExists(demo.title, demo.id);
@@ -150,7 +147,7 @@ const pageAsync = async (title, page, pageSize) => {
  * @param {*} id
  * @returns
  */
-const deleteAsync = async (id) => {
+const deleteAsync = async id => {
   await checkDemoExists(id);
 
   var deleteDemo = await Demo.destroy({
@@ -159,13 +156,13 @@ const deleteAsync = async (id) => {
   return { isSuccess: true, message: "", data: deleteDemo };
 };
 
-const getByIdAsync = async (id) => {
+const getByIdAsync = async id => {
   var demo = await Demo.findByPk(id);
-  if(!demo){
+  if (!demo) {
     throw new EntityNotFoundException("demo not exists");
   }
   return { isSuccess: true, message: "", data: demo };
-}
+};
 
 module.exports = {
   createAsync,

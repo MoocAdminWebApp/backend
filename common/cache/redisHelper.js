@@ -7,7 +7,7 @@ const redisClient = async () => {
   client = await createClient({
     url: `redis://${cacheConfig.host}:${cacheConfig.port}`,
   })
-    .on("error", (err) => console.log("Redis Client Error", err))
+    .on("error", err => console.log("Redis Client Error", err))
     .connect();
 };
 
@@ -36,7 +36,7 @@ const setAsync = async (key, value, ttl = null) => {
  * @param {*} key
  * @returns
  */
-const getAsync = async (key) => {
+const getAsync = async key => {
   if (!client) await redisClient();
   const value = await client.get(key);
   return value;
@@ -46,7 +46,7 @@ const getAsync = async (key) => {
  * Delete cache based on key
  * @param {*} key
  */
-const delAsync = async (key) => {
+const delAsync = async key => {
   if (!client) await redisClient();
   await client.del(key);
 };
@@ -55,7 +55,7 @@ const delAsync = async (key) => {
  * check key is exists
  * @param {*} key
  */
-const hasAsync = async (key) => {
+const hasAsync = async key => {
   if (!client) await redisClient();
   const result = await client.exists(key);
   return result === 1;

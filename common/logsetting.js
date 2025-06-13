@@ -14,14 +14,16 @@ const logger = winston.createLogger({
       format: format.combine(
         format.timestamp(),
         format.errors({ stack: true }),
-        format.printf((info) => {
+        format.printf(info => {
           const logEntry = {
             timestamp: info.timestamp,
             level: info.level,
             message: info.message,
             ...(info.stack && { stack: info.stack }),
           };
-          return `${JSON.stringify(logEntry)}\n==============================================================\n`;
+          return `${JSON.stringify(
+            logEntry
+          )}\n==============================================================\n`;
         })
       ),
     }),
@@ -33,14 +35,16 @@ const logger = winston.createLogger({
       format: format.combine(
         format.timestamp(),
         format.errors({ stack: true }),
-        format.printf((info) => {
+        format.printf(info => {
           const logEntry = {
             timestamp: info.timestamp,
             level: info.level,
             message: info.message,
             ...(info.stack && { stack: info.stack }),
           };
-          return `${JSON.stringify(logEntry)}\n==============================================================\n`;
+          return `${JSON.stringify(
+            logEntry
+          )}\n==============================================================\n`;
         })
       ),
     }),
@@ -52,14 +56,16 @@ const logger = winston.createLogger({
       format: format.combine(
         format.timestamp(),
         format.errors({ stack: true }),
-        format.printf((info) => {
+        format.printf(info => {
           const logEntry = {
             timestamp: info.timestamp,
             level: info.level,
             message: info.message,
             ...(info.stack && { stack: info.stack }),
           };
-          return `${JSON.stringify(logEntry)}\n==============================================================\n`;
+          return `${JSON.stringify(
+            logEntry
+          )}\n==============================================================\n`;
         })
       ),
     }),
@@ -71,14 +77,16 @@ const logger = winston.createLogger({
       format: format.combine(
         format.timestamp(),
         format.errors({ stack: true }),
-        format.printf((info) => {
+        format.printf(info => {
           const logEntry = {
             timestamp: info.timestamp,
             level: info.level,
             message: info.message,
             ...(info.stack && { stack: info.stack }),
           };
-          return `${JSON.stringify(logEntry)}\n==============================================================\n`;
+          return `${JSON.stringify(
+            logEntry
+          )}\n==============================================================\n`;
         })
       ),
     }),

@@ -1,4 +1,4 @@
-const { mysqlConfig } = require('../appConfig');
+const { mysqlConfig } = require("../appConfig");
 
 module.exports = {
   development: {
@@ -7,6 +7,14 @@ module.exports = {
     username: mysqlConfig.user,
     password: mysqlConfig.password,
     database: mysqlConfig.database,
-    dialect: 'mysql'
-  }
+    dialect: "mysql",
+  },
+  test: {
+    host: mysqlConfig.host,
+    port: mysqlConfig.port,
+    username: mysqlConfig.user,
+    password: mysqlConfig.password,
+    database: mysqlConfig.database,
+    dialect: "mysql",
+  },
 };

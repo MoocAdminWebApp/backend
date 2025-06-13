@@ -15,7 +15,7 @@ const setAsync = async (key, value, ttl = null) => {
   if (typeof value === "object") {
     value = JSON.stringify(value);
   }
-  return new Promise((resolve) => {
+  return new Promise(resolve => {
     const success = nodeCache.set(key, value, ttl);
     resolve(success);
   });
@@ -26,8 +26,8 @@ const setAsync = async (key, value, ttl = null) => {
  * @param {*} key
  * @returns
  */
-const getAsync = async (key) => {
-  return new Promise((resolve) => {
+const getAsync = async key => {
+  return new Promise(resolve => {
     const value = nodeCache.get(key);
     resolve(value);
   });
@@ -37,8 +37,8 @@ const getAsync = async (key) => {
  * Delete cache based on key
  * @param {*} key
  */
-const delAsync = async (key) => {
-  return new Promise((resolve) => {
+const delAsync = async key => {
+  return new Promise(resolve => {
     const value = nodeCache.del(key);
     resolve(value);
   });
@@ -48,8 +48,8 @@ const delAsync = async (key) => {
  * check key is exists
  * @param {*} key
  */
-const hasAsync = async (key) => {
-  return new Promise((resolve) => {
+const hasAsync = async key => {
+  return new Promise(resolve => {
     const success = nodeCache.has(key);
     resolve(success);
   });

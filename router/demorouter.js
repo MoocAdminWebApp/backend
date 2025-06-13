@@ -178,7 +178,8 @@ router.get("/getAll", democontroller.getAllAsync);
  *      500:
  *        description: Server Error
  */
-router.get("/:page/:pageSize",
+router.get(
+  "/:page/:pageSize",
   commonValidate([
     param("page")
       .notEmpty()
@@ -188,7 +189,7 @@ router.get("/:page/:pageSize",
       .notEmpty()
       .isInt({ allow_leading_zeroes: false, min: 1 })
       .withMessage("Not a valid pageSize"),
-      query("title").optional().isString().trim().escape(),
+    query("title").optional().isString().trim().escape(),
   ]),
   democontroller.pageAsync
 );
@@ -229,7 +230,6 @@ router.delete(
   ]),
   democontroller.deleteAsync
 );
-
 
 /**
  * @openapi
