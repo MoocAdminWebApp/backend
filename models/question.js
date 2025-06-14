@@ -51,6 +51,7 @@ module.exports = (sequelize, DataTypes) => {
   Question.associate = models => {
     Question.hasMany(models.Option, {
       foreignKey: "questionId",
+      as: "options",
       onDelete: "CASCADE",
     });
 

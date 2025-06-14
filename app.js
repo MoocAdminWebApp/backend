@@ -84,6 +84,11 @@ app.use("/api/users", userRouter);
 //config authRouter
 app.use("/api", authRouter);
 
+
+//config questionRouter
+const questionRouter = require("./router/questionrouter")
+app.use("/api/question", questionRouter)
+
 //config erorhandle
 const erorhandle = require("./middleware/errorhandling");
 app.use(erorhandle.errorhandling);
