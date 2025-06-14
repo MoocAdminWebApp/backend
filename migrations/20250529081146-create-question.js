@@ -66,5 +66,7 @@ module.exports = {
 
   async down(queryInterface, Sequelize) {
     await queryInterface.dropTable("questions");
+
+    console.log("Table questions dropped");
   },
 };

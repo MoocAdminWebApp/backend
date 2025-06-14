@@ -83,5 +83,7 @@ module.exports = {
 
   async down (queryInterface, Sequelize) {
     await queryInterface.dropTable("student_answers")
+
+    console.log("Table student_answers dropped");
   }
 };
