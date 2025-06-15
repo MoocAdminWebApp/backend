@@ -3,43 +3,43 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable("CoursePermission", {
+    await queryInterface.createTable("Chapter", {
       id: {
         type: Sequelize.INTEGER,
         primaryKey: true,
         autoIncrement: true,
         allowNull: false,
       },
+      chapterTitle: {
+        type: Sequelize.STRING(200),
+        allowNull: false,
+      },
+      chapterDescription: {
+        type: Sequelize.TEXT,
+        allowNull: true,
+      },
       courseId: {
         type: Sequelize.INTEGER,
         allowNull: false,
         references: {
-          model: 'Course',
+          model: 'courses',
           key: 'id',
         },
         onDelete: 'CASCADE',
       },
-      userId: {
+      orderNum: {
         type: Sequelize.INTEGER,
         allowNull: false,
-        references: {
-          model: 'User',
-          key: 'id',
-        },
-        onDelete: 'CASCADE',
+        defaultValue: 0,
       },
-      permission: {
-        type: Sequelize.ENUM("View", "Edit", "Manage", "Admin"),
-        allowNull: false,
-        defaultValue: "View",
+      duration: {
+        type: Sequelize.INTEGER, 
+        allowNull: true,
       },
-      grantedBy: {
-        type: Sequelize.INTEGER,
+      status: {
+        type: Sequelize.ENUM("Draft", "Published", "Hidden"),
+        defaultValue: "Draft",
         allowNull: false,
-        references: {
-          model: 'User',
-          key: 'id',
-        },
       },
       createdAt: {
         allowNull: false,
@@ -52,17 +52,10 @@ module.exports = {
         defaultValue: Sequelize.literal("CURRENT_TIMESTAMP"),
       }
     });
-
-    await queryInterface.addIndex("CoursePermission", {
-      fields: ['courseId', 'userId'],
-      unique: true,
-      name: 'unique_course_user_permission'
-    });
-
-    console.log("Table CoursePermission Created");
+    console.log("Table Chapter Created");
   },
 
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable("CoursePermission");
+    await queryInterface.dropTable("Chapter");
   },
 };

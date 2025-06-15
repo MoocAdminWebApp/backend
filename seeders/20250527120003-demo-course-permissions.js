@@ -6,39 +6,26 @@ module.exports = {
     await queryInterface.bulkInsert(
       "CoursePermission",
       [
-        {
+        { 
+          id: 1,
           courseId: 1,
-          userId: 1,
+          userId: 13,
           permission: "View",
-          grantedBy: 2,
+          grantedBy: 11,
           createdAt: new Date(),
           updatedAt: new Date(),
         },
         
-        {
+        { 
+          id: 2,
           courseId: 1,
-          userId: 2,
+          userId: 11,
           permission: "Admin",
-          grantedBy: 2,
+          grantedBy: 12,
           createdAt: new Date(),
           updatedAt: new Date(),
         },
-        {
-          courseId: 2,
-          userId: 2,
-          permission: "Admin",
-          grantedBy: 2,
-          createdAt: new Date(),
-          updatedAt: new Date(),
-        },
-        {
-          courseId: 3,
-          userId: 2,
-          permission: "Admin",
-          grantedBy: 2,
-          createdAt: new Date(),
-          updatedAt: new Date(),
-        },
+       
       ],
       {}
     );

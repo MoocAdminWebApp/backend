@@ -5,12 +5,14 @@ module.exports = {
   async up(queryInterface, Sequelize) {
 
     await queryInterface.bulkInsert(
-      "Course",
+      "courses",
       [
         {
+          id: 1,
           courseName: "JavaScript",
           courseDescription: "JavaScript",
-          instructorId: 1, 
+          courseCode: "JS001",
+          instructorId: 12, 
           status: "Published",
           createdAt: new Date(),
           updatedAt: new Date(),
@@ -20,6 +22,6 @@ module.exports = {
   },
 
   async down(queryInterface, Sequelize) {
-    await queryInterface.bulkDelete("Course", null, {});
+    await queryInterface.bulkDelete("courses", null, {});
   },
 };

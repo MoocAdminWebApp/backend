@@ -1,6 +1,6 @@
 module.exports = (sequelize, DataTypes) => {
   const Course = sequelize.define(
-    'Course',
+    'courses',
     {
       id: {
         type: DataTypes.INTEGER,
@@ -20,12 +20,16 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.TEXT,
         allowNull: true,
       },
-
+       courseCode: { 
+        type: DataTypes.STRING(50),
+        allowNull: false,
+        unique: true,
+      },
       instructorId: {
         type: DataTypes.INTEGER,
         allowNull: false,
         references: {
-          model: 'User',
+          model: 'users',
           key: 'id',
         },
       },
@@ -36,7 +40,7 @@ module.exports = (sequelize, DataTypes) => {
       },
     },
     {
-      tableName: 'Courses',
+      tableName: 'courses',
       timestamps: true,
       createdAt: 'createdAt',
       updatedAt: 'updatedAt',

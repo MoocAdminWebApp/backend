@@ -3,7 +3,7 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable("Course", {
+    await queryInterface.createTable("courses", {
       id: {
         type: Sequelize.INTEGER,
         primaryKey: true,
@@ -27,7 +27,7 @@ module.exports = {
         type: Sequelize.INTEGER,
         allowNull: false,
         references: {
-          model: 'User',
+          model: 'users',
           key: 'id',
         },
         onDelete: 'CASCADE',
@@ -48,10 +48,10 @@ module.exports = {
         defaultValue: Sequelize.literal("CURRENT_TIMESTAMP"),
       }
     });
-    console.log("Table Course Created");
+    console.log("Table courses Created");
   },
 
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable("Course");
+    await queryInterface.dropTable("courses");
   },
 };

@@ -3,24 +3,23 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-  
     await queryInterface.bulkInsert(
       "Media",
       [
         {
-          chapterId: 1,
-          fileName: "js_intro_video_001.mp4",
-          originalName: "JavaScript简介.mp4",
-          filePath: "/uploads/courses/js001/chapter1/js_intro_video_001.mp4",
+          id: 1,
+          chapterId: 1, 
+          fileName: "js_intro_001.mp4",
+          originalName: "JavaScript Introduction Video.mp4",
+          filePath: "/uploads/courses/js001/chapter1/js_intro_001.mp4",
           fileSize: 125829120, 
           mimeType: "video/mp4",
           mediaType: "Video",
-          duration: 3600,
-          uploadedBy: 2,
+          duration: 1500, 
+          uploadedBy: 12, 
           createdAt: new Date(),
           updatedAt: new Date(),
         },
-    
       ],
       {}
     );

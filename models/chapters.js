@@ -9,22 +9,22 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.INTEGER,
       allowNull: false,
       references: {
-        model: 'Course', 
+        model: 'courses', 
         key: 'id',
       },
     },
-    title: {
+    chapterTitle: {
       type: DataTypes.STRING(255),
       allowNull: false,
     },
-     description: {
+     chapterDescription: {
         type: DataTypes.TEXT,
         allowNull: true,
         validate: {
           len: [0, 1000] 
         }
     },
-    orderIndex: {
+    orderNum: {
       type: DataTypes.INTEGER,
       allowNull: false,
       defaultValue: 0,
@@ -50,7 +50,7 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.INTEGER,
       allowNull: true,
       references: {
-        model: 'User',
+        model: 'user',
         key: 'id',
       },
     },
@@ -58,12 +58,12 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.INTEGER,
       allowNull: true,
       references: {
-        model: 'User',
+        model: 'user',
         key: 'id',
       },
     },
   }, {
-    tableName: 'chapters',
+    tableName: 'chapter',
     underscored: true, 
     timestamps: true, 
   });
