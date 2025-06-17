@@ -1,53 +1,43 @@
-const { login } = require("../service/authService");
-const db = require("../models");
-const bcrypt = require("bcryptjs");
+const request = require("supertest");
+const app = require("../app");
+const { sequelize } = require("../db/sequelizedb");
+const { jwtConfig } = require("../appConfig");
 const jwt = require("jsonwebtoken");
+const { User } = require("../models");
+const bcrypt = require("bcryptjs");
 
-jest.mock("../models", () => ({
-  User: {
-    findOne: jest.fn(),
-  },
-}));
+describe("Log in with a test user", () => {
+  beforeAll(async () => {
+    await sequelize.query("SET FOREIGN_KEY_CHECKS = 0");
+    await sequelize.sync({ force: true }); //clean database need to create a new data item
+    await sequelize.query("SET FOREIGN_KEY_CHECKS = 1");
 
-jest.mock("bcryptjs");
-jest.mock("jsonwebtoken");
-
-describe("login service", () => {
-  const mockUser = {
-    id: 1,
-    email: "alice@example.com",
-    password: "hashed-password",
-  };
-
-  beforeEach(() => {
-    jest.clearAllMocks();
+    await User.create({
+      userName: "alice",
+      email: "alice@example.com",
+      password: await bcrypt.hash("password123", 10),
+      status: true,
+    });
   });
 
-  it("should login successfully", async () => {
-    db.User.findOne.mockResolvedValue(mockUser);
-    bcrypt.compare.mockResolvedValue(true);
-    jwt.sign.mockReturnValue("fake-jwt-token");
-
-    const result = await login("alice@example.com", "password123");
-
-    expect(result.isSuccess).toBe(true);
-    expect(result.data.token).toBe("fake-jwt-token");
-    expect(db.User.findOne).toHaveBeenCalledWith({ where: { email: "alice@example.com" } });
-    expect(bcrypt.compare).toHaveBeenCalledWith("password123", "hashed-password");
+  afterAll(async () => {
+    await sequelize.close();
   });
 
-  it("should fail on invalid password", async () => {
-    db.User.findOne.mockResolvedValue(mockUser);
-    bcrypt.compare.mockResolvedValue(false);
-
-    const result = await login("alice@example.com", "wrong-password");
-
-    expect(result.isSuccess).toBe(false);
-    expect(result.message).toBe("Invalid username or password");
-  });
-
-  it("should throw error if user not found", async () => {
-    db.User.findOne.mockResolvedValue(null);
-    await expect(login("notfound@example.com", "password")).rejects.toThrow("User not exists");
+  test("POST /api/login", async () => {
+    const res = await request(app).post("/api/login").send({
+      userName: "alice@example.com",
+      password: "password123",
+      status: true,
+    });
+    expect(res.statusCode).toBe(200);
+    expect(res.body.data).toHaveProperty("token");
+    expect(typeof res.body.data).toBe("string");
+    expect(res.body.data.length).toBeGreaterThan(10);
+    const decoded = jwt.verify(res.body.data.token, jwtConfig.secret);
+    expect(decoded).toHaveProperty("id");
+    expect(decoded).toHaveProperty("email");
+    expect(decoded).toHaveProperty("userName");
+    expect(decoded).toHaveProperty("roles");
   });
 });

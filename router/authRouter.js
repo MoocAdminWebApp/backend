@@ -1,7 +1,8 @@
 const express = require("express");
 const router = express.Router();
-const authController = require("../controller/authController");
-
+const authController = require("../controller/authcontroller");
+const { commonValidate } = require("../middleware/expressValidator");
+const { body } = require("express-validator");
 /**
  * @swagger
  * tags:
@@ -24,21 +25,29 @@ const authController = require("../controller/authController");
  *             properties:
  *               email:
  *                 type: string
+ *                 default: "alice@example.com"
  *               password:
  *                 type: string
+ *                 default: "password123"
  *     responses:
- *       200:
- *         description: Login successful
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 message:
- *                   type: string
- *                 user:
- *                   $ref: '#/components/schemas/User'
+ *      200:
+ *        description: login Successfully
+ *      400:
+ *        description: Bad Request
+ *      401:
+ *        description: Unauthorized
+ *      404:
+ *        description: Not Found
+ *      500:
+ *        description: Server Error
  */
-router.post("/login", authController.loginUser);
+router.post(
+  "/login",
+  commonValidate([
+    body("email").isEmail().withMessage("Please enter a valid email"),
+    body("password").isLength({ min: 6 }).withMessage("Password must be at least 6 characters"),
+  ]),
+  authController.loginUser
+);
 
 module.exports = router;

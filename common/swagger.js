@@ -5,9 +5,9 @@ const options = {
   definition: {
     openapi: "3.0.0",
     info: {
-      title: "mk api",
+      title: "MOOC25 API",
       version: "1.0.0",
-      description: `only has user apis and will add more`,
+      description: `include all APIs of MOOC25`,
     },
     components: {
       securitySchemes: {
