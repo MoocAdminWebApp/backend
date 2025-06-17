@@ -44,15 +44,15 @@ module.exports = {
         defaultValue: 0,
       },
       courseId: {
-      type: Sequelize.INTEGER,
-      allowNull: true,
-      references: {
-      model: 'courses',
-      key: 'id',
-     },
-     onUpdate: 'CASCADE',
-     onDelete: 'SET NULL',
-       },
+        type: Sequelize.INTEGER,
+        allowNull: true,
+        references: {
+          model: "courses",
+          key: "id",
+        },
+        onUpdate: "CASCADE",
+        onDelete: "SET NULL",
+      },
       createdBy: {
         type: Sequelize.INTEGER,
         allowNull: true,
@@ -90,11 +90,3 @@ module.exports = {
     await queryInterface.dropTable("course_offerings");
   },
 };
-
-
-
-
-
-
-
-
