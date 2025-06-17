@@ -33,4 +33,7 @@ module.exports = {
     host: process.env.REDIS_HOST,
     port: process.env.REDIS_PORT,
   },
+  cookieConfig: {
+    maxAge: parseInt(process.env.COOKIE_MAX_AGE, 10),
+  },
 };

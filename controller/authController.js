@@ -1,15 +1,15 @@
 const authService = require("../service/authService");
-
+const { cookieConfig } = require("../appConfig");
 const loginUser = async (req, res) => {
   const { email, password } = req.body;
   try {
     const result = await authService.login(email, password);
-    const { token } = result.data;
+    const token = result.data;
     res.cookie("token", token, {
       httpOnly: true,
-      secure: false,
-      sameSite: "strict",
-      maxAge: 3600000 * 24,
+      secure: false, // Set to true if using HTTPS
+      sameSite: "strict", //prevent CSRF attack
+      maxAge: cookieConfig.maxAge,
     });
     res.sendCommonValue(200, "success", result.data);
   } catch (err) {
