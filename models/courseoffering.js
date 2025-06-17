@@ -45,6 +45,16 @@ module.exports = (sequelize, DataTypes) => {
           isIn: [[0, 1, 2]],
         },
       },
+      courseId: {
+  type: DataTypes.INTEGER,
+  allowNull: true,
+  references: {
+    model: 'Courses',
+    key: 'id',
+  },
+  onUpdate: 'CASCADE',
+  onDelete: 'SET NULL',
+},
       createdBy: {
         type: DataTypes.INTEGER,
         allowNull: true,
@@ -93,6 +103,10 @@ module.exports = (sequelize, DataTypes) => {
       foreignKey: 'updatedBy',
       as: 'updater',
     });
+    CourseOffering.belongsTo(models.Course, {
+     foreignKey: 'courseId',
+     as: 'course',
+   });
   };
 
 

@@ -43,6 +43,16 @@ module.exports = {
         allowNull: false,
         defaultValue: 0,
       },
+      courseId: {
+      type: Sequelize.INTEGER,
+      allowNull: true,
+      references: {
+      model: 'Course',
+      key: 'id',
+     },
+     onUpdate: 'CASCADE',
+     onDelete: 'SET NULL',
+       },
       createdBy: {
         type: Sequelize.INTEGER,
         allowNull: true,

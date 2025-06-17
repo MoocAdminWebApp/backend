@@ -13,7 +13,8 @@ module.exports = {
         schedule: "Monday 9:00-11:00",
         status: 0,
         createdBy: 1,
-        updatedBy: 1
+        updatedBy: 1,
+        courseId: 1
       },
       {
         courseName: "Advanced Database Systems",
@@ -25,7 +26,8 @@ module.exports = {
         schedule: "Wednesday 13:00-15:00",
         status: 0,
         createdBy: 1,
-        updatedBy: 1
+        updatedBy: 1,
+        courseId: 1
       },
       {
         courseName: "Web Development Basics",
@@ -37,7 +39,8 @@ module.exports = {
         schedule: "Friday 10:00-12:00",
         status: 1,
         createdBy: 1,
-        updatedBy: 1
+        updatedBy: 1,
+        courseId: 1
       }
     ]);
   },
