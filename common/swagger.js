@@ -66,6 +66,31 @@ const options = {
             },
           },
         },
+        QuestionInput: {
+          type: "object",
+          required: ["type", "content"],
+          properties: {
+            id: {
+              type: "integer",
+              example: 1,
+            },
+            type: {
+              type: "string",
+              enum: ["Single", "Multiple", "TrueFalse", "ShortAnswer"],
+              example: "Single",
+              description: "The question type, needs to be one of : Single, Multiple, TrueFalse, ShortAnswer"
+            },
+            content: {
+              type: "string",
+              example: "Which HTML tag is used to insert a line break"
+            },
+            difficulty: {
+              type: "string",
+              enum: ["Easy", "Medium", "Hard"],
+              example: "Easy"
+            },
+          },
+        },
       },
     },
   },
