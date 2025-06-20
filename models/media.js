@@ -12,7 +12,7 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.INTEGER,
         allowNull: false,
         references: {
-          model: "Chapter",
+          model: "chapters",
           key: "id",
         },
       },
@@ -37,11 +37,11 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: false,
       },
       mediaType: {
-        type: DataTypes.ENUM("Video", "Document"),
+        type: DataTypes.ENUM("VIDEO", "DOCUMENT"),
         allowNull: false,
       },
       resourceType: {
-        type: DataTypes.ENUM("course", "chapter", "section"),
+        type: DataTypes.ENUM("COURSE", "CHAPTER", "SECTION"),
         allowNull: false,
       },
       resourceId: {
@@ -61,9 +61,9 @@ module.exports = (sequelize, DataTypes) => {
         },
       },
       status: {
-        type: DataTypes.ENUM("uploading", "processing", "ready", "error"),
+        type: DataTypes.ENUM("UPLOADING", "PROCESSING", "READY", "ERROR"),
         allowNull: false,
-        defaultValue: "uploading",
+        defaultValue: "UPLOADING",
       },
       thumbnail: {
         type: DataTypes.STRING(500),
@@ -76,7 +76,7 @@ module.exports = (sequelize, DataTypes) => {
       },
     },
     {
-      tableName: "Media",
+      tableName: "media",
       timestamps: true,
       createdAt: "createdAt",
       updatedAt: "updatedAt",

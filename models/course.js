@@ -30,13 +30,13 @@ module.exports = (sequelize, DataTypes) => {
         },
       },
       status: {
-        type: DataTypes.ENUM("Draft", "Published", "Archived"),
-        defaultValue: "Draft",
+        type: DataTypes.ENUM("DRAFT", "PUBLISHED", "ARCHIVED"),
+        defaultValue: "DRAFT",
         allowNull: false,
       },
     },
     {
-      tableName: "Courses",
+      tableName: "courses",
       timestamps: true,
       createdAt: "createdAt",
       updatedAt: "updatedAt",

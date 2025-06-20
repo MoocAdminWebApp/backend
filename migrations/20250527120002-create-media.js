@@ -3,7 +3,7 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable("Media", {
+    await queryInterface.createTable("media", {
       id: {
         type: Sequelize.INTEGER,
         primaryKey: true,
@@ -14,7 +14,7 @@ module.exports = {
         type: Sequelize.INTEGER,
         allowNull: false,
         references: {
-          model: "Chapter",
+          model: "chapters",
           key: "id",
         },
         onDelete: "CASCADE",
@@ -40,7 +40,7 @@ module.exports = {
         allowNull: false,
       },
       mediaType: {
-        type: Sequelize.ENUM("Video", "Document"),
+        type: Sequelize.ENUM("VIDEO", "DOCUMENT"),
         allowNull: false,
       },
       duration: {
@@ -70,6 +70,6 @@ module.exports = {
   },
 
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable("Media");
+    await queryInterface.dropTable("media");
   },
 };

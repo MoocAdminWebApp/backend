@@ -16,7 +16,7 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.INTEGER,
         allowNull: false,
         references: {
-          model: "Course",
+          model: "courses",
           key: "id",
         },
       },
@@ -31,15 +31,15 @@ module.exports = (sequelize, DataTypes) => {
           len: [0, 1000],
         },
       },
-      orderIndex: {
+      orderNum: {
         type: DataTypes.INTEGER,
         allowNull: false,
         defaultValue: 0,
       },
-      isPublished: {
-        type: DataTypes.BOOLEAN,
+      status: {
+        type: DataTypes.ENUM("DRAFT", "PUBLISHED", "HIDDEN"),
+        defaultValue: "DRAFT",
         allowNull: false,
-        defaultValue: false,
       },
       content: {
         type: DataTypes.TEXT,

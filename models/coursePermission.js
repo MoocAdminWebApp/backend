@@ -1,92 +1,72 @@
-module.exports = (sequelize, DataTypes) => {
-  const CoursePermission = sequelize.define(
-    "CoursePermission",
-    {
-      id: {
-        type: DataTypes.INTEGER,
-        primaryKey: true,
-        autoIncrement: true,
-        allowNull: false,
-      },
-      userId: {
-        type: DataTypes.INTEGER,
-        allowNull: false,
-        references: {
-          model: 'users', 
-          key: 'id',
-        },
-        onUpdate: 'CASCADE',
-        onDelete: 'CASCADE'
-      },
-      courseOfferingId: {
-        type: DataTypes.INTEGER,
-        allowNull: false,
-        references: {
-          model: 'course_offerings', 
-          key: 'id',
-        },
-        onUpdate: 'CASCADE',
-        onDelete: 'CASCADE'
-      },
-      roleId: {
-        type: DataTypes.INTEGER,
-        allowNull: false,
-        references: {
-          model: 'roles',
-          key: 'id',
-        },
-        onUpdate: 'CASCADE',
-        onDelete: 'RESTRICT' 
-      },
-      enrollmentDate: {
-        type: DataTypes.DATE,
-        allowNull: false,
-        defaultValue: DataTypes.NOW,
-      },
-      status: {
-        type: DataTypes.ENUM('Active', 'Inactive', 'Pending', 'Completed', 'Dropped'),
-        defaultValue: 'Pending',
-        allowNull: false,
+const { DataTypes } = require("sequelize");
+const { sequelize } = require("../db/sequelizedb");
+
+const CoursePermission = sequelize.define(
+  "CoursePermission",
+  {
+    id: {
+      type: DataTypes.INTEGER,
+      primaryKey: true,
+      autoIncrement: true,
+      allowNull: false,
+    },
+    courseId: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      field: "courseId",
+      references: {
+        model: "courses",
+        key: "id",
       },
     },
-    {
-      tableName: 'course_permissions',
-      timestamps: true,
-      createdAt: 'createdAt',
-      updatedAt: 'updatedAt',
-     
-      indexes: [
-        {
-          unique: true,
-          fields: ['userId', 'courseOfferingId'],
-          name: 'unique_user_course_offering'
-        },
-        {
-          fields: ['roleId'] 
-        },
-        {
-          fields: ['status']
-        }
-      ]
-    }
-  );
+    userId: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      field: "userId",
+      references: {
+        model: "users",
+        key: "id",
+      },
+    },
+    permission: {
+      type: DataTypes.ENUM("VIEW", "EDIT", "MANAGE", "ADMIN"),
+      allowNull: false,
+      defaultValue: "VIEW",
+      field: "permission",
+    },
+    grantedBy: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      field: "grantedBy",
+      references: {
+        model: "users",
+        key: "id",
+      },
+    },
+  },
+  {
+    tableName: "course_permissions",
+    timestamps: true,
+    createdAt: "createdAt",
+    updatedAt: "updatedAt",
+  }
+);
 
-  CoursePermission.associate = (models) => {
-    CoursePermission.belongsTo(models.User, {
-      foreignKey: 'userId',
-      as: 'user',
-    });
+CoursePermission.associate = function (models) {
+  CoursePermission.belongsTo(models.Course, {
+    foreignKey: "courseId",
+    as: "course",
+  });
 
-    CoursePermission.belongsTo(models.CourseOffering, {
-      foreignKey: 'courseOfferingId',
-      as: 'courseOffering',
-    });
+  CoursePermission.belongsTo(models.User, {
+    foreignKey: "userId",
+    as: "user",
+  });
 
-    CoursePermission.belongsTo(models.Role, {
-      foreignKey: 'roleId',
-      as: 'role',
-    });
-  };
-
-  return CoursePermission;
+  CoursePermission.belongsTo(models.User, {
+    foreignKey: "grantedBy",
+    as: "grantor",
+  });
 };
+
+module.exports = CoursePermission;

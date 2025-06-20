@@ -82,14 +82,14 @@ module.exports = (sequelize, DataTypes) => {
       status: {
         type: DataTypes.ENUM("ACTIVE", "INACTIVE", "DRAFT", "ARCHIVED"),
         allowNull: false,
-        defaultValue: "active",
+        defaultValue: "ACTIVE",
         get() {
           const status = this.getDataValue("status");
           const statusToNumber = {
-            active: 1,
-            inactive: 2,
-            draft: 3,
-            archived: 4,
+            ACTIVE: 1,
+            INACTIVE: 2,
+            DRAFT: 3,
+            ARCHIVED: 4,
           };
           return statusToNumber[status];
         },
@@ -130,7 +130,7 @@ module.exports = (sequelize, DataTypes) => {
     {
       sequelize,
       modelName: "Menu",
-      tableName: "Menus",
+      tableName: "menus",
     }
   );
   return Menu;

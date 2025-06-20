@@ -3,7 +3,7 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable("Course", {
+    await queryInterface.createTable("courses", {
       id: {
         type: Sequelize.INTEGER,
         primaryKey: true,
@@ -33,8 +33,8 @@ module.exports = {
         onDelete: "CASCADE",
       },
       status: {
-        type: Sequelize.ENUM("Draft", "Published", "Archived"),
-        defaultValue: "Draft",
+        type: Sequelize.ENUM("DRAFT", "PUBLISHED", "ARCHIVED"),
+        defaultValue: "DRAFT",
         allowNull: false,
       },
       createdAt: {
@@ -52,6 +52,6 @@ module.exports = {
   },
 
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable("Course");
+    await queryInterface.dropTable("courses");
   },
 };

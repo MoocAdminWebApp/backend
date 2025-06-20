@@ -4,12 +4,12 @@
 module.exports = {
   async up(queryInterface, Sequelize) {
     await queryInterface.bulkInsert(
-      "Chapter",
+      "chapters",
       [
         {
           chapterNumber: 1,
-          chapterTitle: "Introduction to JavaScript",
-          chapterDescription: "Welcome to JavaScript programming",
+          title: "Introduction to JavaScript",
+          description: "Welcome to JavaScript programming",
 
           courseId: 1,
           content: JSON.stringify({
@@ -22,20 +22,7 @@ module.exports = {
           videoUrl: "https://example.com/videos/js-intro.mp4",
           duration: 25,
           orderNum: 1,
-          status: "Published",
-          isFree: true,
-          objectives: JSON.stringify([
-            "Understand what JavaScript is",
-            "Set up development environment",
-            "Write first JavaScript program",
-          ]),
-          resources: JSON.stringify([
-            {
-              title: "MDN JavaScript Guide",
-              url: "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide",
-              type: "documentation",
-            },
-          ]),
+          status: "PUBLISHED",
           createdBy: 1,
           updatedBy: 1,
           createdAt: new Date(),
@@ -47,6 +34,6 @@ module.exports = {
   },
 
   async down(queryInterface, Sequelize) {
-    await queryInterface.bulkDelete("Chapter", null, {});
+    await queryInterface.bulkDelete("chapters", null, {});
   },
 };

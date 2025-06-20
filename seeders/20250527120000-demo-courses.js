@@ -3,7 +3,7 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.bulkInsert("Course", [
+    await queryInterface.bulkInsert("courses", [
       {
         courseCode: `TEMP-${Date.now()}-${Math.floor(Math.random() * 1000)}`, //temp placeholder for courseCode
         courseName: "JavaScript",
@@ -17,6 +17,6 @@ module.exports = {
   },
 
   async down(queryInterface, Sequelize) {
-    await queryInterface.bulkDelete("Course", null, {});
+    await queryInterface.bulkDelete("courses", null, {});
   },
 };

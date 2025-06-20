@@ -3,7 +3,7 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable("CoursePermission", {
+    await queryInterface.createTable("course_permissions", {
       id: {
         type: Sequelize.INTEGER,
         primaryKey: true,
@@ -14,7 +14,7 @@ module.exports = {
         type: Sequelize.INTEGER,
         allowNull: false,
         references: {
-          model: "Course",
+          model: "courses",
           key: "id",
         },
         onDelete: "CASCADE",
@@ -29,9 +29,9 @@ module.exports = {
         onDelete: "CASCADE",
       },
       permission: {
-        type: Sequelize.ENUM("View", "Edit", "Manage", "Admin"),
+        type: Sequelize.ENUM("VIEW", "EDIT", "MANAGE", "ADMIN"),
         allowNull: false,
-        defaultValue: "View",
+        defaultValue: "VIEW",
       },
       grantedBy: {
         type: Sequelize.INTEGER,
@@ -53,16 +53,16 @@ module.exports = {
       },
     });
 
-    await queryInterface.addIndex("CoursePermission", {
+    await queryInterface.addIndex("course_permissions", {
       fields: ["courseId", "userId"],
       unique: true,
       name: "unique_course_user_permission",
     });
 
-    console.log("Table CoursePermission Created");
+    console.log("Table course_permissions Created");
   },
 
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable("CoursePermission");
+    await queryInterface.dropTable("course_permissions");
   },
 };
