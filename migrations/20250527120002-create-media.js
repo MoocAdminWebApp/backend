@@ -3,7 +3,7 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable("Media", {
+    await queryInterface.createTable("media", {
       id: {
         type: Sequelize.INTEGER,
         primaryKey: true,
@@ -14,10 +14,10 @@ module.exports = {
         type: Sequelize.INTEGER,
         allowNull: false,
         references: {
-          model: 'Chapter',
-          key: 'id',
+          model: "chapters",
+          key: "id",
         },
-        onDelete: 'CASCADE',
+        onDelete: "CASCADE",
       },
       fileName: {
         type: Sequelize.STRING(255),
@@ -32,7 +32,7 @@ module.exports = {
         allowNull: false,
       },
       fileSize: {
-        type: Sequelize.BIGINT, 
+        type: Sequelize.BIGINT,
         allowNull: false,
       },
       mimeType: {
@@ -40,19 +40,19 @@ module.exports = {
         allowNull: false,
       },
       mediaType: {
-        type: Sequelize.ENUM("Video", "Document"),
+        type: Sequelize.ENUM("VIDEO", "DOCUMENT"),
         allowNull: false,
       },
       duration: {
-        type: Sequelize.INTEGER, 
+        type: Sequelize.INTEGER,
         allowNull: true,
       },
       uploadedBy: {
         type: Sequelize.INTEGER,
         allowNull: false,
         references: {
-          model: 'User',
-          key: 'id',
+          model: "users",
+          key: "id",
         },
       },
       createdAt: {
@@ -64,12 +64,12 @@ module.exports = {
         allowNull: true,
         type: Sequelize.DATE,
         defaultValue: Sequelize.literal("CURRENT_TIMESTAMP"),
-      }
+      },
     });
     console.log("Table Media Created");
   },
 
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable("Media");
+    await queryInterface.dropTable("media");
   },
 };

@@ -4,37 +4,21 @@
 module.exports = {
   async up(queryInterface, Sequelize) {
     await queryInterface.bulkInsert(
-      "CoursePermission",
+      "course_permissions",
       [
         {
           courseId: 1,
           userId: 1,
-          permission: "View",
+          permission: "VIEW",
           grantedBy: 2,
           createdAt: new Date(),
           updatedAt: new Date(),
         },
-        
+
         {
           courseId: 1,
           userId: 2,
-          permission: "Admin",
-          grantedBy: 2,
-          createdAt: new Date(),
-          updatedAt: new Date(),
-        },
-        {
-          courseId: 2,
-          userId: 2,
-          permission: "Admin",
-          grantedBy: 2,
-          createdAt: new Date(),
-          updatedAt: new Date(),
-        },
-        {
-          courseId: 3,
-          userId: 2,
-          permission: "Admin",
+          permission: "ADMIN",
           grantedBy: 2,
           createdAt: new Date(),
           updatedAt: new Date(),
@@ -44,7 +28,7 @@ module.exports = {
     );
   },
 
-    async down(queryInterface, Sequelize) {
-    await queryInterface.bulkDelete("CoursePermission", null, {});
+  async down(queryInterface, Sequelize) {
+    await queryInterface.bulkDelete("course_permissions", null, {});
   },
 };

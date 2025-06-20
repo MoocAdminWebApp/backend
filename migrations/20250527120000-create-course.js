@@ -3,7 +3,7 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable("Course", {
+    await queryInterface.createTable("courses", {
       id: {
         type: Sequelize.INTEGER,
         primaryKey: true,
@@ -27,14 +27,14 @@ module.exports = {
         type: Sequelize.INTEGER,
         allowNull: false,
         references: {
-          model: 'User',
-          key: 'id',
+          model: "users",
+          key: "id",
         },
-        onDelete: 'CASCADE',
+        onDelete: "CASCADE",
       },
       status: {
-        type: Sequelize.ENUM("Draft", "Published", "Archived"),
-        defaultValue: "Draft",
+        type: Sequelize.ENUM("DRAFT", "PUBLISHED", "ARCHIVED"),
+        defaultValue: "DRAFT",
         allowNull: false,
       },
       createdAt: {
@@ -46,12 +46,12 @@ module.exports = {
         allowNull: true,
         type: Sequelize.DATE,
         defaultValue: Sequelize.literal("CURRENT_TIMESTAMP"),
-      }
+      },
     });
     console.log("Table Course Created");
   },
 
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable("Course");
+    await queryInterface.dropTable("courses");
   },
 };
