@@ -52,6 +52,12 @@ const EUserAccess = ["ADMIN", "TEACHER", "STUDENT"];
  *         description: User created
  *       400:
  *         description: Invalid input
+ *       404:
+ *         description: User not found
+ *       409:
+ *         description: Conflict
+ *       500:
+ *         description: Server error
  */
 router.post(
   "/",
@@ -73,7 +79,15 @@ router.post(
  *     tags: [Users]
  *     responses:
  *       200:
- *         description: Success
+ *         description: Get all users Successfully
+ *       400:
+ *         description: Bad request
+ *       401:
+ *         description: Unauthorized
+ *       404:
+ *         description: User not found
+ *       500:
+ *         description: Server error
  */
 router.get("/", userController.getAllUsers);
 
@@ -92,9 +106,15 @@ router.get("/", userController.getAllUsers);
  *           default: test@example.com
  *     responses:
  *       200:
- *         description: User found
+ *         description: Get user by email successfully
+ *       400:
+ *         description: Invalid input
+ *       401:
+ *         description: Unauthorized
  *       404:
- *         description: User not found
+ *         description: User with this email not found
+ *       500:
+ *         description: Server error
  */
 router.get(
   "/by-email",
@@ -117,9 +137,15 @@ router.get(
  *         description: User ID
  *     responses:
  *       200:
- *         description: User found
+ *         description: Get user by id successfully
+ *       400:
+ *         description: Invalid input
+ *       401:
+ *         description: Unauthorized
  *       404:
- *         description: User not found
+ *         description: User with this id not found
+ *       500:
+ *         description: Server error
  */
 router.get(
   "/:id",
@@ -164,10 +190,16 @@ router.get(
  *                 enum: [ADMIN, TEACHER, STUDENT]
  *                 default: TEACHER
  *     responses:
- *       200:
+ *       201:
  *         description: User updated
  *       400:
  *         description: Invalid input
+ *       404:
+ *         description: User with this id not found
+ *       409:
+ *         description: Conflict
+ *       500:
+ *         description: Server error
  */
 router.put(
   "/:id",
@@ -201,8 +233,14 @@ router.put(
  *     responses:
  *       200:
  *         description: User deleted
+ *       400:
+ *         description: Invalid input
+ *       401:
+ *         description: Unauthorized
  *       404:
- *         description: User not found
+ *         description: User with this id not found
+ *       500:
+ *         description: Server error
  */
 router.delete(
   "/:id",
