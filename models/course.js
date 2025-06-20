@@ -1,6 +1,6 @@
 module.exports = (sequelize, DataTypes) => {
   const Course = sequelize.define(
-    'Course',
+    "Course",
     {
       id: {
         type: DataTypes.INTEGER,
@@ -13,8 +13,8 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: false,
         validate: {
           notEmpty: true,
-          len: [1, 200] 
-        }
+          len: [1, 200],
+        },
       },
       courseDescription: {
         type: DataTypes.TEXT,
@@ -25,43 +25,43 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.INTEGER,
         allowNull: false,
         references: {
-          model: 'User',
-          key: 'id',
+          model: "users",
+          key: "id",
         },
       },
       status: {
-        type: DataTypes.ENUM('Draft', 'Published', 'Archived'),
-        defaultValue: 'Draft',
+        type: DataTypes.ENUM("Draft", "Published", "Archived"),
+        defaultValue: "Draft",
         allowNull: false,
       },
     },
     {
-      tableName: 'Courses',
+      tableName: "Courses",
       timestamps: true,
-      createdAt: 'createdAt',
-      updatedAt: 'updatedAt',
+      createdAt: "createdAt",
+      updatedAt: "updatedAt",
     }
   );
 
-  Course.associate = (models) => {
+  Course.associate = models => {
     Course.belongsTo(models.User, {
-      foreignKey: 'instructorId',
-      as: 'instructor',
+      foreignKey: "instructorId",
+      as: "instructor",
     });
 
     Course.hasMany(models.Chapter, {
-      foreignKey: 'courseId',
-      as: 'chapters',
+      foreignKey: "courseId",
+      as: "chapters",
     });
 
     Course.hasMany(models.CoursePermission, {
-      foreignKey: 'courseId',
-      as: 'permissions',
+      foreignKey: "courseId",
+      as: "permissions",
     });
 
     Course.hasMany(models.CourseOffering, {
-      foreignKey: 'courseId',
-      as: 'offerings',
+      foreignKey: "courseId",
+      as: "offerings",
     });
   };
 

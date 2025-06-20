@@ -14,10 +14,10 @@ module.exports = {
         type: Sequelize.INTEGER,
         allowNull: false,
         references: {
-          model: 'Chapter',
-          key: 'id',
+          model: "Chapter",
+          key: "id",
         },
-        onDelete: 'CASCADE',
+        onDelete: "CASCADE",
       },
       fileName: {
         type: Sequelize.STRING(255),
@@ -32,7 +32,7 @@ module.exports = {
         allowNull: false,
       },
       fileSize: {
-        type: Sequelize.BIGINT, 
+        type: Sequelize.BIGINT,
         allowNull: false,
       },
       mimeType: {
@@ -44,15 +44,15 @@ module.exports = {
         allowNull: false,
       },
       duration: {
-        type: Sequelize.INTEGER, 
+        type: Sequelize.INTEGER,
         allowNull: true,
       },
       uploadedBy: {
         type: Sequelize.INTEGER,
         allowNull: false,
         references: {
-          model: 'User',
-          key: 'id',
+          model: "users",
+          key: "id",
         },
       },
       createdAt: {
@@ -64,7 +64,7 @@ module.exports = {
         allowNull: true,
         type: Sequelize.DATE,
         defaultValue: Sequelize.literal("CURRENT_TIMESTAMP"),
-      }
+      },
     });
     console.log("Table Media Created");
   },

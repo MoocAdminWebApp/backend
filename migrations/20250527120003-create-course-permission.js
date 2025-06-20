@@ -14,19 +14,19 @@ module.exports = {
         type: Sequelize.INTEGER,
         allowNull: false,
         references: {
-          model: 'Course',
-          key: 'id',
+          model: "Course",
+          key: "id",
         },
-        onDelete: 'CASCADE',
+        onDelete: "CASCADE",
       },
       userId: {
         type: Sequelize.INTEGER,
         allowNull: false,
         references: {
-          model: 'User',
-          key: 'id',
+          model: "users",
+          key: "id",
         },
-        onDelete: 'CASCADE',
+        onDelete: "CASCADE",
       },
       permission: {
         type: Sequelize.ENUM("View", "Edit", "Manage", "Admin"),
@@ -37,8 +37,8 @@ module.exports = {
         type: Sequelize.INTEGER,
         allowNull: false,
         references: {
-          model: 'User',
-          key: 'id',
+          model: "users",
+          key: "id",
         },
       },
       createdAt: {
@@ -50,13 +50,13 @@ module.exports = {
         allowNull: true,
         type: Sequelize.DATE,
         defaultValue: Sequelize.literal("CURRENT_TIMESTAMP"),
-      }
+      },
     });
 
     await queryInterface.addIndex("CoursePermission", {
-      fields: ['courseId', 'userId'],
+      fields: ["courseId", "userId"],
       unique: true,
-      name: 'unique_course_user_permission'
+      name: "unique_course_user_permission",
     });
 
     console.log("Table CoursePermission Created");
