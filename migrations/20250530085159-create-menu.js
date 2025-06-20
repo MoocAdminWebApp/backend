@@ -2,7 +2,7 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable("Menus", {
+    await queryInterface.createTable("menus", {
       id: {
         allowNull: false,
         autoIncrement: true,
@@ -14,7 +14,7 @@ module.exports = {
         allowNull: false,
       },
       type: {
-        type: Sequelize.ENUM("directory", "menu", "button"),
+        type: Sequelize.ENUM("DIRECTORY", "MENU", "BUTTON"),
         allowNull: false,
       },
       parentId: {
@@ -48,7 +48,7 @@ module.exports = {
         defaultValue: false,
       },
       status: {
-        type: Sequelize.ENUM("active", "inactive", "draft", "archived"),
+        type: Sequelize.ENUM("ACTIVE", "INACTIVE", "DRAFT", "ARCHIVED"),
         allowNull: false,
         defaultValue: "active",
       },
@@ -88,6 +88,6 @@ module.exports = {
     });
   },
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable("Menus");
+    await queryInterface.dropTable("menus");
   },
 };

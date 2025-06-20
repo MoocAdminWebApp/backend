@@ -3,29 +3,42 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable("Chapter", {
+    await queryInterface.createTable("chapters", {
       id: {
         type: Sequelize.INTEGER,
         primaryKey: true,
         autoIncrement: true,
         allowNull: false,
       },
-      chapterTitle: {
+      chapterNumber: {
+        type: Sequelize.INTEGER,
+        allowNull: false,
+        defaultValue: 1,
+      },
+      title: {
         type: Sequelize.STRING(200),
         allowNull: false,
       },
-      chapterDescription: {
+      description: {
         type: Sequelize.TEXT,
+        allowNull: true,
+      },
+      content: {
+        type: Sequelize.TEXT,
+        allowNull: true,
+      },
+      videoUrl: {
+        type: Sequelize.STRING(500),
         allowNull: true,
       },
       courseId: {
         type: Sequelize.INTEGER,
         allowNull: false,
         references: {
-          model: 'Course',
-          key: 'id',
+          model: "courses",
+          key: "id",
         },
-        onDelete: 'CASCADE',
+        onDelete: "CASCADE",
       },
       orderNum: {
         type: Sequelize.INTEGER,
@@ -33,12 +46,12 @@ module.exports = {
         defaultValue: 0,
       },
       duration: {
-        type: Sequelize.INTEGER, 
+        type: Sequelize.INTEGER,
         allowNull: true,
       },
       status: {
-        type: Sequelize.ENUM("Draft", "Published", "Hidden"),
-        defaultValue: "Draft",
+        type: Sequelize.ENUM("DRAFT", "PUBLISHED", "HIDDEN"),
+        defaultValue: "DRAFT",
         allowNull: false,
       },
       createdAt: {
@@ -50,12 +63,28 @@ module.exports = {
         allowNull: true,
         type: Sequelize.DATE,
         defaultValue: Sequelize.literal("CURRENT_TIMESTAMP"),
-      }
+      },
+      createdBy: {
+        type: Sequelize.INTEGER,
+        allowNull: true,
+        references: {
+          model: "users",
+          key: "id",
+        },
+      },
+      updatedBy: {
+        type: Sequelize.INTEGER,
+        allowNull: true,
+        references: {
+          model: "users",
+          key: "id",
+        },
+      },
     });
     console.log("Table Chapter Created");
   },
 
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable("Chapter");
+    await queryInterface.dropTable("chapters");
   },
 };

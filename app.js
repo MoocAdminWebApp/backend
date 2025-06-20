@@ -4,7 +4,8 @@ const path = require("path");
 const appConfig = require("./appConfig");
 const app = express();
 const authRouter = require("./router/authRouter");
-
+const cookiesParser = require("cookie-parser");
+const { expressjwt: jwtMiddleware } = require("express-jwt");
 //config cors
 const cors = require("cors");
 
@@ -31,10 +32,24 @@ app.use(returnvalue.returnvalue);
 app.use(express.json({ limit: "50mb" }));
 app.use(express.urlencoded({ extended: true, limit: "50mb" }));
 
-// config Swagger
+//process token sent from the client
+app.use(cookiesParser());
+
+//jwt middleware, get token from cookie
+app.use(
+  jwtMiddleware({
+    secret: appConfig.jwtConfig.secret,
+    algorithms: appConfig.jwtConfig.algorithms,
+    getToken: req => req.cookies.token,
+  }).unless({
+    path: ["/", /^\/api-docs/, "/api/login"], // login route
+  })
+);
+
+//config Swagger
 const swaggerDocument = require("./common/swagger");
 const swaggerUi = require("swagger-ui-express");
-// config'/api-docs'  Path to access Swagger UI
+// config'/api-docs' Path to access Swagger UI
 const swaggerUiOptions = {
   explorer: true,
 };

@@ -1,6 +1,6 @@
 const { Model, DataTypes } = require("sequelize");
 
-module.exports = (sequelize) => {
+module.exports = sequelize => {
   class Role extends Model {
     static associate(models) {
       Role.belongsToMany(models.User, {
@@ -47,7 +47,7 @@ module.exports = (sequelize) => {
         type: DataTypes.INTEGER,
         allowNull: true,
         references: {
-          model: "User",
+          model: "users",
           key: "id",
         },
         onUpdate: "CASCADE",
@@ -57,7 +57,7 @@ module.exports = (sequelize) => {
         type: DataTypes.INTEGER,
         allowNull: true,
         references: {
-          model: "User",
+          model: "users",
           key: "id",
         },
         onUpdate: "CASCADE",
