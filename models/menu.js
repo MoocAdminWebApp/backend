@@ -14,7 +14,7 @@ module.exports = (sequelize, DataTypes) => {
 
       Menu.belongsTo(models.Menu, { foreignKey: "parentId", as: "parent" });
       Menu.hasMany(models.Menu, { foreignKey: "parentId", as: "children" });
-      
+
       Menu.belongsToMany(models.Role, {
         foreignKey: "menuId",
         otherKey: "roleId",
@@ -36,7 +36,7 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: false,
       },
       type: {
-        type: DataTypes.ENUM("directory", "menu", "button"),
+        type: DataTypes.ENUM("DIRECTORY", "MENU", "BUTTON"),
         allowNull: false,
         get() {
           const type = this.getDataValue("type");
@@ -80,7 +80,7 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: true,
       },
       status: {
-        type: DataTypes.ENUM("active", "inactive", "draft", "archived"),
+        type: DataTypes.ENUM("ACTIVE", "INACTIVE", "DRAFT", "ARCHIVED"),
         allowNull: false,
         defaultValue: "active",
         get() {

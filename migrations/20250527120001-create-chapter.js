@@ -10,6 +10,11 @@ module.exports = {
         autoIncrement: true,
         allowNull: false,
       },
+      chapterNumber: {
+        type: Sequelize.INTEGER,
+        allowNull: false,
+        defaultValue: 1,
+      },
       chapterTitle: {
         type: Sequelize.STRING(200),
         allowNull: false,
@@ -22,10 +27,10 @@ module.exports = {
         type: Sequelize.INTEGER,
         allowNull: false,
         references: {
-          model: 'Course',
-          key: 'id',
+          model: "Course",
+          key: "id",
         },
-        onDelete: 'CASCADE',
+        onDelete: "CASCADE",
       },
       orderNum: {
         type: Sequelize.INTEGER,
@@ -33,7 +38,7 @@ module.exports = {
         defaultValue: 0,
       },
       duration: {
-        type: Sequelize.INTEGER, 
+        type: Sequelize.INTEGER,
         allowNull: true,
       },
       status: {
@@ -50,7 +55,7 @@ module.exports = {
         allowNull: true,
         type: Sequelize.DATE,
         defaultValue: Sequelize.literal("CURRENT_TIMESTAMP"),
-      }
+      },
     });
     console.log("Table Chapter Created");
   },
