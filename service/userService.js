@@ -30,9 +30,12 @@ const getAllUsersAsync = async () => {
   });
   return users.map(u => u.toJSON());
 };
+
 // get user by email only used in register, login or reset password
 const getUserByEmailAsync = async email => {
-  return await User.findOne({ where: { email: email.trim() } });
+  const user = await User.findOne({ where: { email: email.trim() } });
+  if (!user) throw new EntityNotFoundException("User with this email not found", 404);
+  return user;
 };
 
 const getUserByIdAsync = async id => {
@@ -44,13 +47,14 @@ const getUserByIdAsync = async id => {
     ],
   });
 
-  if (!user) throw new EntityNotFoundException("User not found");
+  if (!user) throw new EntityNotFoundException("User with this id not found");
+
   return user.toJSON();
 };
 
 const updateUserAsync = async (id, updateData, updaterId) => {
   const user = await User.findByPk(id);
-  if (!user) throw new EntityNotFoundException("User not found");
+  if (!user) throw new EntityNotFoundException("User with this idnot found");
 
   if (updateData.password) {
     updateData.password = await bcrypt.hash(updateData.password, bcryptConfig.saltRounds);
@@ -66,7 +70,7 @@ const updateUserAsync = async (id, updateData, updaterId) => {
 
 const deleteUserAsync = async id => {
   const user = await User.findByPk(id);
-  if (!user) throw new EntityNotFoundException("User not found");
+  if (!user) throw new EntityNotFoundException("User with this id not found");
   await user.destroy();
   return { message: "User deleted successfully" };
 };
