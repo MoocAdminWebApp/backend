@@ -1,7 +1,7 @@
 const { DataTypes } = require("sequelize");
-const { sequelize } = require("../db/sequelizedb");
 
-const CoursePermission = sequelize.define(
+module.exports = (sequelize) => {
+  const CoursePermission = sequelize.define(
   "CoursePermission",
   {
     id: {
@@ -69,4 +69,5 @@ CoursePermission.associate = function (models) {
   });
 };
 
-module.exports = CoursePermission;
+return CoursePermission;
+};
