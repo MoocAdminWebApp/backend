@@ -1,9 +1,4 @@
 const userService = require("../service/userService");
-const {
-  EntityAlreadyExistsException,
-  EntityNotFoundException,
-  UserFriendlyException,
-} = require("../common/commonError.js");
 
 const createUser = async (req, res) => {
   try {
@@ -11,10 +6,8 @@ const createUser = async (req, res) => {
     const newUser = await userService.createUserAsync(req.body, creatorId);
     res.status(201).json(newUser);
   } catch (err) {
-    if (err instanceof EntityAlreadyExistsException) {
-      return res.status(err.statusCode).json({ status: err.statusCode, error: err.message });
-    }
-    res.status(400).json({ error: err.message });
+    const statusCode = err.statusCode || 400;
+    res.status(statusCode).json({ status: statusCode, error: err.message });
   }
 };
 const getAllUsers = async (req, res) => {
@@ -31,13 +24,13 @@ const getUserByEmail = async (req, res) => {
 
   try {
     const user = await userService.getUserByEmailAsync(email);
-    if (!user) {
-      return res.status(404).json({ error: "User not found" });
-    }
-
     res.json(user);
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    const statusCode = err.statusCode || 500;
+    res.status(statusCode).json({
+      status: statusCode,
+      error: err.message,
+    });
   }
 };
 
@@ -46,7 +39,8 @@ const getUserById = async (req, res) => {
     const user = await userService.getUserByIdAsync(req.params.id);
     res.json(user);
   } catch (err) {
-    res.status(404).json({ error: err.message });
+    const statusCode = err.statusCode || 404;
+    res.status(statusCode).json({ status: statusCode, error: err.message });
   }
 };
 
@@ -56,7 +50,8 @@ const updateUser = async (req, res) => {
     const updatedUser = await userService.updateUserAsync(req.params.id, req.body, updaterId);
     res.json(updatedUser);
   } catch (err) {
-    res.status(400).json({ error: err.message });
+    const statusCode = err.statusCode || 400;
+    res.status(statusCode).json({ status: statusCode, error: err.message });
   }
 };
 
@@ -65,7 +60,8 @@ const deleteUser = async (req, res) => {
     const result = await userService.deleteUserAsync(req.params.id);
     res.json(result);
   } catch (err) {
-    res.status(404).json({ error: err.message });
+    const statusCode = err.statusCode || 404;
+    res.status(statusCode).json({ status: statusCode, error: err.message });
   }
 };
 
