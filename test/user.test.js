@@ -41,6 +41,38 @@ describe("User API CRUD Tests", () => {
     expect(res.body).toHaveProperty("email", "test@example.com");
   });
 
+  test("GET /api/users/page - get users with pagination ordered by id ASC", async () => {
+    // Create 15 users to ensure multiple pages of data
+    for (let i = 0; i < 15; i++) {
+      await request(app)
+        .post("/api/users")
+        .send({
+          email: `user${i}@example.com`,
+          password: "123456",
+          firstName: `First${i}`,
+          lastName: `Last${i}`,
+          access: "STUDENT",
+        });
+    }
+
+    // Request page 2 with pageSize 5
+    const res = await request(app).get("/api/users/page").query({ page: 2, pageSize: 5 });
+
+    expect(res.statusCode).toBe(200);
+
+    expect(res.body).toHaveProperty("total");
+    expect(res.body).toHaveProperty("page", 2);
+    expect(res.body).toHaveProperty("pageSize", 5);
+    expect(res.body).toHaveProperty("totalPages");
+    expect(Array.isArray(res.body.users)).toBe(true);
+
+    // The number of users returned should not exceed pageSize
+    expect(res.body.users.length).toBeLessThanOrEqual(5);
+
+    // Verify the order by id ASC, the first user on page 2 should be the 6th created user (index 5)
+    expect(res.body.users[0]).toHaveProperty("email", "user0@example.com");
+  });
+
   test("GET /api/users/:id - get user by ID", async () => {
     const res = await request(app).get(`/api/users/${createdUserId}`);
     expect(res.statusCode).toBe(200);
