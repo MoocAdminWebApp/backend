@@ -44,6 +44,19 @@ const getUserById = async (req, res) => {
   }
 };
 
+const getUsersByPage = async (req, res) => {
+  try {
+    const page = parseInt(req.query.page) || 1;
+    const pageSize = parseInt(req.query.pageSize) || 10;
+
+    const pagedUsers = await userService.getUsersByPageAsync(page, pageSize);
+    res.json(pagedUsers);
+  } catch (err) {
+    const statusCode = err.statusCode || 500;
+    res.status(statusCode).json({ status: statusCode, error: err.message });
+  }
+};
+
 const updateUser = async (req, res) => {
   try {
     const updaterId = req.user?.id || null;
@@ -70,6 +83,7 @@ module.exports = {
   getAllUsers,
   getUserByEmail,
   getUserById,
+  getUsersByPage,
   updateUser,
   deleteUser,
 };

@@ -51,7 +51,7 @@ const EUserAccess = ["ADMIN", "TEACHER", "STUDENT"];
  *       201:
  *         description: User created
  *       400:
- *         description: Invalid input
+ *         description: Bad request
  *       404:
  *         description: User not found
  *       409:
@@ -108,7 +108,7 @@ router.get("/", userController.getAllUsers);
  *       200:
  *         description: Get user by email successfully
  *       400:
- *         description: Invalid input
+ *         description: Bad request
  *       401:
  *         description: Unauthorized
  *       404:
@@ -120,6 +120,48 @@ router.get(
   "/by-email",
   commonValidate([query("email").isEmail().withMessage("Valid email is required")]),
   userController.getUserByEmail
+);
+
+/**
+ * @openapi
+ * /api/users/page:
+ *   get:
+ *     summary: Get users with pagination
+ *     tags: [Users]
+ *     parameters:
+ *       - in: query
+ *         name: page
+ *         required: false
+ *         schema:
+ *           type: integer
+ *           default: 1
+ *         description: Page number (starting from 1)
+ *       - in: query
+ *         name: pageSize
+ *         required: false
+ *         schema:
+ *           type: integer
+ *           default: 10
+ *         description: Number of users per page
+ *     responses:
+ *       200:
+ *         description: Get paged users successfully
+ *       400:
+ *         description: Bad request
+ *       401:
+ *         description: Unauthorized
+ *       404:
+ *         description: Users with this page information not found
+ *       500:
+ *         description: Server error
+ */
+router.get(
+  "/page",
+  commonValidate([
+    query("page").optional().isInt({ min: 1 }).withMessage("Page must be an integer >= 1"),
+    query("pageSize").optional().isInt({ min: 1 }).withMessage("Page size must be an integer >= 1"),
+  ]),
+  userController.getUsersByPage
 );
 
 /**
@@ -139,7 +181,7 @@ router.get(
  *       200:
  *         description: Get user by id successfully
  *       400:
- *         description: Invalid input
+ *         description: Bad request
  *       401:
  *         description: Unauthorized
  *       404:
@@ -193,7 +235,7 @@ router.get(
  *       201:
  *         description: User updated
  *       400:
- *         description: Invalid input
+ *         description: Bad request
  *       404:
  *         description: User with this id not found
  *       409:
@@ -234,7 +276,7 @@ router.put(
  *       200:
  *         description: User deleted
  *       400:
- *         description: Invalid input
+ *         description: Bad request
  *       401:
  *         description: Unauthorized
  *       404:

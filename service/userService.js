@@ -26,7 +26,7 @@ const getAllUsersAsync = async () => {
   const users = await User.findAll({
     attributes: { exclude: ["password"] },
     include: [{ model: Role, as: "roles", through: { attributes: [] } }],
-    order: [["createdAt", "DESC"]],
+    order: [["id", "ASC"]],
   });
   return users.map(u => u.toJSON());
 };
@@ -50,6 +50,27 @@ const getUserByIdAsync = async id => {
   if (!user) throw new EntityNotFoundException("User with this id not found");
 
   return user.toJSON();
+};
+
+const getUsersByPageAsync = async (page = 1, pageSize = 10) => {
+  const offset = (page - 1) * pageSize;
+  const limit = pageSize;
+
+  const { count, rows } = await User.findAndCountAll({
+    attributes: { exclude: ["password"] },
+    include: [{ model: Role, as: "roles", through: { attributes: [] } }],
+    order: [["id", "ASC"]],
+    limit,
+    offset,
+  });
+
+  return {
+    total: count,
+    page,
+    pageSize,
+    totalPages: Math.ceil(count / pageSize),
+    users: rows.map(u => u.toJSON()),
+  };
 };
 
 const updateUserAsync = async (id, updateData, updaterId) => {
@@ -80,6 +101,7 @@ module.exports = {
   getAllUsersAsync,
   getUserByEmailAsync,
   getUserByIdAsync,
+  getUsersByPageAsync,
   updateUserAsync,
   deleteUserAsync,
 };
