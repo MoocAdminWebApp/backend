@@ -52,7 +52,7 @@ app.use(
 
 
   }).unless({
-    path: ["/", /^\/api-docs/, "/api/login"], // login route
+    path: ["/", /^\/api-docs/, "/api/login", "/api/users/by-email"], // login route
   })
 );
 

@@ -19,6 +19,8 @@ const EUserAccess = ["ADMIN", "TEACHER", "STUDENT"];
  *   post:
  *     summary: Create a new user
  *     tags: [Users]
+ *     security:
+ *       - BearerAuth: []
  *     requestBody:
  *       required: true
  *       content:
@@ -77,6 +79,8 @@ router.post(
  *   get:
  *     summary: Get all users
  *     tags: [Users]
+ *     security:
+ *       - BearerAuth: []
  *     responses:
  *       200:
  *         description: Get all users Successfully
@@ -103,7 +107,7 @@ router.get("/", userController.getAllUsers);
  *         required: true
  *         schema:
  *           type: string
- *           default: test@example.com
+ *           default: bob@gmail.com
  *     responses:
  *       200:
  *         description: Get user by email successfully
@@ -128,6 +132,8 @@ router.get(
  *   get:
  *     summary: Get users with pagination
  *     tags: [Users]
+ *     security:
+ *       - BearerAuth: []
  *     parameters:
  *       - in: query
  *         name: page
@@ -170,6 +176,8 @@ router.get(
  *   get:
  *     summary: Get user by ID
  *     tags: [Users]
+ *     security:
+ *       - BearerAuth: []
  *     parameters:
  *       - in: path
  *         name: id
@@ -201,6 +209,8 @@ router.get(
  *   put:
  *     summary: Update user by ID
  *     tags: [Users]
+ *     security:
+ *       - BearerAuth: []
  *     parameters:
  *       - in: path
  *         name: id
@@ -265,6 +275,8 @@ router.put(
  *   delete:
  *     summary: Delete user by ID
  *     tags: [Users]
+ *     security:
+ *       - BearerAuth: []
  *     parameters:
  *       - in: path
  *         name: id
