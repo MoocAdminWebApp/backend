@@ -13,7 +13,7 @@ const loginUser = async (req, res) => {
     });
     res.sendCommonValue(200, "success", result.data);
   } catch (err) {
-    res.sendCommonValue(400, "fail");
+    res.sendCommonValue(400, "fail",{});
   }
 };
 

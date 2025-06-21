@@ -40,7 +40,17 @@ app.use(
   jwtMiddleware({
     secret: appConfig.jwtConfig.secret,
     algorithms: appConfig.jwtConfig.algorithms,
-    getToken: req => req.cookies.token,
+    getToken: req => {
+  if (req.headers.authorization && req.headers.authorization.startsWith("Bearer ")) {
+    return req.headers.authorization.split(" ")[1];
+  } else if (req.cookies && req.cookies.token) {
+    return req.cookies.token;
+  }
+  return null;
+}
+
+
+
   }).unless({
     path: ["/", /^\/api-docs/, "/api/login"], // login route
   })

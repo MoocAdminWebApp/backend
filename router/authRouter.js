@@ -15,7 +15,7 @@ const { body } = require("express-validator");
  * /api/login:
  *   post:
  *     summary: user logs in
- *     tags: [Login]
+ *     tags: [Authentication] 
  *     requestBody:
  *       required: true
  *       content:
