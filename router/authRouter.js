@@ -25,10 +25,10 @@ const { body } = require("express-validator");
  *             properties:
  *               email:
  *                 type: string
- *                 default: "alice@example.com"
+ *                 default: "alice@gmail.com"
  *               password:
  *                 type: string
- *                 default: "password123"
+ *                 default: "password12"
  *     responses:
  *      200:
  *        description: login Successfully
