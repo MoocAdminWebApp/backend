@@ -38,7 +38,7 @@ const login = async (email, password) => {
     return { isSuccess: false, message: "Invalid username or password", data: "" };
   }
   const token = jwt.sign(
-    { id: user.id, userName: user.userName, email: user.email, roles: user.roles },
+    { id: user.id,  email: user.email, roles: user.roles },
     jwtConfig.secret,
     {
       expiresIn: jwtConfig.expiresIn,

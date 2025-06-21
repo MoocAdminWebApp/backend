@@ -50,6 +50,8 @@ const controller = require("../controller/courseofferingcontroller");
  *   get:
  *     summary: Get all course offerings
  *     tags: [CourseOfferings]
+ *     security:
+ *       - BearerAuth: []
  *     responses:
  *       200:
  *         description: List of course offerings
@@ -68,6 +70,8 @@ router.get("/", controller.getAll);
  *   get:
  *     summary: Get a course offering by ID
  *     tags: [CourseOfferings]
+ *     security:
+ *       - BearerAuth: []
  *     parameters:
  *       - in: path
  *         name: id
@@ -93,6 +97,8 @@ router.get("/:id", controller.getById);
  *   post:
  *     summary: Create a new course offering
  *     tags: [CourseOfferings]
+ *     security:
+ *       - BearerAuth: []
  *     requestBody:
  *       required: true
  *       content:
@@ -117,6 +123,8 @@ router.post("/", controller.create);
  *   put:
  *     summary: Update a course offering by ID
  *     tags: [CourseOfferings]
+ *     security:
+ *       - BearerAuth: []
  *     parameters:
  *       - in: path
  *         name: id
@@ -148,6 +156,8 @@ router.put("/:id", controller.update);
  *   delete:
  *     summary: Delete a course offering by ID
  *     tags: [CourseOfferings]
+ *     security:
+ *       - BearerAuth: []
  *     parameters:
  *       - in: path
  *         name: id
@@ -164,4 +174,3 @@ router.put("/:id", controller.update);
 router.delete("/:id", controller.remove);
 
 module.exports = router;
-
