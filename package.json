@@ -9,7 +9,7 @@
     "init-db": "sequelize-cli db:migrate && sequelize-cli db:seed:all",
     "dev": "nodemon server.js",
     "format": "prettier --write .",
-    "test-db:init:test": "NODE_ENV=test sequelize-cli db:create --env test && NODE_ENV=test sequelize-cli db:migrate --env test && NODE_ENV=test sequelize-cli db:seed:all --env test"
+    "test-db:init:test": "cross-env NODE_ENV=test sequelize-cli db:create --env test && cross-env NODE_ENV=test sequelize-cli db:migrate --env test && cross-env NODE_ENV=test sequelize-cli db:seed:all --env test"
   },
   "keywords": [],
   "author": "",
@@ -19,6 +19,7 @@
     "body-parser": "^2.2.0",
     "cookie-parser": "^1.4.7",
     "cors": "^2.8.5",
+    "cross-env": "^7.0.3",
     "dotenv": "^16.4.7",
     "express": "^5.1.0",
     "express-jwt": "^8.5.1",
