@@ -52,7 +52,7 @@ app.use(
 
 
   }).unless({
-    path: ["/", /^\/api-docs/, "/api/login"], // login route
+    path: ["/", /^\/api-docs/, "/api/login", "/api/users/by-email"], // login route
   })
 );
 
@@ -77,6 +77,9 @@ app.use("/api/roles", roleRoutes);
 //config courseofferingrouter
 const courseofferingrouter = require("./router/courseofferingrouter");
 app.use("/api/courseofferings", courseofferingrouter);
+//config userRouter
+const userRouter = require("./router/userRouter");
+app.use("/api/users", userRouter);
 
 //config authRouter
 app.use("/api", authRouter);
