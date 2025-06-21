@@ -3,19 +3,13 @@ const router = express.Router();
 const authController = require("../controller/authcontroller");
 const { commonValidate } = require("../middleware/expressValidator");
 const { body } = require("express-validator");
-/**
- * @swagger
- * tags:
- *   name: Authentication
- *   description: user logs in and returns a token, the user and all the menus
- */
 
 /**
  * @swagger
  * /api/login:
  *   post:
  *     summary: user logs in
- *     tags: [Authentication] 
+ *     tags: [Authentication]
  *     requestBody:
  *       required: true
  *       content:
