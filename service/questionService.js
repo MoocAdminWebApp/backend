@@ -1,8 +1,16 @@
+const { EntityNotFoundException } = require('../common/commonError')
 const db = require('../models')
 const Question = db.Question
 const Option = db.Option
 
-const getQuestions = async() => {
+const checkQuestionIdExist = async(id) => {
+  const question = await Question.findByPk(id)
+  if(!question){
+    throw new EntityNotFoundException(`Question with ID: ${id} not found!`)
+  }
+}
+
+const getAllQuestions = async() => {
   const questions = await Question.findAll({
     include: [
       {
@@ -25,6 +33,10 @@ const getQuestionById = async(id) => {
       }
     ]
   })
+
+  if(!question) {
+    throw new EntityNotFoundException("Question ID not found!")
+  }
   return question
 }
 
@@ -40,16 +52,17 @@ const createQuestion = async(body) => {
 }
 
 const deleteQuestionById = async(id) => {
-  const deleted = await Question.destroy({ where: { id }})
+  await checkQuestionIdExist(id)
 
+  const deleted = await Question.destroy({ where: { id }})
   return
 }
 
 const updateQuestionById = async(id, body) => {
-  const question = await Question.findByPk(id)
+  await checkQuestionIdExist(id)
 
   const {type, content, difficulty, updatedBy } = body
-  await question.update({
+  const newQuestion = await question.update({
     type: type ?? question.type,
     content: content ?? question.content,
     difficulty: difficulty ?? question.difficulty,
@@ -60,7 +73,7 @@ const updateQuestionById = async(id, body) => {
 }
 
 module.exports = {
-  getQuestions,
+  getAllQuestions,
   getQuestionById,
   createQuestion,
   deleteQuestionById,

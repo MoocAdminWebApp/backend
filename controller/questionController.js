@@ -1,8 +1,8 @@
 const questionService = require("../service/questionService")
 
-const getQuestions = async(req, res, next) => {
+const getAllQuestions = async(req, res, next) => {
   try {
-    const questions = await questionService.getQuestions()
+    const questions = await questionService.getAllQuestions()
     res.status(200).json({
       success: true,
       data: questions
@@ -49,7 +49,7 @@ const deleteQuestionById = async(req, res, next) => {
 const updateQuestionById = async(req, res, next) => {
   try {
     const questionId = req.params.id
-    const question = await questionService.updateQuestionById(questionId)
+    const question = await questionService.updateQuestionById(questionId, req.body)
     res.status(201).json({
       success: true,
       data: question
@@ -60,7 +60,7 @@ const updateQuestionById = async(req, res, next) => {
 }
 
 module.exports = {
-  getQuestions,
+  getAllQuestions,
   getQuestionById,
   createQuestion,
   deleteQuestionById,

@@ -14,10 +14,12 @@ module.exports = {
       type: {
         type: Sequelize.STRING(20),
         validate: {
-          isIn: [["Single", "Multiple", "TrueFalse", "ShortAnswer"]]
+          isIn: {
+            args: [["Single", "Multiple", "TrueFalse", "ShortAnswer"]],
+            msg: "Question type must be one of: Single, Multiple, TrueFalse, ShortAnswer"
         },
         allowNull: false,
-      },
+      }},
       content: {
         type: Sequelize.TEXT,
         allowNull: false,
