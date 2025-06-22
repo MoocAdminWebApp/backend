@@ -87,6 +87,9 @@ router.get("/:id",
  */
 router.post("/",
   commonValidate([
+    body("category")
+      .notEmpty()
+      .withMessage("Category is required"),
     body("type")
       .notEmpty()
       .withMessage("Type is required")

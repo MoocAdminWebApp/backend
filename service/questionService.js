@@ -68,8 +68,9 @@ const getQuestionById = async(id) => {
 }
 
 const createQuestion = async(body) => {
-  const {type, content, difficulty } = body
+  const {category, type, content, difficulty } = body
   const newQuestion = await Question.create({
+    category,
     type,
     content,
     difficulty
@@ -88,8 +89,11 @@ const deleteQuestionById = async(id) => {
 const updateQuestionById = async(id, body) => {
   await checkQuestionIdExist(id)
 
-  const {type, content, difficulty, updatedBy } = body
+  const question = await Question.findByPk(id)
+
+  const {category, type, content, difficulty, updatedBy } = body
   const newQuestion = await question.update({
+    category: category ?? question.category,
     type: type ?? question.type,
     content: content ?? question.content,
     difficulty: difficulty ?? question.difficulty,

@@ -50,7 +50,6 @@ const deleteQuestionById = async(req, res, next) => {
 const updateQuestionById = async(req, res, next) => {
   try {
     const questionId = req.params.id
-    console.log(req.body)
     const updatedQuestion = await questionService.updateQuestionById(questionId, req.body)
     res.status(201).json({
       success: true,
