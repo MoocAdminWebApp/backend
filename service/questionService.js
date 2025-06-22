@@ -2,6 +2,7 @@ const { EntityNotFoundException } = require('../common/commonError')
 const db = require('../models')
 const Question = db.Question
 const Option = db.Option
+const { Op } = require("sequelize")
 
 const checkQuestionIdExist = async(id) => {
   const question = await Question.findByPk(id)
@@ -10,18 +11,44 @@ const checkQuestionIdExist = async(id) => {
   }
 }
 
-const getAllQuestions = async() => {
-  const questions = await Question.findAll({
+const getAllQuestions = async (query) => {
+  const { page = 1, limit = 5, q } = query;
+  const offset = (page - 1) * limit;
+  
+
+  const where = {};
+
+  if (q) {
+    where[Op.or] = [
+      { content: { [Op.like]: `%${q}%` } },  
+      { category: { [Op.like]: `%${q}%` } }     
+    ];
+  }
+  console.log('Search Query', where.content)
+  const { count, rows } = await Question.findAndCountAll({
+    where,
+    limit: parseInt(limit),
+    offset: parseInt(offset),
     include: [
       {
         model: Option,
         as: "options",
-        attributes: ["id", "content", "isCorrect"]
-      }
-    ]
-  })
-  return questions
-}
+        attributes: ["id", "content", "isCorrect"],
+      },
+    ],
+    order: [["id", "ASC"]],
+  });
+
+  return {
+    data: rows,
+    meta: {
+      total: count,
+      page: parseInt(page),
+      limit: parseInt(limit),
+      pages: Math.ceil(count / limit),
+    },
+  };
+};
 
 const getQuestionById = async(id) => {
   const question = await Question.findByPk(id, {

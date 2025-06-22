@@ -1,6 +1,8 @@
 const express = require("express");
 const router = express.Router();
-const controller = require('../controller/questionController');
+const controller = require("../controller/questionController");
+const { commonValidate } = require("../middleware/expressValidator")
+const { body, param, query } = require("express-validator")
 
 /**
  * @swagger
@@ -20,7 +22,23 @@ const controller = require('../controller/questionController');
  *       200:
  *         description: Get all questions successfully
  */
-router.get("/", controller.getQuestions)
+router.get("/",
+  commonValidate([
+    query("page")
+      .optional()
+      .isInt({ min: 1 })
+      .withMessage("Page must be a positive integer"),
+
+    query("limit")
+      .optional()
+      .isInt({ min: 1 })
+      .withMessage("Limit must be a positive integer"),
+
+    query("q")
+      .optional()
+      .isString()
+      .withMessage("Search query must be a string"),]),
+  controller.getAllQuestions)
 
 
 /**
@@ -40,7 +58,15 @@ router.get("/", controller.getQuestions)
  *       200:
  *         description: Get question by ID successfully
  */
-router.get("/:id", controller.getQuestionById)
+router.get("/:id",
+  commonValidate([
+    param("id")
+      .notEmpty()
+      .withMessage("id is required")
+      .isInt({ min: 1 })
+      .withMessage("ID must be an integer")
+  ]), 
+  controller.getQuestionById)
 
 
 /**
@@ -59,7 +85,24 @@ router.get("/:id", controller.getQuestionById)
  *       201:
  *         description: Question created successfully
  */
-router.post("/", controller.createQuestion)
+router.post("/",
+  commonValidate([
+    body("type")
+      .notEmpty()
+      .withMessage("Type is required")
+      .isIn(["Single", "Multiple", "TrueFalse", "ShortAnswer"])
+      .withMessage("Type must be one of [ Single, Multiple, TrueFalse, ShortAnswer ]"),
+
+    body("content")
+      .notEmpty()
+      .withMessage("Content is required"),
+
+    body("difficulty")
+      .optional()
+      .isIn(["Easy", "Medium", "Hard"])
+      .withMessage("Difficulty must be one of [ Easy, Medium, Hard ]")
+  ]),
+  controller.createQuestion)
 
 /**
  * @swagger
@@ -78,7 +121,14 @@ router.post("/", controller.createQuestion)
  *       204:
  *         description: Question deleted
  */
-router.delete("/:id", controller.deleteQuestionById)
+router.delete("/:id",
+  commonValidate([
+    param("id")
+      .notEmpty()
+      .isInt({ min: 1 })
+      .withMessage("ID must be an positive integer")
+  ]), 
+  controller.deleteQuestionById)
 
 
 /**
@@ -104,6 +154,25 @@ router.delete("/:id", controller.deleteQuestionById)
  *       201:
  *         description: Question created successfully
  */
-router.put("/:id", controller.updateQuestionById)
+router.put("/:id",
+  commonValidate([
+    param("id")
+      .isInt({ min: 1 })
+      .withMessage("ID must be an integer"),
+    body("type")
+      .notEmpty()
+      .isIn(["Single", "Multiple", "TrueFalse", "ShortAnswer"])
+      .withMessage("Type is required and must be one of [ Single, Multiple, TrueFalse, ShortAnswer ]"),
+
+    body("content")
+      .notEmpty()
+      .withMessage("Content is required"),
+
+    body("difficulty")
+      .optional()
+      .isIn(["Easy", "Medium", "Hard"])
+      .withMessage("Difficulty must be Easy, Medium, or Hard")
+  ]), 
+  controller.updateQuestionById)
 
 module.exports = router

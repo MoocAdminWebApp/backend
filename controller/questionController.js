@@ -2,10 +2,11 @@ const questionService = require("../service/questionService")
 
 const getAllQuestions = async(req, res, next) => {
   try {
-    const questions = await questionService.getAllQuestions()
+    const questions = await questionService.getAllQuestions(req.query)
     res.status(200).json({
       success: true,
-      data: questions
+      data: questions.data, 
+      meta: questions.meta
     })
   } catch (e) {
     next(e)
@@ -49,10 +50,11 @@ const deleteQuestionById = async(req, res, next) => {
 const updateQuestionById = async(req, res, next) => {
   try {
     const questionId = req.params.id
-    const question = await questionService.updateQuestionById(questionId, req.body)
+    console.log(req.body)
+    const updatedQuestion = await questionService.updateQuestionById(questionId, req.body)
     res.status(201).json({
       success: true,
-      data: question
+      data: updatedQuestion
     })
   } catch (e) {
     next(e)

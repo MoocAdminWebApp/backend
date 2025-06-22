@@ -11,6 +11,13 @@ module.exports = {
         primaryKey: true,
         autoIncrement: true,
       },
+      category: {
+        type: Sequelize.STRING(50),
+        validate: {
+          len: [2, 50]
+        },
+        allowNull: false
+      },
       type: {
         type: Sequelize.STRING(20),
         validate: {
