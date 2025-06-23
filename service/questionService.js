@@ -12,7 +12,7 @@ const checkQuestionIdExist = async(id) => {
 }
 
 const getAllQuestions = async (query) => {
-  const { page = 1, limit = 5, q } = query;
+  const { page = 1, limit = 10, q } = query;
   const offset = (page - 1) * limit;
   
 
@@ -24,7 +24,6 @@ const getAllQuestions = async (query) => {
       { category: { [Op.like]: `%${q}%` } }     
     ];
   }
-  console.log('Search Query', where.content)
   const { count, rows } = await Question.findAndCountAll({
     where,
     limit: parseInt(limit),
@@ -92,15 +91,15 @@ const updateQuestionById = async(id, body) => {
   const question = await Question.findByPk(id)
 
   const {category, type, content, difficulty, updatedBy } = body
-  const newQuestion = await question.update({
-    category: category ?? question.category,
-    type: type ?? question.type,
-    content: content ?? question.content,
-    difficulty: difficulty ?? question.difficulty,
-    updatedBy: updatedBy ?? question.updatedBy,
+  const updatedQuestion = await question.update({
+    category: category ?? null,
+    type: type ?? null,
+    content: content ?? null,
+    difficulty: difficulty ?? null,
+    updatedBy: updatedBy ?? null,
   });
 
-  return newQuestion
+  return updatedQuestion
 }
 
 module.exports = {
