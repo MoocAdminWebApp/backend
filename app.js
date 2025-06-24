@@ -88,4 +88,12 @@ app.use("/api", authRouter);
 const erorhandle = require("./middleware/errorhandling");
 app.use(erorhandle.errorhandling);
 
+//config  chapterRouter
+const chapterRouter = require("./router/chapterRouter");
+app.use("/api/chapters", chapterRouter);
+
+//config mediaRouter
+const mediaRouter = require("./router/mediaRouter");
+app.use("/api/media", mediaRouter);
+
 module.exports = app;
