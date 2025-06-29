@@ -1,10 +1,10 @@
 const { Course, User, Chapter } = require("../models");
 
-exports.createCourse = async (data) => {
+const createCourse = async (data) => {
   return await Course.create(data);
 };
 
-exports.getCourses = async (filters) => {
+const getCourses = async (filters) => {
   const where = {};
   if (filters.status) {
     where.status = filters.status;
@@ -15,7 +15,7 @@ exports.getCourses = async (filters) => {
   return await Course.findAll({ where });
 };
 
-exports.getCourseById = async (id) => {
+const getCourseById = async (id) => {
   return await Course.findByPk(id, {
     include: [
       { model: User, as: "instructor", attributes: ["id", "name"] },
@@ -24,14 +24,14 @@ exports.getCourseById = async (id) => {
   });
 };
 
-exports.updateCourse = async (id, data) => {
+const updateCourse = async (id, data) => {
   const course = await Course.findByPk(id);
   if (!course) return null;
   await course.update(data);
   return course;
 };
 
-exports.updateCourseStatus = async (id, status) => {
+const updateCourseStatus = async (id, status) => {
   const course = await Course.findByPk(id);
   if (!course) return null;
   course.status = status;
@@ -39,9 +39,18 @@ exports.updateCourseStatus = async (id, status) => {
   return course;
 };
 
-exports.deleteCourse = async (id) => {
+const deleteCourse = async (id) => {
   const course = await Course.findByPk(id);
   if (!course) return false;
   await course.destroy();
   return true;
 };
+
+module.exports = {
+  createCourse,
+  getCourses,
+  getCourseById,
+  updateCourse,
+  updateCourseStatus,
+  deleteCourse
+}

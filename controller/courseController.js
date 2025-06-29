@@ -1,6 +1,6 @@
 const courseService = require("../services/course.service");
 
-exports.createCourse = async (req, res) => {
+const createCourse = async (req, res) => {
   try {
     const course = await courseService.createCourse(req.body);
     res.status(201).json(course);
@@ -9,7 +9,7 @@ exports.createCourse = async (req, res) => {
   }
 };
 
-exports.getCourses = async (req, res) => {
+const getCourses = async (req, res) => {
   try {
     const courses = await courseService.getCourses(req.query);
     res.json(courses);
@@ -18,7 +18,7 @@ exports.getCourses = async (req, res) => {
   }
 };
 
-exports.getCourseById = async (req, res) => {
+const getCourseById = async (req, res) => {
   try {
     const course = await courseService.getCourseById(req.params.id);
     if (!course) {
@@ -30,7 +30,7 @@ exports.getCourseById = async (req, res) => {
   }
 };
 
-exports.updateCourse = async (req, res) => {
+const updateCourse = async (req, res) => {
   try {
     const course = await courseService.updateCourse(req.params.id, req.body);
     if (!course) {
@@ -42,7 +42,7 @@ exports.updateCourse = async (req, res) => {
   }
 };
 
-exports.updateCourseStatus = async (req, res) => {
+const updateCourseStatus = async (req, res) => {
   try {
     const course = await courseService.updateCourseStatus(
       req.params.id,
@@ -57,7 +57,7 @@ exports.updateCourseStatus = async (req, res) => {
   }
 };
 
-exports.deleteCourse = async (req, res) => {
+const deleteCourse = async (req, res) => {
   try {
     const success = await courseService.deleteCourse(req.params.id);
     if (!success) {
@@ -68,3 +68,12 @@ exports.deleteCourse = async (req, res) => {
     res.status(500).json({ error: err.message });
   }
 };
+
+module.exports = {
+  createCourse, 
+  getCourses, 
+  getCourseById, 
+  updateCourse, 
+  updateCourseStatus,
+  deleteCourse
+}
