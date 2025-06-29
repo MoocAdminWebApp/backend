@@ -4,6 +4,9 @@ const loginUser = async (req, res) => {
   const { email, password } = req.body;
   try {
     const result = await authService.login(email, password);
+    if (result.isSuccess == false) {
+      throw new Error(result.message);
+    }
     const token = result.data;
     res.cookie("token", token, {
       httpOnly: true,
@@ -11,9 +14,9 @@ const loginUser = async (req, res) => {
       sameSite: "strict", //prevent CSRF attack
       maxAge: cookieConfig.maxAge,
     });
-    res.sendCommonValue(200, "success", result.data);
+    res.sendCommonValue(200, "Login successful", result.data);
   } catch (err) {
-    res.sendCommonValue(400, "fail",{});
+    res.sendCommonValue(400, err.message, {});
   }
 };
 

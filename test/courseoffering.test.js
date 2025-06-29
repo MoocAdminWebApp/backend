@@ -48,11 +48,11 @@ describe("CourseOffering API CRUD", () => {
       .send({
         courseName: "Node.js Basics",
         teacherName: "Mr. Lin",
-        semester: "2025 Spring",
+        semester: "2026 First",
         capacity: 30,
         enrolledCount: 0,
         location: "A101",
-        schedule: "Mon 10:00-12:00",
+        schedule: "7/3/2026-7/6/2026",
         status: 0,
         courseId: 1,
         createdBy: 1,
@@ -101,7 +101,7 @@ describe("CourseOffering API CRUD", () => {
       .delete(`/api/courseofferings/${createdId}`)
       .set("Authorization", `Bearer ${token}`);
 
-    expect(res.statusCode).toBe(200);
+    expect(res.statusCode).toBe(204);
   });
 });
 

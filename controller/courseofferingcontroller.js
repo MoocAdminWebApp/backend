@@ -40,14 +40,17 @@ const update = async (req, res) => {
   }
 };
 
-const remove = async (req, res) => {
+const deleteOne = async (req, res) => {
   const id = req.params.id;
   const result = await courseofferingService.deleteAsync(id);
-  if (result.isSuccess) {
-    res.sendCommonValue(200, "success", result.data);
-  } else {
-    res.sendCommonValue(result.statusCode || 400, "fail", result.message);
+  if(!result.isSuccess&&result.statusCode===404){
+    return res.sendStatus(204);
   }
+  if(result.isSuccess){
+    return res.sendStatus(204);
+  }
+
+  return res.sendCommonValue(result.statusCode || 400, "fail", result.message);
 };
 
 module.exports = {
@@ -55,6 +58,6 @@ module.exports = {
   getById,
   create,
   update,
-  remove,
+  deleteOne,
 };
 
