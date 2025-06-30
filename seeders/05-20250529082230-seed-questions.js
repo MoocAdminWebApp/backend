@@ -7,6 +7,7 @@ module.exports = {
 
     await queryInterface.bulkInsert("questions", [
       {
+        category: "frontend",
         type: "Single",
         content: "Which HTML tag is used to insert a line break?",
         difficulty: "Easy",
@@ -16,6 +17,7 @@ module.exports = {
         updatedAt: now,
       },
       {
+        category: "frontend",
         type: "Multiple",
         content: "Which of the following are valid CSS units?",
         difficulty: "Easy",
@@ -25,6 +27,7 @@ module.exports = {
         updatedAt: now,
       },
       {
+        category: "frontend",
         type: "TrueFalse",
         content: "CSS stands for Cascading Style Sheets.",
         difficulty: "Easy",
@@ -34,6 +37,7 @@ module.exports = {
         updatedAt: now,
       },
       {
+        category: "backend",
         type: "Single",
         content: "Which HTTP method is used to retrieve data from a server?",
         difficulty: "Easy",
@@ -43,6 +47,7 @@ module.exports = {
         updatedAt: now,
       },
       {
+        category: "backend",
         type: "Multiple",
         content: "Which of the following are backend languages?",
         difficulty: "Easy",
@@ -52,6 +57,7 @@ module.exports = {
         updatedAt: now,
       },
       {
+        category: "backend",
         type: "ShortAnswer",
         content: "What is the purpose of middleware in Express.js?",
         difficulty: "Hard",
@@ -61,6 +67,7 @@ module.exports = {
         updatedAt: now,
       },
       {
+        category: "database",
         type: "Single",
         content: "Which SQL keyword is used to sort results?",
         difficulty: "Medium",
@@ -70,6 +77,7 @@ module.exports = {
         updatedAt: now,
       },
       {
+        category: "database",
         type: "TrueFalse",
         content: "A primary key can have duplicate values in SQL.",
         difficulty: "Medium",
@@ -79,6 +87,7 @@ module.exports = {
         updatedAt: now,
       },
       {
+        category: "database",
         type: "ShortAnswer",
         content: "Name one advantage of using indexes in a database.",
         difficulty: "Hard",

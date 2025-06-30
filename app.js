@@ -6,6 +6,7 @@ const app = express();
 const authRouter = require("./router/authRouter");
 const cookiesParser = require("cookie-parser");
 const { expressjwt: jwtMiddleware } = require("express-jwt");
+const { authorizeRole } = require("./middleware/authorizeRole")
 //config cors
 const cors = require("cors");
 
@@ -47,7 +48,7 @@ app.use(
     return req.cookies.token;
   }
   return null;
-}
+  }
 
 
 
@@ -83,6 +84,11 @@ app.use("/api/users", userRouter);
 
 //config authRouter
 app.use("/api", authRouter);
+
+
+//config questionRouter
+const questionRouter = require("./router/questionRouter")
+app.use("/api/questions", authorizeRole("admin", "teacher"), questionRouter)
 
 //config erorhandle
 const erorhandle = require("./middleware/errorhandling");
