@@ -1,13 +1,15 @@
 const userService = require("../service/userService");
+const { getCurrentUser } = require("../common/getCurrentUser");
 
 const createUser = async (req, res) => {
-  try {
-    const creatorId = req.user?.id || null; // get the creatorId from the request
-    const newUser = await userService.createUserAsync(req.body, creatorId);
-    res.status(201).json(newUser);
-  } catch (err) {
-    const statusCode = err.statusCode || 400;
-    res.status(statusCode).json({ status: statusCode, error: err.message });
+  //const creatorId = req.auth?.id || null; // get the creatorId from the request
+  const creatorId = getCurrentUser(req).userId; // get the creatorId from the common function
+  const result = await userService.createUserAsync(req.body, creatorId);
+
+  if (result.isSuccess) {
+    res.sendCommonValue(201, "success", result.data);
+  } else {
+    res.sendCommonValue(400, "fail");
   }
 };
 const getAllUsers = async (req, res) => {

@@ -19,7 +19,11 @@ const createUserAsync = async (userData, creatorId) => {
     createdBy: creatorId || null,
   });
 
-  return newUser.toJSON();
+  return {
+    isSuccess: newUser.id > 0 ? true : false,
+    message: "",
+    data: newUser,
+  };
 };
 
 const getAllUsersAsync = async () => {
