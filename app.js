@@ -81,6 +81,9 @@ app.use("/api/courseofferings", courseofferingrouter);
 //config userRouter
 const userRouter = require("./router/userRouter");
 app.use("/api/users", userRouter);
+//config carouselRouter
+const carouselRouter = require("./router/carouselRouter");
+app.use("/api/carousels", carouselRouter);
 
 //config authRouter
 app.use("/api", authRouter);

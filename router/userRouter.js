@@ -26,7 +26,7 @@ const EUserAccess = ["ADMIN", "TEACHER", "STUDENT"];
  *       content:
  *         application/json:
  *           schema:
- *             type: object
+ *             type: object 
  *             required:
  *               - email
  *               - password
