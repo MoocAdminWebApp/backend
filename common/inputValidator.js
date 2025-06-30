@@ -1,45 +1,78 @@
-const {ValidationException } = require('./commonError');
-const {Menu} = require('../models');
+const { Menu } = require("../models");
 
-const validateMenuData = (data) => {
-    const {
-        title,
-        type,
-        parentId,
-        orderNum,
-        path,
-        component,
-        permission,
-        hidden,
-        status,
-        comment
-    }   = data;
+const titlePattern = /^[A-Za-z0-9 ]+$/;
 
-    if (!title || typeof title !== 'string' || title.trim() === '') {
-        throw new ValidationException('Title is required and must be a non-empty string');
-    }
+const MenuValidator = async data => {
+  /**
+   * Helper functions to retrieve existing type and status values in the database
+   */
+  const getValidTypes = async () => {
+    const typeList = await Menu.findAll({
+      attributes: ["type"],
+      group: ["type"],
+    });
+    return typeList.map(t => t.type);
+  };
+  const getValidStatuses = async () => {
+    const statusList = await Menu.findAll({
+      attributes: ["status"],
+      group: ["status"],
+    });
+    return statusList.map(s => s.status);
+  };
+  const [validTypes, validStatuses] = await Promise.all([getValidTypes(), getValidStatuses()]);
 
-    const validStatuses = async () => {
-        const statusList = await Menu.findAll({
-            attributes: ['status'],
-            group: ['status']
-        });
-        return statusList.map(s => s.status);
-    }
-    if (!status || !validStatuses.includes(type)) {
-        throw new ValidationException('Status field is required and must be selected from: ' + validStatuses.join(', '));
-    }
+  /**
+   * Title field should satisfy:
+   * 1) is a non-null string
+   * 2) only contains letters, space, and numbers
+   * 3) no longer than 255 characters
+   */
+  const isValidTitle = title =>
+    typeof title === "string" &&
+    title.trim() !== "" &&
+    titlePattern.test(title) &&
+    title.length <= 255;
 
-    const validTypes = async () => {
-        const typeList = await Menu.findAll({
-            attributes: ['type'],
-            group: ['type']
-        });
-        return typeList.map(t => t.type);
-    }
-    if (!type || !validTypes.includes(type)) {
-        throw new ValidationException('Type field is required and must be selected from: ' + validTypes.join(', '));
-    }
+  /**
+   * Type field should satisfy:
+   * 1) is a non-null string
+   * 2) should belong to one of the existing type
+   */
+  const isValidType = type => !!type && validTypes.includes(type);
 
-    
-}
+  /**
+   * Status field should satisfy:
+   * 1) is a non-null string
+   * 2) should belong to one of the existing status value
+   */
+  const isValidStatus = status => !!status && validStatuses.includes(status);
+
+  /**
+   * Comment field should be no longer than 255 characters
+   */
+  const isValidComment = comment => comment == null || comment.length <= 255;
+
+  // TODO: edit the following validations after implementing frontend
+  // path
+  // component
+  // permission
+
+  const result = {
+    title: isValidTitle(data.title),
+    type: isValidType(data.type),
+    status: isValidStatus(data.status),
+    comment: isValidComment(data.comment),
+  };
+  const invalidKeys = Object.keys(result).filter(key => result[key] === false);
+
+  return {
+    ...result,
+    invalidKeys,
+    finalResult: invalidKeys.length === 0,
+  };
+};
+
+module.exports = {
+  MenuValidator,
+};
