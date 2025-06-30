@@ -1,11 +1,13 @@
 const { EntityNotFoundException, EntityAlreadyExistsException } = require("./commonError");
 const { Menu, RoleMenu, UserRole, RolePermission, Role, Permission } = require("../models");
+const { Op } = require("sequelize");
 
 const statusCodes = {
   success: 200,
   badRequest: 400,
   authenticationError: 403,
   notFound: 404,
+  internalError: 500,
 };
 
 const menuOperation = {
@@ -14,6 +16,7 @@ const menuOperation = {
   delete: 2,
   updateOrderNum: -1,
 };
+
 /**
  * ACCESS CHECKING FUNCTIONS
  * The functions listed below are used to check whether user has sufficient access (role + permission)
@@ -201,7 +204,7 @@ const UserAuthenticatorAllMenu = async userId => {
   );
 
   // return a list of user's accessible menus
-  const filteredMenuList = menuAccessfilteredByPermission.map(m => m.menuId);
+  const filteredMenuList = menuAccessFilteredByPermission.map(m => m.menuId);
   return filteredMenuList;
 };
 
@@ -237,25 +240,41 @@ const bulkUpdateMenuRecords = async updateMenuList => {
   for (const menuData of updateMenuList) {
     const menuItem = await Menu.findByPk(menuData.id);
     if (!menuItem) {
-      throw new EntityNotFoundException(`Menu item with id ${menuData.id} not found`);
+      return {
+        statusCode: statusCodes.notFound,
+        data: null,
+        message: `Error: Failed to find menu item - menu ${menuData.id}`,
+      };
     }
-    // Update orderNum, and parentId if required
-    if (menuData.parentId === menuOperation.updateOrderNum) {
+
+    const updateFields =
+      menuData.parentId === menuOperation.updateOrderNum
+        ? {
+            orderNum: menuData.orderNum,
+          }
+        : {
+            orderNum: menuData.orderNum,
+            parentId: menuData.parentId,
+          };
+    try {
       const updateMenuItem = await menuItem.update({
-        orderNum: menuData.orderNum,
+        ...updateFields,
         updatedAt: new Date(),
       });
       updateMenuResult.push(updateMenuItem.toJSON());
-    } else {
-      const updateMenuItem = await menuItem.update({
-        orderNum: menuData.orderNum,
-        parentId: menuData.parentId,
-        updatedAt: new Date(),
-      });
-      updateMenuResult.push(updateMenuItem.toJSON());
+    } catch (err) {
+      return {
+        statusCode: statusCodes.internalError,
+        data: null,
+        message: `Update menu ${menuData.id} failed: ${err.message}`,
+      };
     }
   }
-  return updateMenuResult;
+  return {
+    statusCode: statusCodes.success,
+    data: updateMenuResult,
+    message: "Successfully updated all the relevant menu records",
+  };
 };
 
 /* Helper function to create a map of child rooted at each menu */
@@ -278,7 +297,11 @@ const traverseMenuTree = async (rootMenuId, rootMenuOrderNum, newParentId) => {
   // Check whether the target menu item exists
   const rootMenuItem = await Menu.findByPk(rootMenuId);
   if (rootMenuItem === null) {
-    throw new EntityNotFoundException(`Menu item with id ${rootMenuId} not found`);
+    return {
+      statusCode: statusCodes.notFound,
+      data: null,
+      message: `Error: Failed to find child menu item - menu ${rootMenuId}`,
+    };
   }
 
   // Get child menu map
@@ -304,15 +327,9 @@ const traverseMenuTree = async (rootMenuId, rootMenuOrderNum, newParentId) => {
   await preorderTraverseUpdate(rootMenuId, rootMenuOrderNum);
 
   // Update the record in the database and return result
-  const updatedMenuItems = await bulkUpdateMenuRecords(menusToUpdate);
-  const statusCode = updatedMenuItems ? statusCodes.success : statusCodes.badRequest;
-  return {
-    statusCode: statusCode,
-    data: updatedMenuItems,
-  };
+  const updatedMenuResult = await bulkUpdateMenuRecords(menusToUpdate);
+  return updatedMenuResult;
 };
-
-/* Traverse all the descendant menus of updated menu in Preorder sequence */
 
 /* Helper function to handle the case where the user requests to change parentId of a menu item */
 const updateMenuInTree = async (menuId, menuData) => {
@@ -321,56 +338,94 @@ const updateMenuInTree = async (menuId, menuData) => {
   if (!menu) {
     return {
       statusCode: statusCodes.notFound,
-      data: [],
+      data: null,
+      message: `Error: Failed to find menu item - menu "${menu.title}"`,
     };
   }
 
   const oldParentId = menu.parentId;
   const newParentId = menuData.parentId;
-  const menuUpdateResult = await menu.update({
-    ...menuData,
-    updatedAt: new Date(),
-  });
 
   // Check whether the old and new parent menus have the same orderNum
   //   If yes, then don't need to bulk update the orderNum for descendant menus
   //   If no, then traverse all the descendant menus and update the orderNum respectively
   const shouldUpdateTree = await needToUpdateMenuTree(oldParentId, newParentId);
-  if (!shouldUpdateTree.needUpdate) {
+  try {
+    const menuUpdateResult = await menu.update({
+      ...menuData,
+      updatedAt: new Date(),
+    });
+    if (!shouldUpdateTree.needUpdate) {
+      return {
+        statusCode: statusCodes.success,
+        data: menuUpdateResult.toJSON(),
+        message: `Successfullt updated the menu ${menu.title} without modifying menu tree structure`,
+      };
+    }
+
+    // Update orderNum for descendant menus
+    const newMenuOrderNum = shouldUpdateTree.newParentOrderNum + 1; // +1 for child level
+    const updatedResult = await traverseMenuTree(menuId, newMenuOrderNum);
+    return updatedResult;
+  } catch (err) {
     return {
-      statusCode: menuUpdateResult ? statusCodes.success : statusCodes.badRequest,
-      data: menuUpdateResult.toJSON(),
+      statusCode: statusCodes.internalError,
+      data: null,
+      message: `Update menu "${menu.title}" failed: ${err.message}`,
+    };
+  }
+};
+
+/* Helper function to create a new menu record */
+const insertMenuIntoTree = async menuItem => {
+  // Check whether the menu item already exits in the system
+  const fieldsToCheck = [{ title: menuItem.title }];
+  if (menuItem.path != null && menuItem.path.length > 0) {
+    fieldsToCheck.push({ path: menuItem.path });
+  }
+  if (menuItem.component != null && menuItem.component.length > 0) {
+    fieldsToCheck.push({ component: menuItem.component });
+  }
+
+  // TODO: change the method from findOne to findAll and update conflict fields checking criteria
+  const menu = await Menu.findOne({
+    where: {
+      [Op.or]: fieldsToCheck,
+    },
+    attributes: ["id", "title", "path", "component"],
+  });
+
+  if (menu) {
+    // Further check the conflict field for frontend to display precise error message
+    const conflictFields = [];
+    if (menu.title === menuItem.title) conflictFields.push("Title");
+    if (menu.path === menuItem.path) conflictFields.push("Path");
+    if (menu.component === menuItem.component) conflictFields.push("Component");
+
+    return {
+      statusCode: statusCodes.badRequest,
+      data: null,
+      message: `Error: menu with given ${conflictFields.join(", ")} already exists`,
     };
   }
 
-  const newMenuOrderNum = shouldUpdateTree.newParentOrderNum + 1; // +1 for child level
-  const updatedResult = await traverseMenuTree(menuId, newMenuOrderNum);
-  return {
-    statusCode: updatedResult.statusCode,
-    data: updatedResult.data,
-  };
-};
-
-/* Helper function to insert new menu record into the database */
-const insertMenuIntoTree = async menuItem => {
-  // Check whether the menu item already exits in the system
-  const menu = await Menu.findOne({
-    where: { title: menuItem.title },
-    // TODO: check whether the path and component already exist in the database
-  });
-  if (menu) {
-    throw new EntityAlreadyExistsException(`Menu with title ${menuItem.title} already exists.`);
+  try {
+    const result = await Menu.create({
+      ...menuItem,
+      updatedAt: new Date(),
+      createdAt: new Date(),
+    });
+    return {
+      statusCode: statusCodes.success,
+      data: result.toJSON(),
+    };
+  } catch (err) {
+    return {
+      statusCode: statusCodes.internalError,
+      data: null,
+      message: `Failed to create new menu item: ${err.message}`,
+    };
   }
-  const result = await Menu.create({
-    ...menuItem,
-    updatedAt: new Date(),
-    createdAt: new Date(),
-  });
-  const resultStatusCode = result ? statusCodes.success : statusCodes.badRequest;
-  return {
-    statusCode: resultStatusCode,
-    data: result,
-  };
 };
 
 /* Helper function to delete existing menu record from the database and handle possible tree structure update */
@@ -378,18 +433,31 @@ const deleteMenuFromTree = async menuId => {
   // Check whether the menu item exits
   const menu = await Menu.findByPk(menuId);
   if (!menu) {
-    throw new EntityNotFoundException(`Menu item with id ${menuId} not found`);
+    return {
+      statusCode: statusCodes.notFound,
+      data: null,
+      message: `Error: Failed to find menu item - menu "${menu.title}"`,
+    };
   }
+  const menuTitle = menu.title;
 
   // Check whether the menu item has child menus
   const childMenuMap = await getDescendantMenuMap();
   const childMenuList = childMenuMap.get(menuId) || [];
   if (childMenuList.length < 1) {
     // There's no need to update the tree structure
-    await menu.destroy();
-    return {
-      statusCode: statusCodes.success,
-    };
+    try {
+      await menu.destroy();
+      return {
+        statusCode: statusCodes.success,
+        message: `Successfully delete menu item - "${menuTitle}"`,
+      };
+    } catch (err) {
+      return {
+        statusCode: statusCodes.internalError,
+        message: `Failed to delete menu item - "${menuTitle}"`,
+      };
+    }
   }
 
   // Handle the case where need to update the child menus' parentId and orderNum
@@ -429,6 +497,7 @@ const MenuHandler = async (method, menuId, data) => {
       break;
   }
 
+  // all the possible results are in the same format for menuService to use
   return result;
 };
 
