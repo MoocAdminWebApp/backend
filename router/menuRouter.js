@@ -4,8 +4,7 @@ var router = express.Router();
 const { body, query, param } = require("express-validator");
 const { commonValidate } = require("../middleware/expressValidator");
 
-const mockJwt = require("../middleware/mockJWT");   // TODO: remove this line when authentication is implemented
-
+const mockJwt = require("../middleware/mockJWT"); // TODO: remove this line when authentication is implemented
 
 const menuControllers = require("../controller/menuController");
 
@@ -35,7 +34,7 @@ const menuControllers = require("../controller/menuController");
  */
 router.get(
   "/:id",
-  mockJwt,  //TODO: remove this line when authentication is implemented
+  mockJwt, //TODO: remove this line when authentication is implemented
   commonValidate([
     param("id")
       .notEmpty()
@@ -61,8 +60,8 @@ router.get(
  *        description: Server Error
  */
 router.get(
-    "/",
-    mockJwt,  //TODO: remove this line when authentication is implemented
-    menuControllers.getAllMenus
-  );
+  "/",
+  mockJwt, //TODO: remove this line when authentication is implemented
+  menuControllers.getAllMenus
+);
 module.exports = router;

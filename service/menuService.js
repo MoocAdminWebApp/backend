@@ -1,133 +1,200 @@
-const {Menu, RoleMenu, UserRole, RolePermission} = require('../models');
-const {EntityNotFoundException,EntityAlreadyExistsException,ValidationException} = require('../common/commonError.js');
+const { Menu, RoleMenu, UserRole, RolePermission } = require("../models");
+const { EntityNotFoundException } = require("../common/commonError.js");
 
-const getMenuByIdAsync = async ({menuId, userId}) => {
-    // Check whether the menu item exists
-    const menuItem = await Menu.findByPk(menuId);
-    
-    console.log(`Menu item with id ${menuId} found:`, menuItem);
-    if (menuItem === null) {
-        throw new EntityNotFoundException(`Menu item with id ${menuId} not found`);
-    }
+const { MenuValidator } = require("../common/inputValidator.js");
+const {
+  UserAuthenticatorSingleMenu,
+  UserAuthenticatorAllMenu,
+  MenuHandler,
+} = require("../common/commonHelper.js");
 
-    // Check user's roles and corresponding permissions
-    const userRoles = await UserRole.findAll({ 
-        where: { userId },
-        attributes: ['roleId']}
-    );
-    if (!userRoles || userRoles.length === 0) {
-        throw new EntityNotFoundException(`User with id ${userId} not found`);
-    }
-    const userPermissions = await RolePermission.findAll({
-        where: { roleId: userRoles.map(role => role.roleId) },
-        attributes: ['permissionId']
-    });
-    if (!userPermissions || userPermissions.length === 0) {
-        throw new EntityNotFoundException(`User's permission not found`);
-    }
+const menuOperation = {
+  insert: 0,
+  update: 1,
+  delete: 2,
+};
+const statusCodes = {
+  success: 200,
+  badRequest: 400,
+  authenticationError: 403,
+  notFound: 404,
+};
+const errorMessages = {
+  role: "Role Denied: User must be assigned with at least one of the following roles to",
+  permission: "Permission Denied: User must have the following permission to",
+  syntax: "Syntax Error: Please check the following fields:",
+};
+const commonRoleId = {
+  superAdmin: 1, // TODO: change to actual superAdmin id in the role table
+};
 
-    // Retrieve accepted role(s) and required permission(s)
-    const acceptedRoles = await RoleMenu.findAll({
-        where: { menuId },
-        attributes: ['roleId']
-    });
-    const acceptedRolesIds = acceptedRoles.map(role => role.roleId);
-    const requiredPermissions = menuItem.permission
-        ? menuItem.split(',').map(p => p.trim())
-        : [];
+/**
+ * Function to retreive a specific menu
+ */
+const getMenuByIdAsync = async ({ menuId, userId }) => {
+  // Check whether the menu item exists
+  const menuItem = await Menu.findByPk(menuId);
+  if (menuItem === null) {
+    throw new EntityNotFoundException(`Menu item with id ${menuId} not found`);
+  }
 
-    console.log(`Accepted roles for menu item ${menuId}:`, acceptedRolesIds);
-    console.log(`Required permissions for menu item ${menuId}:`, requiredPermissions);
+  // Check whether the user has sufficient access
+  const userAuthResult = await UserAuthenticatorSingleMenu(menuId, userId);
+  if (!userAuthResult.isAuthenticated) {
+    const errorMsg = userAuthResult.role
+      ? `${errorMessages.permission} view this menu: ${userAuthResult.permissionName}`
+      : `${errorMessages.role} view this menu: ${userAuthResult.roleNames.join(", ")}`;
+    return {
+      statusCode: statusCodes.authenticationError,
+      message: errorMsg,
+    };
+  }
 
-    // Check whether the user has the access to menu item
-    const userRolesIds = userRoles.map(role => role.roleId);
-    const userPermissionsIds = userPermissions.map(permission => permission.permissionId);
-    const roleAccess = acceptedRolesIds.some(roleId => userRolesIds.includes(roleId));
-    const permissionAccess = requiredPermissions.every(permissionId => userPermissionsIds.includes(permissionId));
-    if (!roleAccess) {
-        throw new ValidationException(`User with id ${userId} does not have access to menu item with id ${menuId} -- role access denied`);
-    }
-    if (!permissionAccess) {
-        throw new ValidationException(`User with id ${userId} does not have access to menu item with id ${menuId} -- permission access denied`);
-    }
-    return menuItem.toJSON();
-}
+  return menuItem.toJSON();
+};
 
-const getAllMenusAsync = async ({userId}) => {
-    // Get user's roles
-    const userRoles = await UserRole.findAll({ 
-        where: { userId },
-        attributes: ['roleId']}
-    );
-    if (!userRoles || userRoles.length === 0) {
-        throw new EntityNotFoundException(`User with id ${userId} not found`);
-    }
-    const userRoleIds = userRoles.map(r => r.roleId);
+/**
+ * Function to retrieve a list of menus that accessible by the user
+ */
+const getAllMenusAsync = async ({ userId }) => {
+  // Get all the menus accessible by user
+  const menuIds = await UserAuthenticatorAllMenu(userId);
 
-    // Get all the menus accessible by those roles
-    const roleMenus = await RoleMenu.findAll({
-        where: { roleId: userRoleIds },
-        attributes: ['menuId']
-    });
-    if (!roleMenus || roleMenus.length === 0) {
-        throw new EntityNotFoundException(`User's roles do not have access to any menus`);
-    }
-    const menuIds = roleMenus.map(r => r.menuId);
+  // Retrieve an abstract of all the accessible menu items --> to build up the tree structure
+  const accessibleMenus = await Menu.findAll({
+    where: {
+      id: menuIds,
+      type: ["DIRECTORY", "MENU"], // Only directories and menus, not buttons
+    },
+    attributes: ["id", "title", "parentId", "orderNum", "path", "component"], // Only retrieve essential data to build up the sidebar
+    order: [
+      ["orderNum", "ASC"],
+      ["parentId", "ASC"],
+    ],
+  });
+  return accessibleMenus.map(m => m.toJSON());
+};
 
-    // Retrieve an abstract of all the accessible menu items --> to build up the tree structure
-    const accessibleMenus = await Menu.findAll({
-        where: { 
-            id: menuIds,
-            type: ['DIRECTORY', 'MENU'] // Only directories and menus, not buttons
-         },
-        attributes: ['id', 'title', 'parentId', 'orderNum', 'path', 'component'],  // Only retrieve essential data to build up the sidebar
-        order: [['orderNum', 'ASC'], ['parentId', 'ASC']],
-    });
-    return accessibleMenus;
-}
+/**
+ * Function to update an existing menu record
+ */
+const updateMenuByIdAsync = async (menuId, userId, menuData) => {
+  // Check whether the menu item exists
+  const menuItem = await Menu.findByPk(menuId);
+  if (menuItem === null) {
+    return {
+      statusCode: statusCodes.notFound,
+      message: `Menu item with id ${menuId} not found`,
+    };
+  }
 
-const updateMenuByIdAsync = async({menuId, userId, menuData}) => {
-    // Check whether the menu item exists
-    const menuItem = await Menu.findByPk(menuId);
-    if (menuItem === null) {
-        throw new EntityNotFoundException(`Menu item with id ${menuId} not found`);
-    }
+  // Check whether user has sufficient access to update the menu item
+  const userAuthResult = await UserAuthenticatorSingleMenu(menuId, userId);
+  if (!userAuthResult.isAuthenticated) {
+    const errorMsg = userAuthResult.role
+      ? `${errorMessages.permission} update this menu: ${userAuthResult.permissionName}`
+      : `${errorMessages.role} update this menu: ${userAuthResult.roleNames.join(", ")}`;
+    return {
+      statusCode: statusCodes.authenticationError,
+      message: errorMsg,
+    };
+  }
 
-    // Check whether user's allowed to update the menu item
-    const userRoles = await UserRole.findAll({ 
-        where: { userId },
-        attributes: ['roleId']}
-    );
-    if (!userRoles || userRoles.length === 0) {
-        throw new EntityNotFoundException(`User with id ${userId} not found`);
-    }
-    const userRoleIds = userRoles.map(role => role.roleId);
-    const acceptedRoles = await RoleMenu.findAll({
-        where: { menuId },
-        attributes: ['roleId']
-    });
-    const acceptedRolesIds = acceptedRoles.map(role => role.roleId);
-    const roleAccess = acceptedRolesIds.some(roleId => userRoleIds.includes(roleId));
-    if (!roleAccess) {
-        throw new ValidationException(`User with id ${userId} does not have access to update menu item with id ${menuId}`);
-    }
+  // Check whether the inputs are legal and satisfy the requirements
+  const checkInputResult = await MenuValidator({
+    title: menuData.title ? menuData.title : "",
+    type: menuData.type ? menuData.type : "",
+    status: menuData.status ? menuData.status : "",
+    comment: menuData.comment,
+  });
+  if (!checkInputResult.finalResult) {
+    return {
+      statusCode: statusCodes.badRequest,
+      message: `${errorMessages.syntax} ${checkInputResult.invalidKeys.join(", ")}`,
+      invalidKeys: checkInputResult.invalidKeys,
+    };
+  }
 
-    // Update the menu item
-    const updatedMenuItem = await menuItem.update(menuData, {
-        where: { id: menuId },    
-    });
+  // Update the menu item
+  const updateResult = await MenuHandler(menuOperation.update, menuId, menuData);
+  // TODO: continue working on this place after unifying all the return
+  return updateResult;
+};
 
-}
+const deleteMenuByIdAsync = async (menuId, userId) => {
+  // Check whether the menu item exists
+  const menuItem = await Menu.findByPk(menuId);
+  if (menuItem === null) {
+    return {
+      statusCode: statusCodes.notFound,
+      message: `Menu item with id ${menuId} not found`,
+    };
+  }
 
-const deleteMenuByIdAsync = async({menuId, userId}) => {
-}
+  // Check whether user has sufficient access to update the menu item
+  const userAuthResult = await UserAuthenticatorSingleMenu(menuId, userId);
+  if (!userAuthResult.isAuthenticated) {
+    const errorMsg = userAuthResult.role
+      ? `${errorMessages.permission} delete this menu: ${userAuthResult.permissionName}`
+      : `${errorMessages.role} delete this menu: ${userAuthResult.roleNames.join(", ")}`;
+    return {
+      statusCode: statusCodes.authenticationError,
+      message: errorMsg,
+    };
+  }
 
-const createMenuAsync = async({userId, menuData}) => {}
+  // Delete the menu
+  const deleteResult = await MenuHandler(menuOperation.delete, menuId, null);
+  // TODO: continue working on this place after unifying all the return
+  return deleteResult;
+};
+
+const createMenuAsync = async (userId, menuData) => {
+  // Check whether user has sufficient access to update the menu item
+  // By default, ONLY superAdmin has the access to create new menu
+  const userRole = await UserRole.findAll({
+    where: { userId },
+    attributes: ["roleId"],
+  });
+  if (!userRole || userRole.length === 0)
+    return {
+      statusCode: statusCodes.authenticationError,
+      message: `${errorMessages.role} create a new menu: superAdmin`,
+    };
+  const userRoleList = userRole.map(r => r.roleId);
+  if (!userRoleList.includes(commonRoleId.superAdmin))
+    return {
+      statusCode: statusCodes.authenticationError,
+      message: `${errorMessages.role} create a new menu: superAdmin}`,
+    };
+
+  // Check whether the inputs are legal and satisfy the requirements
+  // TODO: make a helper function for input checking
+  const checkInputResult = await MenuValidator({
+    title: menuData.title ? menuData.title : "",
+    type: menuData.type ? menuData.type : "",
+    status: menuData.status ? menuData.status : "",
+    comment: menuData.comment,
+  });
+  if (!checkInputResult.finalResult) {
+    return {
+      statusCode: statusCodes.badRequest,
+      message: `${errorMessages.syntax} ${checkInputResult.invalidKeys.join(", ")}`,
+      invalidKeys: checkInputResult.invalidKeys,
+    };
+  }
+
+  // Create new menu item in the database, and
+  // MenuHandler will check whether another menu item with same title/path/component already exists
+  const createResult = await MenuHandler(menuOperation.insert, null, menuData);
+  // TODO: continue working on this place after unifying all the return
+  return createResult;
+};
 
 module.exports = {
-    getMenuByIdAsync,
-    getAllMenusAsync,
-    updateMenuByIdAsync,
-    deleteMenuByIdAsync,
-    createMenuAsync
+  getMenuByIdAsync,
+  getAllMenusAsync,
+  updateMenuByIdAsync,
+  deleteMenuByIdAsync,
+  createMenuAsync,
 };
