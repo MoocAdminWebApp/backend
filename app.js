@@ -6,6 +6,7 @@ const app = express();
 const authRouter = require("./router/authRouter");
 const cookiesParser = require("cookie-parser");
 const { expressjwt: jwtMiddleware } = require("express-jwt");
+const { authorizeRole } = require("./middleware/authorizeRole")
 //config cors
 const cors = require("cors");
 
@@ -47,12 +48,12 @@ app.use(
     return req.cookies.token;
   }
   return null;
-}
+  }
 
 
 
   }).unless({
-    path: ["/", /^\/api-docs/, "/api/login", "/api/users/by-email", /^\/api\/menus/,], // login route
+    path: ["/", /^\/api-docs/, "/api/login", "/api/users/by-email"], // login route
   })
 );
 
@@ -80,12 +81,14 @@ app.use("/api/courseofferings", courseofferingrouter);
 //config userRouter
 const userRouter = require("./router/userRouter");
 app.use("/api/users", userRouter);
-//config menuRouter
-const menuRouter = require("./router/menuRouter");
-app.use("/api/menus", menuRouter);
 
 //config authRouter
 app.use("/api", authRouter);
+
+
+//config questionRouter
+const questionRouter = require("./router/questionRouter")
+app.use("/api/questions", authorizeRole("admin", "teacher"), questionRouter)
 
 //config erorhandle
 const erorhandle = require("./middleware/errorhandling");

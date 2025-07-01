@@ -171,6 +171,6 @@ router.put("/:id", controller.update);
  *       400:
  *         description: Bad request
  */
-router.delete("/:id", controller.remove);
+router.delete("/:id", controller.deleteOne);
 
 module.exports = router;

@@ -9,7 +9,7 @@ const { body } = require("express-validator");
  * /api/login:
  *   post:
  *     summary: user logs in
- *     tags: [Authentication]
+ *     tags: [Login]
  *     requestBody:
  *       required: true
  *       content:
@@ -19,10 +19,11 @@ const { body } = require("express-validator");
  *             properties:
  *               email:
  *                 type: string
- *                 default: "alice@gmail.com"
+ *                 example: "alice@gmail.com"
  *               password:
  *                 type: string
- *                 default: "password12"
+ *                 format: password
+ *                 example: "password12"
  *     responses:
  *      200:
  *        description: login Successfully
