@@ -104,4 +104,3 @@ describe("CourseOffering API CRUD", () => {
     expect(res.statusCode).toBe(204);
   });
 });
-
