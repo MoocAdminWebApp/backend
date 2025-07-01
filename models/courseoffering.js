@@ -9,15 +9,15 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: false,
       },
       courseName: {
-        type: DataTypes.STRING(50),
+        type: DataTypes.STRING(100),
         allowNull: false,
       },
       teacherName: {
-        type: DataTypes.STRING(40),
+        type: DataTypes.STRING(100),
         allowNull: false,
       },
       semester: {
-        type: DataTypes.STRING(40),
+        type: DataTypes.STRING(100),
         allowNull: false,
       },
       capacity: {
@@ -30,11 +30,11 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: false,
       },
       location: {
-        type: DataTypes.STRING(50),
+        type: DataTypes.STRING(100),
         allowNull: false,
       },
       schedule: {
-        type: DataTypes.STRING(50),
+        type: DataTypes.STRING(200),
         allowNull: false,
       },
       status: {

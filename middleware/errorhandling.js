@@ -10,7 +10,8 @@ const errorhandling = (err, req, res, next) => {
     err.name === "EntityNotFoundException" ||
     err.name === "EntityAlreadyExistsException" ||
     err.name === "UserFriendlyException" ||
-    err.name === "ValidationException"
+    err.name === "ValidationException" ||
+    err.name === "ForbiddenException"
   ) {
     return res.sendCommonValue(err.statusCode, err.message);
   }
