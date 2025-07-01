@@ -192,6 +192,7 @@ const UserAuthenticatorAllMenu = async userId => {
 
   // Get the menu access dict for all the menus exist in database
   const menuAccessDict = await getMenuAccessDict();
+  console.log(menuAccessDict);
 
   // Filter the access dict with user's roles and permission
   const menuAccessFilteredByRole = menuAccessDict.filter(menu =>

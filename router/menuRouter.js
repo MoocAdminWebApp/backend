@@ -170,7 +170,7 @@ router.put(
  *     parameters:
  *      - name: id
  *        in: path
- *        description: The id of the menu to update
+ *        description: The id of the menu to delete
  *        required: true
  *        schema:
  *          type: integer
