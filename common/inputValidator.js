@@ -26,13 +26,13 @@ const MenuValidator = async data => {
    * Title field should satisfy:
    * 1) is a non-null string
    * 2) only contains letters, space, and numbers
-   * 3) no longer than 255 characters
+   * 3) no longer than 50 characters
    */
   const isValidTitle = title =>
     typeof title === "string" &&
     title.trim() !== "" &&
     titlePattern.test(title) &&
-    title.length <= 255;
+    title.length <= 50;
 
   /**
    * Type field should satisfy:
@@ -54,15 +54,18 @@ const MenuValidator = async data => {
   const isValidComment = comment => comment == null || comment.length <= 255;
 
   // TODO: edit the following validations after implementing frontend
-  // path
-  // component
-  // permission
+  // const isValidPath =
+  // const isValidComponent =
+  // const isValidPermission =
 
   const result = {
     title: isValidTitle(data.title),
     type: isValidType(data.type),
     status: isValidStatus(data.status),
     comment: isValidComment(data.comment),
+    // path:,
+    // component:,
+    // permission:,
   };
   const invalidKeys = Object.keys(result).filter(key => result[key] === false);
 

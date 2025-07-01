@@ -58,7 +58,6 @@ const getAllMenusByRoles = async roleIdList => {
   const menus = await RoleMenu.findAll({
     where: { roleId: roleIdList },
     attributes: ["menuId"],
-    order: ["menuId", "ASC"],
   });
   if (menus.length < 1) return [];
   return menus.map(m => m.menuId);
@@ -99,7 +98,6 @@ const getAllRolesByMenu = async menuIdList => {
 const getMenuAccessDict = async () => {
   const menus = await Menu.findAll({
     attributes: ["id", "permission"],
-    order: ["id", "ASC"],
   });
   if (!menus) return null;
   if (menus.length === 0) return [];
@@ -332,7 +330,7 @@ const traverseMenuTree = async (rootMenuId, rootMenuOrderNum, newParentId) => {
 };
 
 /* Helper function to handle the case where the user requests to change parentId of a menu item */
-const updateMenuInTree = async (menuId, menuData) => {
+const updateMenuInTree = async (menuId, userId, menuData) => {
   // Check whether the menu item exits
   const menu = await Menu.findByPk(menuId);
   if (!menu) {
@@ -354,12 +352,13 @@ const updateMenuInTree = async (menuId, menuData) => {
     const menuUpdateResult = await menu.update({
       ...menuData,
       updatedAt: new Date(),
+      updatedBy: userId,
     });
     if (!shouldUpdateTree.needUpdate) {
       return {
         statusCode: statusCodes.success,
         data: menuUpdateResult.toJSON(),
-        message: `Successfullt updated the menu ${menu.title} without modifying menu tree structure`,
+        message: `Successfully updated the menu ${menu.title} without modifying menu tree structure`,
       };
     }
 
@@ -377,7 +376,7 @@ const updateMenuInTree = async (menuId, menuData) => {
 };
 
 /* Helper function to create a new menu record */
-const insertMenuIntoTree = async menuItem => {
+const insertMenuIntoTree = async (userId, menuItem) => {
   // Check whether the menu item already exits in the system
   const fieldsToCheck = [{ title: menuItem.title }];
   if (menuItem.path != null && menuItem.path.length > 0) {
@@ -414,6 +413,8 @@ const insertMenuIntoTree = async menuItem => {
       ...menuItem,
       updatedAt: new Date(),
       createdAt: new Date(),
+      createdBy: userId,
+      updatedBy: userId,
     });
     return {
       statusCode: statusCodes.success,
@@ -483,14 +484,14 @@ const deleteMenuFromTree = async menuId => {
 };
 
 /* Main function to edit the menu tree */
-const MenuHandler = async (method, menuId, data) => {
+const MenuHandler = async (method, menuId, userId, data) => {
   let result = new Map();
   switch (method) {
     case menuOperation.insert:
-      result = await insertMenuIntoTree(data);
+      result = await insertMenuIntoTree(userId, data);
       break;
     case menuOperation.update:
-      result = await updateMenuInTree(menuId, data);
+      result = await updateMenuInTree(menuId, userId, data);
       break;
     case menuOperation.delete:
       result = await deleteMenuFromTree(menuId);

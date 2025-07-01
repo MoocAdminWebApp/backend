@@ -36,6 +36,34 @@ module.exports = {
           createdAt: new Date(),
           updatedAt: new Date(),
         },
+        {
+          id: 4,
+          permissionName: "menu:view",
+          description: "view menu",
+          createdAt: new Date(),
+          updatedAt: new Date(),
+        },
+        {
+          id: 5,
+          permissionName: "menu:edit",
+          description: "update an existing menu",
+          createdAt: new Date(),
+          updatedAt: new Date(),
+        },
+        {
+          id: 6,
+          permissionName: "menu:create",
+          description: "create a new menu",
+          createdAt: new Date(),
+          updatedAt: new Date(),
+        },
+        {
+          id: 7,
+          permissionName: "menu:delete",
+          description: "delete an existing menu from database",
+          createdAt: new Date(),
+          updatedAt: new Date(),
+        },
       ],
       {}
     );
