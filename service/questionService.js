@@ -1,0 +1,111 @@
+const { EntityNotFoundException } = require('../common/commonError')
+const db = require('../models')
+const Question = db.Question
+const Option = db.Option
+const { Op } = require("sequelize")
+
+const checkQuestionIdExist = async(id) => {
+  const question = await Question.findByPk(id)
+  if(!question){
+    throw new EntityNotFoundException(`Question with ID: ${id} not found!`)
+  }
+}
+
+const getAllQuestions = async (query) => {
+  const { page = 1, limit = 10, q } = query;
+  const offset = (page - 1) * limit;
+  
+
+  const where = {};
+
+  if (q) {
+    where[Op.or] = [
+      { content: { [Op.like]: `%${q}%` } },  
+      { category: { [Op.like]: `%${q}%` } }     
+    ];
+  }
+  const { count, rows } = await Question.findAndCountAll({
+    where,
+    limit: parseInt(limit),
+    offset: parseInt(offset),
+    include: [
+      {
+        model: Option,
+        as: "options",
+        attributes: ["id", "content", "isCorrect"],
+      },
+    ],
+    order: [["id", "ASC"]],
+  });
+
+  return {
+    data: rows,
+    meta: {
+      total: count,
+      page: parseInt(page),
+      limit: parseInt(limit),
+      pages: Math.ceil(count / limit),
+    },
+  };
+};
+
+const getQuestionById = async(id) => {
+  const question = await Question.findByPk(id, {
+    include: [
+      {
+        model: Option,
+        as: "options",
+        attributes: ["id", "content", "isCorrect"]
+      }
+    ]
+  })
+
+  if(!question) {
+    throw new EntityNotFoundException("Question ID not found!")
+  }
+  return question
+}
+
+const createQuestion = async(body) => {
+  const {category, type, content, difficulty } = body
+  const newQuestion = await Question.create({
+    category,
+    type,
+    content,
+    difficulty
+  })
+
+  return newQuestion
+}
+
+const deleteQuestionById = async(id) => {
+  await checkQuestionIdExist(id)
+
+  const deleted = await Question.destroy({ where: { id }})
+  return
+}
+
+const updateQuestionById = async(id, body) => {
+  await checkQuestionIdExist(id)
+
+  const question = await Question.findByPk(id)
+
+  const {category, type, content, difficulty, updatedBy } = body
+  const updatedQuestion = await question.update({
+    category: category ?? null,
+    type: type ?? null,
+    content: content ?? null,
+    difficulty: difficulty ?? null,
+    updatedBy: updatedBy ?? null,
+  });
+
+  return updatedQuestion
+}
+
+module.exports = {
+  getAllQuestions,
+  getQuestionById,
+  createQuestion,
+  deleteQuestionById,
+  updateQuestionById
+}

@@ -11,15 +11,15 @@ module.exports = {
         type: Sequelize.INTEGER,
       },
       courseName: {
-        type: Sequelize.STRING(50),
+        type: Sequelize.STRING(100),
         allowNull: false,
       },
       teacherName: {
-        type: Sequelize.STRING(40),
+        type: Sequelize.STRING(100),
         allowNull: false,
       },
       semester: {
-        type: Sequelize.STRING(40),
+        type: Sequelize.STRING(100),
         allowNull: false,
       },
       capacity: {
@@ -31,11 +31,11 @@ module.exports = {
         allowNull: false,
       },
       location: {
-        type: Sequelize.STRING(50),
+        type: Sequelize.STRING(100),
         allowNull: false,
       },
       schedule: {
-        type: Sequelize.STRING(50),
+        type: Sequelize.STRING(200),
         allowNull: false,
       },
       status: {
