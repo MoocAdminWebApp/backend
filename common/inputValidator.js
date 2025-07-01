@@ -3,25 +3,8 @@ const { Menu } = require("../models");
 const titlePattern = /^[A-Za-z0-9 ]+$/;
 
 const MenuValidator = async data => {
-  /**
-   * Helper functions to retrieve existing type and status values in the database
-   */
-  const getValidTypes = async () => {
-    const typeList = await Menu.findAll({
-      attributes: ["type"],
-      group: ["type"],
-    });
-    return typeList.map(t => t.type);
-  };
-  const getValidStatuses = async () => {
-    const statusList = await Menu.findAll({
-      attributes: ["status"],
-      group: ["status"],
-    });
-    return statusList.map(s => s.status);
-  };
-  const [validTypes, validStatuses] = await Promise.all([getValidTypes(), getValidStatuses()]);
-
+  const validTypes = ["DIRECTORY", "MENU", "BUTTON"];
+  const validStatuses = ["ACTIVE", "INACTIVE", "DRAFT", "ARCHIVED"];
   /**
    * Title field should satisfy:
    * 1) is a non-null string

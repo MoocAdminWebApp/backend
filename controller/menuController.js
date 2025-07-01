@@ -20,8 +20,7 @@ const errorMessages = {
 
 const getMenuById = async (req, res) => {
   const menuId = req.params.id;
-  // const userId = req.user.id; // TODO: change to req.user.id when authentication is implemented
-  const userId = commonRoleId.superAdmin; // TODO: remove this line when authentication is implemented
+  const userId = req.header("userid"); // TODO: change to req.user.id when authentication is implemented
 
   try {
     const menu = await menuService.getMenuByIdAsync(menuId, userId);
@@ -40,8 +39,7 @@ const getMenuById = async (req, res) => {
 };
 
 const getAllMenus = async (req, res) => {
-  // const userId = req.user.id; // TODO: change to req.user.id when authentication is implemented
-  const userId = commonRoleId.superAdmin; // TODO: remove this line when authentication is implemented
+  const userId = req.header("userid"); // TODO: change to req.user.id when authentication is implemented
 
   try {
     const menus = await menuService.getAllMenusAsync(userId);
@@ -61,8 +59,7 @@ const getAllMenus = async (req, res) => {
 
 const updateMenuById = async (req, res) => {
   const menuId = req.params.id;
-  // const userId = req.user.id; // TODO: change to req.user.id when authentication is implemented
-  const userId = commonRoleId.superAdmin; // TODO: remove this line when authentication is implemented
+  const userId = req.header("userid"); // TODO: change to req.user.id when authentication is implemented
   const menuData = req.body;
 
   try {
@@ -83,8 +80,7 @@ const updateMenuById = async (req, res) => {
 
 const deleteMenuById = async (req, res) => {
   const menuId = req.params.id;
-  // const userId = req.user.id; // TODO: change to req.user.id when authentication is implemented
-  const userId = commonRoleId.superAdmin; // TODO: remove this line when authentication is implemented
+  const userId = req.header("userid"); // TODO: change to req.user.id when authentication is implemented
 
   try {
     const menu = await menuService.deleteMenuByIdAsync(menuId, userId);
@@ -103,12 +99,11 @@ const deleteMenuById = async (req, res) => {
 };
 
 const createMenu = async (req, res) => {
-  // const userId = req.user.id; // TODO: change to req.user.id when authentication is implemented
-  const userId = commonRoleId.superAdmin; // TODO: remove this line when authentication is implemented
+  const userId = req.header("userid"); // TODO: change to req.user.id when authentication is implemented
   const menuData = req.body;
 
   try {
-    const menu = await menuService.createMenuAsync(menuId, userId);
+    const menu = await menuService.createMenuAsync(userId, menuData);
     return res.status(menu.statusCode).json(menu);
   } catch (error) {
     console.error(error);

@@ -19,11 +19,15 @@ const menuControllers = require("../controller/menuController");
  *        required: true
  *        schema:
  *          type: integer
+ *      - name: userId
+ *        in: header
+ *        description: The id of the user
+ *        required: true
+ *        schema:
+ *          type: integer
  *     responses:
  *      200:
  *        description: Menu Retrieved Successfully
- *      400:
- *        description: Bad Request
  *      403:
  *        description: Unauthorized - Validation Failed
  *      404:
@@ -48,6 +52,13 @@ router.get(
  *   get:
  *     tags: [Menus]
  *     summary: get all accessible menus for the current user
+ *     parameters:
+ *      - name: userId
+ *        in: header
+ *        description: The id of the user
+ *        required: true
+ *        schema:
+ *          type: integer
  *     responses:
  *      200:
  *        description: Fetched Successfully
@@ -64,6 +75,13 @@ router.get("/", menuControllers.getAllMenus);
  *   post:
  *     tags: [Menus]
  *     summary: create a new menu item
+ *     parameters:
+ *      - name: userId
+ *        in: header
+ *        description: The id of the user
+ *        required: true
+ *        schema:
+ *          type: integer
  *     requestBody:
  *       required: true
  *       content:
@@ -93,12 +111,12 @@ router.get("/", menuControllers.getAllMenus);
  *                 default: null
  *               status:
  *                 type: string
- *                 enum: [ACTIVE, INACTIVE, DRAFT, ARCHIVED]
- *                 default: ACTIVE
+ *                 enum: ["ACTIVE", "INACTIVE", "DRAFT", "ARCHIVED"]
+ *                 default: "ACTIVE"
  *               type:
  *                 type: string
- *                 enum: [DIRECTORY, MENU, BUTTON]
- *                 default: MENU
+ *                 enum: ["DIRECTORY", "MENU", "BUTTON"]
+ *                 default: "MENU"
  *               parentId:
  *                 type: integer
  *                 default: 0
@@ -117,7 +135,6 @@ router.get("/", menuControllers.getAllMenus);
 router.post(
   "/",
   commonValidate([
-    // TODO: fix here
     body("title").notEmpty().withMessage("Title field is mandatory. "),
     body("status").notEmpty().withMessage("Status field is mandatory"),
     body("type").notEmpty().withMessage("Type field is mandatory"),
@@ -134,7 +151,13 @@ router.post(
  *     parameters:
  *      - name: id
  *        in: path
- *        description: The id of the menu to update
+ *        description: The id of the menu to retrieve
+ *        required: true
+ *        schema:
+ *          type: integer
+ *      - name: userId
+ *        in: header
+ *        description: The id of the user
  *        required: true
  *        schema:
  *          type: integer
@@ -171,6 +194,12 @@ router.put(
  *      - name: id
  *        in: path
  *        description: The id of the menu to delete
+ *        required: true
+ *        schema:
+ *          type: integer
+ *      - name: userId
+ *        in: header
+ *        description: The id of the user
  *        required: true
  *        schema:
  *          type: integer
