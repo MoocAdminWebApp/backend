@@ -40,8 +40,14 @@ module.exports = {
         allowNull: true,
       },
       permission: {
-        type: Sequelize.STRING(100),
+        type: Sequelize.INTEGER,
         allowNull: true,
+        references: {
+          model: "permissions",
+          key: "id",
+        },
+        onUpdate: "CASCADE",
+        onDelete: "SET NULL",
       },
       hidden: {
         type: Sequelize.BOOLEAN,

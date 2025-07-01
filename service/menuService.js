@@ -1,12 +1,12 @@
-const { Menu, RoleMenu, UserRole, RolePermission } = require("../models");
-const { EntityNotFoundException } = require("../common/commonError.js");
-
+const { Menu, UserRole } = require("../models");
 const { MenuValidator } = require("../common/inputValidator.js");
+
 const {
   UserAuthenticatorSingleMenu,
   UserAuthenticatorAllMenu,
   MenuHandler,
 } = require("../common/commonHelper.js");
+const { permission } = require("process");
 
 const menuOperation = {
   insert: 0,
@@ -18,6 +18,7 @@ const statusCodes = {
   badRequest: 400,
   authenticationError: 403,
   notFound: 404,
+  internalError: 500,
 };
 const errorMessages = {
   role: "Role Denied: User must be assigned with at least one of the following roles to",
@@ -31,11 +32,15 @@ const commonRoleId = {
 /**
  * Function to retreive a specific menu
  */
-const getMenuByIdAsync = async ({ menuId, userId }) => {
+const getMenuByIdAsync = async (menuId, userId) => {
   // Check whether the menu item exists
-  const menuItem = await Menu.findByPk(menuId);
-  if (menuItem === null) {
-    throw new EntityNotFoundException(`Menu item with id ${menuId} not found`);
+  const menu = await Menu.findByPk(menuId);
+  if (!menu) {
+    return {
+      statusCode: statusCodes.notFound,
+      data: null,
+      message: `Error: Menu item with id ${menuId} not found`,
+    };
   }
 
   // Check whether the user has sufficient access
@@ -50,13 +55,17 @@ const getMenuByIdAsync = async ({ menuId, userId }) => {
     };
   }
 
-  return menuItem.toJSON();
+  return {
+    statusCode: statusCodes.success,
+    data: menu.toJSON(),
+    message: `Successfully retrieved menu ${menu.title} by menuId ${menuId}`,
+  };
 };
 
 /**
  * Function to retrieve a list of menus that accessible by the user
  */
-const getAllMenusAsync = async ({ userId }) => {
+const getAllMenusAsync = async userId => {
   // Get all the menus accessible by user
   const menuIds = await UserAuthenticatorAllMenu(userId);
 
@@ -72,7 +81,11 @@ const getAllMenusAsync = async ({ userId }) => {
       ["parentId", "ASC"],
     ],
   });
-  return accessibleMenus.map(m => m.toJSON());
+  return {
+    statusCode: statusCodes.success,
+    data: accessibleMenus.map(m => m.toJSON()),
+    message: "Successfully retrieved all accessible menus",
+  };
 };
 
 /**
@@ -80,11 +93,11 @@ const getAllMenusAsync = async ({ userId }) => {
  */
 const updateMenuByIdAsync = async (menuId, userId, menuData) => {
   // Check whether the menu item exists
-  const menuItem = await Menu.findByPk(menuId);
-  if (menuItem === null) {
+  const menu = await Menu.findByPk(menuId);
+  if (!menu) {
     return {
       statusCode: statusCodes.notFound,
-      message: `Menu item with id ${menuId} not found`,
+      message: `Error: Menu item with id ${menuId} not found`,
     };
   }
 
@@ -116,20 +129,21 @@ const updateMenuByIdAsync = async (menuId, userId, menuData) => {
   }
 
   // Update the menu item
-  const updateResult = await MenuHandler(menuOperation.update, menuId, menuData);
+  const updateResult = await MenuHandler(menuOperation.update, menuId, userId, menuData);
   // TODO: continue working on this place after unifying all the return
   return updateResult;
 };
 
 const deleteMenuByIdAsync = async (menuId, userId) => {
   // Check whether the menu item exists
-  const menuItem = await Menu.findByPk(menuId);
-  if (menuItem === null) {
+  const menu = await Menu.findByPk(menuId);
+  if (!menu) {
     return {
       statusCode: statusCodes.notFound,
-      message: `Menu item with id ${menuId} not found`,
+      message: `Error: Menu item with id ${menuId} not found`,
     };
   }
+  const menuTitle = menu.title ? menu.title : "";
 
   // Check whether user has sufficient access to update the menu item
   const userAuthResult = await UserAuthenticatorSingleMenu(menuId, userId);
@@ -144,9 +158,19 @@ const deleteMenuByIdAsync = async (menuId, userId) => {
   }
 
   // Delete the menu
-  const deleteResult = await MenuHandler(menuOperation.delete, menuId, null);
-  // TODO: continue working on this place after unifying all the return
-  return deleteResult;
+  const deleteResult = await MenuHandler(menuOperation.delete, menuId, null, null);
+  if (deleteResult.statusCode !== statusCodes.success) {
+    return deleteResult;
+  }
+
+  // Obtain a list of current menu tree for the front end to re-render the tree structure display
+  const newMenuTree = await getAllMenusAsync(userId);
+  return {
+    statusCode: statusCodes.success,
+    data: newMenuTree,
+    message: deleteResult.message,
+    deletedMenu: menuTitle,
+  };
 };
 
 const createMenuAsync = async (userId, menuData) => {
@@ -161,6 +185,7 @@ const createMenuAsync = async (userId, menuData) => {
       statusCode: statusCodes.authenticationError,
       message: `${errorMessages.role} create a new menu: superAdmin`,
     };
+
   const userRoleList = userRole.map(r => r.roleId);
   if (!userRoleList.includes(commonRoleId.superAdmin))
     return {
@@ -174,7 +199,10 @@ const createMenuAsync = async (userId, menuData) => {
     title: menuData.title ? menuData.title : "",
     type: menuData.type ? menuData.type : "",
     status: menuData.status ? menuData.status : "",
-    comment: menuData.comment,
+    comment: menuData.comment ? menuData.comment : null,
+    path: menuData.path ? menuData.path : null,
+    component: menuData.component ? menuData.component : null,
+    permission: menuData.permission ? menuData.permission : null,
   });
   if (!checkInputResult.finalResult) {
     return {
@@ -186,8 +214,7 @@ const createMenuAsync = async (userId, menuData) => {
 
   // Create new menu item in the database, and
   // MenuHandler will check whether another menu item with same title/path/component already exists
-  const createResult = await MenuHandler(menuOperation.insert, null, menuData);
-  // TODO: continue working on this place after unifying all the return
+  const createResult = await MenuHandler(menuOperation.insert, null, userId, menuData);
   return createResult;
 };
 
