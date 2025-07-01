@@ -1,5 +1,15 @@
 const { CourseOffering } = require("../models");
 
+function getNotNullProperties(obj) {
+  const result={};
+  for(let key in obj){
+    if(obj[key] !== null && obj[key] !== undefined){
+      result[key] = obj[key]
+    }
+  }
+  return result;
+}
+
 const getAllAsync = async () => {
   try {
     const offerings = await CourseOffering.findAll();
@@ -37,19 +47,27 @@ const updateAsync = async (id, data) => {
       return { isSuccess: false, statusCode: 404, message: "Course offering not found" };
     }
 
-    await offering.update({
-      courseName: data.courseName ?? offering.courseName,
-      teacherName: data.teacherName ?? offering.teacherName,
-      semester: data.semester ?? offering.semester,
-      capacity: data.capacity ?? offering.capacity,
-      enrolledCount: data.enrolledCount ?? offering.enrolledCount,
-      location: data.location ?? offering.location,
-      schedule: data.schedule ?? offering.schedule,
-      status: data.status ?? offering.status,
-      updatedBy: data.updatedBy ?? offering.updatedBy,
-    });
+    const updateModel={
+      courseName:data.courseName ?? null,
+      teacherName:data.teacherName ?? null,
+      semester:data.semester ?? null,
+      capacity:data.capacity ?? null,
+      enrolledCount:data.enrolledCount ?? null,
+      location:data.location ?? null,
+      schedule:data.schedule ?? null,
+      status:data.status ?? null,
+      updateBy:data.updateBy ?? null,
+    };
 
-    return { isSuccess: true, data: offering };
+    const fieldsToUpdate= getNotNullProperties(updateModel);
+
+    await CourseOffering.update(fieldsToUpdate,{
+      where:{id},
+      fields:Object.keys(fieldsToUpdate),
+    })
+
+
+    return { isSuccess: true, data: {id, ...fieldsToUpdate} };
   } catch (err) {
     return { isSuccess: false, message: err.message };
   }
@@ -63,7 +81,7 @@ const deleteAsync = async (id) => {
     }
 
     await offering.destroy();
-    return { isSuccess: true, data: null };
+    return { isSuccess: true, statusCode:204, message:"Deleted Successfully", data: null };
   } catch (err) {
     return { isSuccess: false, message: err.message };
   }
