@@ -8,11 +8,7 @@ const options = {
     info: {
       title: "MOOC25 API",
       version: "1.0.0",
-<<<<<<< HEAD
       description: `include all APIs of MOOC25`,
-=======
-      description: "only has user apis and will add more",
->>>>>>> 512e6d51 (add swagger to courseoffering model)
     },
     components: {
       securitySchemes: {
