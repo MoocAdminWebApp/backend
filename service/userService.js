@@ -52,7 +52,7 @@ const getAllUsersAsync = async () => {
 const getUserByEmailAsync = async email => {
   const user = await User.findOne({ where: { email: email.trim() } });
   if (!user) throw new EntityNotFoundException("User with this email not found", 404);
-  return user;
+  return { isSuccess: true, message: "", data: user };
 };
 
 const getUserByIdAsync = async id => {
@@ -102,14 +102,14 @@ const updateUserAsync = async (id, updateData, updaterId) => {
     updatedBy: updaterId,
   });
 
-  return { isSuccess: true, message: "", data: updateData };
+  return { isSuccess: true, message: "User updated successfully", data: updateData };
 };
 
 const deleteUserAsync = async id => {
   const user = await User.findByPk(id);
   if (!user) throw new EntityNotFoundException("User with this id not found");
   await user.destroy();
-  return { message: "User deleted successfully" };
+  return { isSuccess: true, message: "User deleted successfully", data: user };
 };
 
 module.exports = {

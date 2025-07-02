@@ -24,17 +24,8 @@ const getAllUsers = async (req, res) => {
 // get user by email only used in register, login or reset password
 const getUserByEmail = async (req, res) => {
   const { email } = req.query;
-
-  try {
-    const user = await userService.getUserByEmailAsync(email);
-    res.json(user);
-  } catch (err) {
-    const statusCode = err.statusCode || 500;
-    res.status(statusCode).json({
-      status: statusCode,
-      error: err.message,
-    });
-  }
+  const result = await userService.getUserByEmailAsync(email);
+  res.sendCommonValue(200, "success", result.data);
 };
 
 const getUserById = async (req, res) => {
@@ -66,12 +57,12 @@ const updateUser = async (req, res) => {
 };
 
 const deleteUser = async (req, res) => {
-  try {
-    const result = await userService.deleteUserAsync(req.params.id);
-    res.json(result);
-  } catch (err) {
-    const statusCode = err.statusCode || 404;
-    res.status(statusCode).json({ status: statusCode, error: err.message });
+  const result = await userService.deleteUserAsync(req.params.id);
+
+  if (result.isSuccess) {
+    res.sendCommonValue(200, "success", result.data);
+  } else {
+    res.sendCommonValue(400, "fail");
   }
 };
 
