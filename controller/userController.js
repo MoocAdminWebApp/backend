@@ -34,15 +34,16 @@ const getUserById = async (req, res) => {
 };
 
 const getUsersByPage = async (req, res) => {
-  try {
-    const page = parseInt(req.query.page) || 1;
-    const pageSize = parseInt(req.query.pageSize) || 10;
+  let access = req.query.access || undefined;
+  const page = parseInt(req.query.page) || 1;
+  const pageSize = parseInt(req.query.pageSize) || 10;
 
-    const pagedUsers = await userService.getUsersByPageAsync(page, pageSize);
-    res.json(pagedUsers);
-  } catch (err) {
-    const statusCode = err.statusCode || 500;
-    res.status(statusCode).json({ status: statusCode, error: err.message });
+  const result = await userService.getUsersByPageAsync(access, page, pageSize);
+
+  if (result.isSuccess) {
+    res.sendCommonValue(200, "success", result.data);
+  } else {
+    res.sendCommonValue(400, "fail");
   }
 };
 

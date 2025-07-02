@@ -68,11 +68,20 @@ const getUserByIdAsync = async id => {
 
   return { isSuccess: true, message: "", data: user };
 };
-const getUsersByPageAsync = async (page = 1, pageSize = 10) => {
+
+const getUsersByPageAsync = async (access = null, page = 1, pageSize = 10) => {
+  const whereClause = {};
+  if (access !== undefined) {
+    whereClause.access = {
+      [Op.like]: `%${access}%`,
+    };
+  }
+
   const offset = (page - 1) * pageSize;
   const limit = pageSize;
 
   const { count, rows } = await User.findAndCountAll({
+    where: whereClause,
     attributes: { exclude: ["password"] },
     include: [{ model: Role, as: "roles", through: { attributes: [] } }],
     order: [["id", "ASC"]],
@@ -80,13 +89,15 @@ const getUsersByPageAsync = async (page = 1, pageSize = 10) => {
     offset,
   });
 
-  return {
-    total: count,
+  const data = {
     page,
     pageSize,
     totalPages: Math.ceil(count / pageSize),
-    users: rows.map(u => u.toJSON()),
+    total: count,
+    users: rows,
   };
+
+  return { isSuccess: true, message: "", data: data };
 };
 
 const updateUserAsync = async (id, updateData, updaterId) => {
