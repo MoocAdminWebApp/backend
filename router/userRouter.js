@@ -26,29 +26,7 @@ const EUserAccess = ["ADMIN", "TEACHER", "STUDENT"];
  *       content:
  *         application/json:
  *           schema:
- *             type: object
- *             required:
- *               - email
- *               - password
- *               - firstName
- *               - lastName
- *             properties:
- *               email:
- *                 type: string
- *                 default: test@example.com
- *               password:
- *                 type: string
- *                 default: 123456
- *               firstName:
- *                 type: string
- *                 default: John
- *               lastName:
- *                 type: string
- *                 default: Doe
- *               access:
- *                 type: string
- *                 enum: [ADMIN, TEACHER, STUDENT]
- *                 default: STUDENT
+ *             $ref: '#/components/schemas/User'
  *     responses:
  *       201:
  *         description: User created
@@ -84,6 +62,12 @@ router.post(
  *     responses:
  *       200:
  *         description: Get all users Successfully
+ *         content:
+ *            application/json:
+ *              schema:
+ *                type: array
+ *                items:
+ *                  $ref: '#/components/schemas/User'
  *       400:
  *         description: Bad request
  *       401:
@@ -111,6 +95,10 @@ router.get("/", userController.getAllUsers);
  *     responses:
  *       200:
  *         description: Get user by email successfully
+ *         content:
+ *            application/json:
+ *              schema:
+ *                $ref: '#/components/schemas/User'
  *       400:
  *         description: Bad request
  *       401:
@@ -149,9 +137,23 @@ router.get(
  *           type: integer
  *           default: 10
  *         description: Number of users per page
+ *       - in: query
+ *         name: access
+ *         required: false
+ *         schema:
+ *           type: string
+ *           enum: [ADMIN, TEACHER, STUDENT]
+ *           default: STUDENT
+ *         description: Filter users by access type
  *     responses:
  *       200:
  *         description: Get paged users successfully
+ *         content:
+ *            application/json:
+ *              schema:
+ *                type: array
+ *                items:
+ *                  $ref: '#/components/schemas/User'
  *       400:
  *         description: Bad request
  *       401:
@@ -188,6 +190,10 @@ router.get(
  *     responses:
  *       200:
  *         description: Get user by id successfully
+ *         content:
+ *            application/json:
+ *              schema:
+ *                $ref: '#/components/schemas/User'
  *       400:
  *         description: Bad request
  *       401:
@@ -207,7 +213,7 @@ router.get(
  * @openapi
  * /api/users/{id}:
  *   put:
- *     summary: Update user by ID
+ *     summary: Update user by ID, id and email cannot be updated
  *     tags: [Users]
  *     security:
  *       - BearerAuth: []
@@ -223,24 +229,7 @@ router.get(
  *       content:
  *         application/json:
  *           schema:
- *             type: object
- *             properties:
- *               email:
- *                 type: string
- *                 default: updated@example.com
- *               password:
- *                 type: string
- *                 default: newpassword
- *               firstName:
- *                 type: string
- *                 default: Jane
- *               lastName:
- *                 type: string
- *                 default: Smith
- *               access:
- *                 type: string
- *                 enum: [ADMIN, TEACHER, STUDENT]
- *                 default: TEACHER
+ *             $ref: '#/components/schemas/UserUpdate'
  *     responses:
  *       201:
  *         description: User updated
@@ -257,7 +246,7 @@ router.put(
   "/:id",
   commonValidate([
     param("id").isInt().withMessage("User ID must be an integer"),
-    body("email").optional().isEmail().withMessage("Valid email is required"),
+    body("email").not().exists().withMessage("Email cannot be updated"),
     body("password")
       .optional()
       .isLength({ min: 6 })

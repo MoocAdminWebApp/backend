@@ -34,7 +34,7 @@ const getUserById = async (req, res) => {
 };
 
 const getUsersByPage = async (req, res) => {
-  let access = req.query.access || undefined;
+  let access = req.query.access ?? null;
   const page = parseInt(req.query.page) || 1;
   const pageSize = parseInt(req.query.pageSize) || 10;
 

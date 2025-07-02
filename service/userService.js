@@ -1,4 +1,6 @@
 const { User, Role, Profile } = require("../models/index.js");
+const { Op } = require("sequelize");
+
 const {
   EntityAlreadyExistsException,
   EntityNotFoundException,
@@ -71,7 +73,7 @@ const getUserByIdAsync = async id => {
 
 const getUsersByPageAsync = async (access = null, page = 1, pageSize = 10) => {
   const whereClause = {};
-  if (access !== undefined) {
+  if (access) {
     whereClause.access = {
       [Op.like]: `%${access}%`,
     };
@@ -103,6 +105,10 @@ const getUsersByPageAsync = async (access = null, page = 1, pageSize = 10) => {
 const updateUserAsync = async (id, updateData, updaterId) => {
   const user = await User.findByPk(id);
   if (!user) throw new EntityNotFoundException("User with this idnot found");
+
+  //id and email cannot be updated
+  delete updateData.id;
+  delete updateData.email;
 
   if (updateData.password) {
     updateData.password = await bcrypt.hash(updateData.password, bcryptConfig.saltRounds);
