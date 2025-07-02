@@ -38,13 +38,8 @@ const getUserByEmail = async (req, res) => {
 };
 
 const getUserById = async (req, res) => {
-  try {
-    const user = await userService.getUserByIdAsync(req.params.id);
-    res.json(user);
-  } catch (err) {
-    const statusCode = err.statusCode || 404;
-    res.status(statusCode).json({ status: statusCode, error: err.message });
-  }
+  const result = await userService.getUserByIdAsync(req.params.id);
+  res.sendCommonValue(200, "success", result.data);
 };
 
 const getUsersByPage = async (req, res) => {
@@ -61,13 +56,12 @@ const getUsersByPage = async (req, res) => {
 };
 
 const updateUser = async (req, res) => {
-  try {
-    const updaterId = req.user?.id || null;
-    const updatedUser = await userService.updateUserAsync(req.params.id, req.body, updaterId);
-    res.json(updatedUser);
-  } catch (err) {
-    const statusCode = err.statusCode || 400;
-    res.status(statusCode).json({ status: statusCode, error: err.message });
+  const updaterId = getCurrentUser(req).userId;
+  const result = await userService.updateUserAsync(req.params.id, req.body, updaterId);
+  if (result.isSuccess) {
+    res.sendCommonValue(200, "success", result.data);
+  } else {
+    res.sendCommonValue(400, "fail");
   }
 };
 

@@ -66,9 +66,8 @@ const getUserByIdAsync = async id => {
 
   if (!user) throw new EntityNotFoundException("User with this id not found");
 
-  return user.toJSON();
+  return { isSuccess: true, message: "", data: user };
 };
-
 const getUsersByPageAsync = async (page = 1, pageSize = 10) => {
   const offset = (page - 1) * pageSize;
   const limit = pageSize;
@@ -100,10 +99,10 @@ const updateUserAsync = async (id, updateData, updaterId) => {
 
   await user.update({
     ...updateData,
-    updatedBy: updaterId || null,
+    updatedBy: updaterId,
   });
 
-  return user.toJSON();
+  return { isSuccess: true, message: "", data: updateData };
 };
 
 const deleteUserAsync = async id => {
