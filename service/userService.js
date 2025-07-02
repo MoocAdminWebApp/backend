@@ -7,6 +7,10 @@ const {
 const bcrypt = require("bcryptjs");
 const { bcryptConfig } = require("../appConfig");
 
+// function getALLCacheKey() {
+//   //Return all cached keys
+//   return "user_all";
+// }
 const createUserAsync = async (userData, creatorId) => {
   const existing = await User.findOne({ where: { email: userData.email } });
   if (existing) throw new EntityAlreadyExistsException("A user with this email already exists");
@@ -19,6 +23,8 @@ const createUserAsync = async (userData, creatorId) => {
     createdBy: creatorId || null,
   });
 
+  //await cacheHelper.delAsync(getALLCacheKey());
+
   return {
     isSuccess: newUser.id > 0 ? true : false,
     message: "",
@@ -27,12 +33,19 @@ const createUserAsync = async (userData, creatorId) => {
 };
 
 const getAllUsersAsync = async () => {
-  const users = await User.findAll({
+  // let cacheValue = await cacheHelper.getAsync(getALLCacheKey());
+  // if (cacheValue) {
+  //   return { isSuccess: true, message: "", data: JSON.parse(cacheValue) };
+  // }
+  var allUsers = await User.findAll({
     attributes: { exclude: ["password"] },
     include: [{ model: Role, as: "roles", through: { attributes: [] } }],
     order: [["id", "ASC"]],
   });
-  return users.map(u => u.toJSON());
+  if (allUsers) {
+    //await cacheHelper.setAsync(getALLCacheKey(), JSON.stringify(allUsers), 10);
+    return { isSuccess: true, message: "", data: allUsers };
+  }
 };
 
 // get user by email only used in register, login or reset password

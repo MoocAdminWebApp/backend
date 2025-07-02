@@ -13,11 +13,12 @@ const createUser = async (req, res) => {
   }
 };
 const getAllUsers = async (req, res) => {
-  try {
-    const users = await userService.getAllUsersAsync();
-    res.json(users);
-  } catch (err) {
-    res.status(500).json({ error: err.message });
+  const users = await userService.getAllUsersAsync();
+  res.json(users);
+  if (result.isSuccess) {
+    res.sendCommonValue(201, "success", result.data);
+  } else {
+    res.sendCommonValue(500, "fail");
   }
 };
 // get user by email only used in register, login or reset password
