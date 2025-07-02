@@ -1,4 +1,6 @@
 const { User, Role, Profile } = require("../models/index.js");
+const { Op } = require("sequelize");
+
 const {
   EntityAlreadyExistsException,
   EntityNotFoundException,
@@ -7,6 +9,10 @@ const {
 const bcrypt = require("bcryptjs");
 const { bcryptConfig } = require("../appConfig");
 
+// function getALLCacheKey() {
+//   //Return all cached keys
+//   return "user_all";
+// }
 const createUserAsync = async (userData, creatorId) => {
   const existing = await User.findOne({ where: { email: userData.email } });
   if (existing) throw new EntityAlreadyExistsException("A user with this email already exists");
@@ -19,23 +25,36 @@ const createUserAsync = async (userData, creatorId) => {
     createdBy: creatorId || null,
   });
 
-  return newUser.toJSON();
+  //await cacheHelper.delAsync(getALLCacheKey());
+
+  return {
+    isSuccess: newUser.id > 0 ? true : false,
+    message: "",
+    data: newUser,
+  };
 };
 
 const getAllUsersAsync = async () => {
-  const users = await User.findAll({
+  // let cacheValue = await cacheHelper.getAsync(getALLCacheKey());
+  // if (cacheValue) {
+  //   return { isSuccess: true, message: "", data: JSON.parse(cacheValue) };
+  // }
+  var allUsers = await User.findAll({
     attributes: { exclude: ["password"] },
     include: [{ model: Role, as: "roles", through: { attributes: [] } }],
     order: [["id", "ASC"]],
   });
-  return users.map(u => u.toJSON());
+  if (allUsers) {
+    //await cacheHelper.setAsync(getALLCacheKey(), JSON.stringify(allUsers), 10);
+    return { isSuccess: true, message: "", data: allUsers };
+  }
 };
 
 // get user by email only used in register, login or reset password
 const getUserByEmailAsync = async email => {
   const user = await User.findOne({ where: { email: email.trim() } });
   if (!user) throw new EntityNotFoundException("User with this email not found", 404);
-  return user;
+  return { isSuccess: true, message: "", data: user };
 };
 
 const getUserByIdAsync = async id => {
@@ -49,14 +68,22 @@ const getUserByIdAsync = async id => {
 
   if (!user) throw new EntityNotFoundException("User with this id not found");
 
-  return user.toJSON();
+  return { isSuccess: true, message: "", data: user };
 };
 
-const getUsersByPageAsync = async (page = 1, pageSize = 10) => {
+const getUsersByPageAsync = async (access = null, page = 1, pageSize = 10) => {
+  const whereClause = {};
+  if (access) {
+    whereClause.access = {
+      [Op.like]: `%${access}%`,
+    };
+  }
+
   const offset = (page - 1) * pageSize;
   const limit = pageSize;
 
   const { count, rows } = await User.findAndCountAll({
+    where: whereClause,
     attributes: { exclude: ["password"] },
     include: [{ model: Role, as: "roles", through: { attributes: [] } }],
     order: [["id", "ASC"]],
@@ -64,18 +91,24 @@ const getUsersByPageAsync = async (page = 1, pageSize = 10) => {
     offset,
   });
 
-  return {
-    total: count,
+  const data = {
     page,
     pageSize,
     totalPages: Math.ceil(count / pageSize),
-    users: rows.map(u => u.toJSON()),
+    total: count,
+    users: rows,
   };
+
+  return { isSuccess: true, message: "", data: data };
 };
 
 const updateUserAsync = async (id, updateData, updaterId) => {
   const user = await User.findByPk(id);
   if (!user) throw new EntityNotFoundException("User with this idnot found");
+
+  //id and email cannot be updated
+  delete updateData.id;
+  delete updateData.email;
 
   if (updateData.password) {
     updateData.password = await bcrypt.hash(updateData.password, bcryptConfig.saltRounds);
@@ -83,17 +116,17 @@ const updateUserAsync = async (id, updateData, updaterId) => {
 
   await user.update({
     ...updateData,
-    updatedBy: updaterId || null,
+    updatedBy: updaterId,
   });
 
-  return user.toJSON();
+  return { isSuccess: true, message: "User updated successfully", data: updateData };
 };
 
 const deleteUserAsync = async id => {
   const user = await User.findByPk(id);
   if (!user) throw new EntityNotFoundException("User with this id not found");
   await user.destroy();
-  return { message: "User deleted successfully" };
+  return { isSuccess: true, message: "User deleted successfully", data: user };
 };
 
 module.exports = {
