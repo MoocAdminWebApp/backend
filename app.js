@@ -85,10 +85,13 @@ app.use("/api/users", userRouter);
 //config authRouter
 app.use("/api", authRouter);
 
-
 //config questionRouter
 const questionRouter = require("./router/questionRouter")
 app.use("/api/questions", authorizeRole("admin", "teacher"), questionRouter)
+
+// config categoryRouter
+const categoryRouter = require("./router/categoryrouter");
+app.use("/api/categories", categoryRouter);
 
 //config erorhandle
 const erorhandle = require("./middleware/errorhandling");

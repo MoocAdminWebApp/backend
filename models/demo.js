@@ -1,40 +1,44 @@
-const { DataTypes } = require("sequelize");
-const { sequelize } = require("../db/sequelizedb");
+// models/demo.js
 
-const demo = sequelize.define(
-  "demo",
-  {
-    // Model attributes are defined here
-    id: {
-      type: DataTypes.INTEGER,
-      primaryKey: true,
-      autoIncrement: true,
-      allowNull: false,
+module.exports = (sequelize, DataTypes) => {
+  const Demo = sequelize.define(
+    "Demo",
+    {
+      id: {
+        type: DataTypes.INTEGER,
+        primaryKey: true,
+        autoIncrement: true,
+        allowNull: false,
+      },
+      title: {
+        type: DataTypes.STRING,
+        allowNull: false,
+      },
+      mark: {
+        type: DataTypes.STRING,
+        allowNull: true,
+      },
+      count: {
+        type: DataTypes.INTEGER,
+        allowNull: true,
+      },
+      active: {
+        // 修正字段名：原来写成 acitve
+        type: DataTypes.BOOLEAN,
+        allowNull: false,
+        defaultValue: true,
+      },
+      dataTime: {
+        type: DataTypes.DATE,
+        allowNull: false,
+        defaultValue: DataTypes.NOW,
+      },
     },
-    title: {
-      type: DataTypes.STRING,
-      allowNull: false,
-    },
-    mark: {
-      type: DataTypes.STRING,
-      allowNull: true,
-    },
-    count: {
-      type: DataTypes.INTEGER,
-      allowNull: true,
-    },
-    acitve: {
-      type: DataTypes.BOOLEAN,
-      defaultValue: true,
-      allowNull: false,
-    },
-    dataTime: {
-      type: DataTypes.DATE,
-      defaultValue: DataTypes.NOW,
-      allowNull: false,
-    },
-  },
-  { timestamps: false, tableName: "demo" }
-);
+    {
+      tableName: "demo",
+      timestamps: false,
+    }
+  );
 
-module.exports = demo;
+  return Demo;
+};
