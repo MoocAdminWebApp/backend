@@ -33,23 +33,18 @@ const getUserById = async (req, res) => {
   res.sendCommonValue(200, "success", result.data);
 };
 
-// const getUsersByPage = async (req, res) => {
-//   let access = req.query.access ?? null;
-//   const page = parseInt(req.query.page) || 1;
-//   const pageSize = parseInt(req.query.pageSize) || 10;
-
-//   const result = await userService.getUsersByPageAsync(access, page, pageSize);
-
-//   if (result.isSuccess) {
-//     res.sendCommonValue(200, "success", result.data);
-//   } else {
-//     res.sendCommonValue(400, "fail");
-//   }
-// };
 const getUsersByPage = async (req, res) => {
   const page = parseInt(req.query.page) || 1;
   const pageSize = parseInt(req.query.pageSize) || 10;
-  const filters = req.query.filters || {};
+
+  let filters = {};
+  if (typeof req.query.filters === "string") {
+    try {
+      filters = JSON.parse(req.query.filters);
+    } catch (err) {
+      return res.sendCommonValue(400, "Invalid filters format");
+    }
+  }
 
   let fuzzyKeys = req.query.fuzzyKeys || [];
   if (typeof fuzzyKeys === "string") {

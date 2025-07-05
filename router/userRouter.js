@@ -144,9 +144,8 @@ router.get(
  *       - in: query
  *         name: filters
  *         schema:
- *           type: object
- *           example: {"email":"bob@","lastName":"Bro", "access":"TEACHER"}
- *           additionalProperties: true
+ *           type: string
+ *           example: '{"email":"bob@","lastName":"Bro", "access":"TEACHER"}'
  *         description: JSON string of filter fields and values
  *     responses:
  *       200:

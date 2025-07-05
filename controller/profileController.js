@@ -5,7 +5,6 @@ const { getCurrentUser } = require("../common/getCurrentUser");
 const createProfile = async (req, res) => {
   const creatorId = getCurrentUser(req).userId;
   const result = await profileService.createProfileAsync(req.body, creatorId);
-
   if (result.isSuccess) {
     res.sendCommonValue(201, "success", result.data);
   } else {
@@ -51,7 +50,15 @@ const getProfileById = async (req, res) => {
 const getProfilesByPage = async (req, res) => {
   const page = parseInt(req.query.page) || 1;
   const pageSize = parseInt(req.query.pageSize) || 10;
-  const filters = req.query.filters || {};
+
+  let filters = {};
+  if (typeof req.query.filters === "string") {
+    try {
+      filters = JSON.parse(req.query.filters);
+    } catch (err) {
+      return res.sendCommonValue(400, "Invalid filters format");
+    }
+  }
 
   let fuzzyKeys = req.query.fuzzyKeys || [];
   if (typeof fuzzyKeys === "string") {

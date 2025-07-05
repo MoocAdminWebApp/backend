@@ -1,5 +1,6 @@
 const { Profile, User } = require("../models/index.js");
 const { Op } = require("sequelize");
+const { paginateModelAsync } = require("../common/pagination");
 
 const {
   EntityAlreadyExistsException,
@@ -27,9 +28,9 @@ const createProfileAsync = async (profileData, creatorId) => {
 const getAllProfilesAsync = async () => {
   const allProfiles = await Profile.findAll({
     include: [
-      { model: User, as: "user", attributes: ["id", "email", "firstName", "lastName"] },
-      { model: User, as: "creator", attributes: ["id", "email"] },
-      { model: User, as: "updater", attributes: ["id", "email"] },
+      { model: User, as: "user", attributes: ["id", "email", "firstName", "lastName", "access"] },
+      { model: User, as: "creator", attributes: ["id", "email", "access"] },
+      { model: User, as: "updater", attributes: ["id", "email", "access"] },
     ],
     order: [["id", "ASC"]],
   });
@@ -40,9 +41,9 @@ const getAllProfilesAsync = async () => {
 const getProfileByIdAsync = async id => {
   const profile = await Profile.findByPk(id, {
     include: [
-      { model: User, as: "user", attributes: ["id", "email", "firstName", "lastName"] },
-      { model: User, as: "creator", attributes: ["id", "email"] },
-      { model: User, as: "updater", attributes: ["id", "email"] },
+      { model: User, as: "user", attributes: ["id", "email", "firstName", "lastName", "access"] },
+      { model: User, as: "creator", attributes: ["id", "email", "access"] },
+      { model: User, as: "updater", attributes: ["id", "email", "access"] },
     ],
   });
 
@@ -55,9 +56,9 @@ const getProfileByUserIdAsync = async userId => {
   const profile = await Profile.findOne({
     where: { userId },
     include: [
-      { model: User, as: "user", attributes: ["id", "email", "firstName", "lastName"] },
-      { model: User, as: "creator", attributes: ["id", "email"] },
-      { model: User, as: "updater", attributes: ["id", "email"] },
+      { model: User, as: "user", attributes: ["id", "email", "firstName", "lastName", "access"] },
+      { model: User, as: "creator", attributes: ["id", "email", "access"] },
+      { model: User, as: "updater", attributes: ["id", "email", "access"] },
     ],
   });
 
@@ -65,31 +66,6 @@ const getProfileByUserIdAsync = async userId => {
 
   return { isSuccess: true, message: "", data: profile };
 };
-
-// const getProfilesByPageAsync = async (page = 1, pageSize = 10) => {
-//   const offset = (page - 1) * pageSize;
-
-//   const { count, rows } = await Profile.findAndCountAll({
-//     offset,
-//     limit: pageSize,
-//     order: [["id", "ASC"]],
-//     include: [
-//       { model: User, as: "user", attributes: ["id", "email", "firstName", "lastName"] },
-//       { model: User, as: "creator", attributes: ["id", "email"] },
-//       { model: User, as: "updater", attributes: ["id", "email"] },
-//     ],
-//   });
-
-//   const data = {
-//     page,
-//     pageSize,
-//     totalPages: Math.ceil(count / pageSize),
-//     total: count,
-//     profiles: rows,
-//   };
-
-//   return { isSuccess: true, message: "", data };
-// };
 
 const getProfilesByPageAsync = async (filters = {}, fuzzyKeys = [], page = 1, pageSize = 10) => {
   return await paginateModelAsync(Profile, {

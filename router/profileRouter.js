@@ -114,14 +114,16 @@ router.get("/", profileController.getAllProfiles);
  *         name: filters
  *         required: false
  *         schema:
- *           type: object
- *         description: Filters in key-value pairs, e.g. filters[country]=Australia
+ *           type: string
+ *           example: '{"streetAddress":"100","bio":"Student","country":"China"}'
+ *         description: JSON string of filter fields and values
  *       - in: query
  *         name: fuzzyKeys
  *         required: false
  *         schema:
  *           type: string
- *         description: Comma separated keys to apply fuzzy matching, e.g. country,city
+ *           example: "streetAddress,bio"
+ *         description: Comma separated keys to apply fuzzy matching
  *     responses:
  *       200:
  *         description: Get paged profiles successfully
@@ -196,6 +198,43 @@ router.get(
   "/:id",
   commonValidate([param("id").isInt().withMessage("Profile ID must be an integer")]),
   profileController.getProfileById
+);
+
+/**
+ * @openapi
+ * /api/profiles/by-user/{userId}:
+ *   get:
+ *     summary: Get profile by userId
+ *     tags: [Profiles]
+ *     security:
+ *       - BearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: userId
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: User ID associated with the profile
+ *     responses:
+ *       200:
+ *         description: Get profile by userId successfully
+ *         content:
+ *            application/json:
+ *              schema:
+ *                $ref: '#/components/schemas/Profile'
+ *       400:
+ *         description: Bad request
+ *       401:
+ *         description: Unauthorized
+ *       404:
+ *         description: Profile with this userId not found
+ *       500:
+ *         description: Server error
+ */
+router.get(
+  "/by-user/:userId",
+  commonValidate([param("userId").isInt().withMessage("User ID must be an integer")]),
+  profileController.getProfileByUserId
 );
 
 /**

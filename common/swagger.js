@@ -144,8 +144,7 @@ const options = {
         Profile: {
           type: "object",
           properties: {
-            id: { type: "integer", example: 1 },
-            userId: { type: "integer", example: 5 },
+            userId: { type: "integer", example: 6 },
             countryCode: { type: "string", example: "+61" },
             phoneNumber: { type: "string", example: "1234567890" },
             country: { type: "string", example: "Australia" },
