@@ -6,7 +6,7 @@ const app = express();
 const authRouter = require("./router/authRouter");
 const cookiesParser = require("cookie-parser");
 const { expressjwt: jwtMiddleware } = require("express-jwt");
-const { authorizeRole } = require("./middleware/authorizeRole")
+const { authorizeRole } = require("./middleware/authorizeRole");
 //config cors
 const cors = require("cors");
 
@@ -42,16 +42,13 @@ app.use(
     secret: appConfig.jwtConfig.secret,
     algorithms: appConfig.jwtConfig.algorithms,
     getToken: req => {
-  if (req.headers.authorization && req.headers.authorization.startsWith("Bearer ")) {
-    return req.headers.authorization.split(" ")[1];
-  } else if (req.cookies && req.cookies.token) {
-    return req.cookies.token;
-  }
-  return null;
-  }
-
-
-
+      if (req.headers.authorization && req.headers.authorization.startsWith("Bearer ")) {
+        return req.headers.authorization.split(" ")[1];
+      } else if (req.cookies && req.cookies.token) {
+        return req.cookies.token;
+      }
+      return null;
+    },
   }).unless({
     path: ["/", /^\/api-docs/, "/api/login", "/api/users/by-email"], // login route
   })
@@ -81,13 +78,15 @@ app.use("/api/courseofferings", courseofferingrouter);
 //config userRouter
 const userRouter = require("./router/userRouter");
 app.use("/api/users", userRouter);
-
+//config profileRouter
+const profileRouter = require("./router/profileRouter");
+app.use("/api/profiles", profileRouter);
 //config authRouter
 app.use("/api", authRouter);
 
 //config questionRouter
-const questionRouter = require("./router/questionRouter")
-app.use("/api/questions", authorizeRole("admin", "teacher"), questionRouter)
+const questionRouter = require("./router/questionRouter");
+app.use("/api/questions", authorizeRole("admin", "teacher"), questionRouter);
 
 // config categoryRouter
 const categoryRouter = require("./router/categoryrouter");
