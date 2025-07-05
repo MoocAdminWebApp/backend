@@ -62,10 +62,12 @@ module.exports = {
       },
     });
 
-    console.log("Table question_sets created");
+    console.log("Table question_set_questions created");
   },
 
   async down (queryInterface, Sequelize) {
     await queryInterface.dropTable("question_set_questions")
+
+    console.log("Table question_set_questions dropped");
   }
 };

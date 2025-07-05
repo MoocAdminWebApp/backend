@@ -11,6 +11,7 @@ module.exports = (sequelize, DataTypes) => {
       // define association here
       Menu.belongsTo(models.User, { foreignKey: "createdBy", targetKey: "id" });
       Menu.belongsTo(models.User, { foreignKey: "updatedBy", targetKey: "id" });
+      Menu.belongsTo(models.Permission, { foreignKey: "permission", targetKey: "id" });
 
       Menu.belongsTo(models.Menu, { foreignKey: "parentId", as: "parent" });
       Menu.hasMany(models.Menu, { foreignKey: "parentId", as: "children" });
@@ -72,8 +73,14 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: true,
       },
       permission: {
-        type: DataTypes.STRING,
+        type: DataTypes.INTEGER,
         allowNull: true,
+        references: {
+          model: "permissions",
+          key: "id",
+        },
+        onUpdate: "CASCADE",
+        onDelete: "SET NULL",
       },
       hidden: {
         type: DataTypes.BOOLEAN,

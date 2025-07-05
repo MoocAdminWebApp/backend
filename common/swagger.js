@@ -66,6 +66,81 @@ const options = {
             },
           },
         },
+        QuestionInput: {
+          type: "object",
+          required: ["type", "content"],
+          properties: {
+            id: {
+              type: "integer",
+              example: 1,
+            },
+            type: {
+              type: "string",
+              enum: ["Single", "Multiple", "TrueFalse", "ShortAnswer"],
+              example: "Single",
+              description:
+                "The question type, needs to be one of : Single, Multiple, TrueFalse, ShortAnswer",
+            },
+            content: {
+              type: "string",
+              example: "Which HTML tag is used to insert a line break",
+            },
+            difficulty: {
+              type: "string",
+              enum: ["Easy", "Medium", "Hard"],
+              example: "Easy",
+            },
+          },
+        },
+        User: {
+          type: "object",
+          properties: {
+            email: { type: "string", example: "test@example.com" },
+            password: { type: "string", example: "123456" },
+            firstName: { type: "string", example: "John" },
+            lastName: { type: "string", example: "Doe" },
+            access: {
+              type: "string",
+              enum: ["ADMIN", "TEACHER", "STUDENT"],
+              example: "STUDENT",
+            },
+            createdAt: {
+              type: "string",
+              format: "date-time",
+              example: "2025-05-27T10:00:00Z",
+            },
+            updatedAt: {
+              type: "string",
+              format: "date-time",
+              example: "2025-05-27T12:00:00Z",
+            },
+          },
+          required: ["email", "password", "firstName", "lastName"],
+        },
+        UserUpdate: {
+          type: "object",
+          properties: {
+            password: {
+              type: "string",
+              default: "newpassword",
+            },
+            firstName: {
+              type: "string",
+              default: "Jane",
+            },
+            lastName: {
+              type: "string",
+              default: "Smith",
+            },
+            access: {
+              type: "string",
+              enum: ["ADMIN", "TEACHER", "STUDENT"],
+              default: "TEACHER",
+            },
+          },
+          description:
+            "Only password, firstName, lastName, and access can be updated. Id and Email cannot be updated.",
+        },
       },
     },
   },

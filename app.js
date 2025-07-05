@@ -6,6 +6,7 @@ const app = express();
 const authRouter = require("./router/authRouter");
 const cookiesParser = require("cookie-parser");
 const { expressjwt: jwtMiddleware } = require("express-jwt");
+const { authorizeRole } = require("./middleware/authorizeRole")
 //config cors
 const cors = require("cors");
 
@@ -47,7 +48,7 @@ app.use(
     return req.cookies.token;
   }
   return null;
-}
+  }
 
 
 
@@ -87,8 +88,24 @@ app.use("./api/courses", courseRouter);
 //config authRouter
 app.use("/api", authRouter);
 
+//config questionRouter
+const questionRouter = require("./router/questionRouter")
+app.use("/api/questions", authorizeRole("admin", "teacher"), questionRouter)
+
+// config categoryRouter
+const categoryRouter = require("./router/categoryrouter");
+app.use("/api/categories", categoryRouter);
+
 //config erorhandle
 const erorhandle = require("./middleware/errorhandling");
 app.use(erorhandle.errorhandling);
+
+//config  chapterRouter
+const chapterRouter = require("./router/chapterRouter");
+app.use("/api/chapters", chapterRouter);
+
+//config mediaRouter
+const mediaRouter = require("./router/mediaRouter");
+app.use("/api/media", mediaRouter);
 
 module.exports = app;

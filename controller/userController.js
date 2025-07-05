@@ -1,80 +1,69 @@
 const userService = require("../service/userService");
+const { getCurrentUser } = require("../common/getCurrentUser");
 
 const createUser = async (req, res) => {
-  try {
-    const creatorId = req.user?.id || null; // get the creatorId from the request
-    const newUser = await userService.createUserAsync(req.body, creatorId);
-    res.status(201).json(newUser);
-  } catch (err) {
-    const statusCode = err.statusCode || 400;
-    res.status(statusCode).json({ status: statusCode, error: err.message });
+  //const creatorId = req.auth?.id || null; // get the creatorId from the request
+  const creatorId = getCurrentUser(req).userId; // get the creatorId from the common function
+  const result = await userService.createUserAsync(req.body, creatorId);
+
+  if (result.isSuccess) {
+    res.sendCommonValue(201, "success", result.data);
+  } else {
+    res.sendCommonValue(400, "fail");
   }
 };
 const getAllUsers = async (req, res) => {
-  try {
-    const users = await userService.getAllUsersAsync();
-    res.json(users);
-  } catch (err) {
-    res.status(500).json({ error: err.message });
+  const users = await userService.getAllUsersAsync();
+  res.json(users);
+  if (result.isSuccess) {
+    res.sendCommonValue(201, "success", result.data);
+  } else {
+    res.sendCommonValue(500, "fail");
   }
 };
 // get user by email only used in register, login or reset password
 const getUserByEmail = async (req, res) => {
   const { email } = req.query;
-
-  try {
-    const user = await userService.getUserByEmailAsync(email);
-    res.json(user);
-  } catch (err) {
-    const statusCode = err.statusCode || 500;
-    res.status(statusCode).json({
-      status: statusCode,
-      error: err.message,
-    });
-  }
+  const result = await userService.getUserByEmailAsync(email);
+  res.sendCommonValue(200, "success", result.data);
 };
 
 const getUserById = async (req, res) => {
-  try {
-    const user = await userService.getUserByIdAsync(req.params.id);
-    res.json(user);
-  } catch (err) {
-    const statusCode = err.statusCode || 404;
-    res.status(statusCode).json({ status: statusCode, error: err.message });
-  }
+  const result = await userService.getUserByIdAsync(req.params.id);
+  res.sendCommonValue(200, "success", result.data);
 };
 
 const getUsersByPage = async (req, res) => {
-  try {
-    const page = parseInt(req.query.page) || 1;
-    const pageSize = parseInt(req.query.pageSize) || 10;
+  let access = req.query.access ?? null;
+  const page = parseInt(req.query.page) || 1;
+  const pageSize = parseInt(req.query.pageSize) || 10;
 
-    const pagedUsers = await userService.getUsersByPageAsync(page, pageSize);
-    res.json(pagedUsers);
-  } catch (err) {
-    const statusCode = err.statusCode || 500;
-    res.status(statusCode).json({ status: statusCode, error: err.message });
+  const result = await userService.getUsersByPageAsync(access, page, pageSize);
+
+  if (result.isSuccess) {
+    res.sendCommonValue(200, "success", result.data);
+  } else {
+    res.sendCommonValue(400, "fail");
   }
 };
 
 const updateUser = async (req, res) => {
-  try {
-    const updaterId = req.user?.id || null;
-    const updatedUser = await userService.updateUserAsync(req.params.id, req.body, updaterId);
-    res.json(updatedUser);
-  } catch (err) {
-    const statusCode = err.statusCode || 400;
-    res.status(statusCode).json({ status: statusCode, error: err.message });
+  const updaterId = getCurrentUser(req).userId;
+  const result = await userService.updateUserAsync(req.params.id, req.body, updaterId);
+  if (result.isSuccess) {
+    res.sendCommonValue(200, "success", result.data);
+  } else {
+    res.sendCommonValue(400, "fail");
   }
 };
 
 const deleteUser = async (req, res) => {
-  try {
-    const result = await userService.deleteUserAsync(req.params.id);
-    res.json(result);
-  } catch (err) {
-    const statusCode = err.statusCode || 404;
-    res.status(statusCode).json({ status: statusCode, error: err.message });
+  const result = await userService.deleteUserAsync(req.params.id);
+
+  if (result.isSuccess) {
+    res.sendCommonValue(200, "success", result.data);
+  } else {
+    res.sendCommonValue(400, "fail");
   }
 };
 
