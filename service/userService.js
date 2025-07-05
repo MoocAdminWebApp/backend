@@ -1,5 +1,6 @@
 const { User, Role, Profile } = require("../models/index.js");
 const { Op } = require("sequelize");
+const { paginateModelAsync } = require("../common/pagination");
 
 const {
   EntityAlreadyExistsException,
@@ -70,37 +71,48 @@ const getUserByIdAsync = async id => {
 
   return { isSuccess: true, message: "", data: user };
 };
-
-const getUsersByPageAsync = async (access = null, page = 1, pageSize = 10) => {
-  const whereClause = {};
-  if (access) {
-    whereClause.access = {
-      [Op.like]: `%${access}%`,
-    };
-  }
-
-  const offset = (page - 1) * pageSize;
-  const limit = pageSize;
-
-  const { count, rows } = await User.findAndCountAll({
-    where: whereClause,
-    attributes: { exclude: ["password"] },
-    include: [{ model: Role, as: "roles", through: { attributes: [] } }],
-    order: [["id", "ASC"]],
-    limit,
-    offset,
-  });
-
-  const data = {
+const getUsersByPageAsync = async (filters = {}, fuzzyKeys = [], page, pageSize) => {
+  return await paginateModelAsync(User, {
+    filters,
+    fuzzyKeys,
     page,
     pageSize,
-    totalPages: Math.ceil(count / pageSize),
-    total: count,
-    users: rows,
-  };
-
-  return { isSuccess: true, message: "", data: data };
+    excludeFields: ["password"],
+    include: [{ model: Role, as: "roles", through: { attributes: [] } }],
+    orderBy: "id",
+    orderDir: "ASC",
+  });
 };
+// const getUsersByPageAsync = async (access = null, page = 1, pageSize = 10) => {
+//   const whereClause = {};
+//   if (access) {
+//     whereClause.access = {
+//       [Op.like]: `%${access}%`,
+//     };
+//   }
+
+//   const offset = (page - 1) * pageSize;
+//   const limit = pageSize;
+
+//   const { count, rows } = await User.findAndCountAll({
+//     where: whereClause,
+//     attributes: { exclude: ["password"] },
+//     include: [{ model: Role, as: "roles", through: { attributes: [] } }],
+//     order: [["id", "ASC"]],
+//     limit,
+//     offset,
+//   });
+
+//   const data = {
+//     page,
+//     pageSize,
+//     totalPages: Math.ceil(count / pageSize),
+//     total: count,
+//     users: rows,
+//   };
+
+//   return { isSuccess: true, message: "", data: data };
+// };
 
 const updateUserAsync = async (id, updateData, updaterId) => {
   const user = await User.findByPk(id);
