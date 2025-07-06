@@ -104,4 +104,8 @@ app.use("/api/chapters", chapterRouter);
 const mediaRouter = require("./router/mediaRouter");
 app.use("/api/media", mediaRouter);
 
+//config permissionrouter
+const permissionrouter = require("./router/permissionrouter")
+app.use("/api/permissions", permissionrouter);
+
 module.exports = app;

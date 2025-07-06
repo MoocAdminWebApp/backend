@@ -184,6 +184,24 @@ const options = {
             },
           },
         },
+        Permission: {
+          type: "object",
+          properties: {
+            id: { type: "integer", example: 1 },
+            permissionName: { type: "string", example: "Add Role" },
+            description: { type: "string", example: "User can create new roles" },
+            createdAt: {
+              type: "string",
+              format: "date-time",
+              example: "2025-06-27T10:00:00Z",
+            },
+            updatedAt: {
+              type: "string",
+              format: "date-time",
+              example: "2025-06-27T10:00:00Z",
+            },
+          },
+        },
       },
     },
   },
