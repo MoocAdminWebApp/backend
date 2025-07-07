@@ -78,9 +78,16 @@ app.use("/api/courseofferings", courseofferingrouter);
 //config userRouter
 const userRouter = require("./router/userRouter");
 app.use("/api/users", userRouter);
+
+//config courseRouter
+const courseRouter = require("./router/courseRouter");
+app.use("/api/courses", courseRouter);
+
+
 //config profileRouter
 const profileRouter = require("./router/profileRouter");
 app.use("/api/profiles", profileRouter);
+
 //config authRouter
 app.use("/api", authRouter);
 
