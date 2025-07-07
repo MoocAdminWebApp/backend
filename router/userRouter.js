@@ -118,48 +118,59 @@ router.get(
  * @openapi
  * /api/users/page:
  *   get:
- *     summary: Get users with pagination
+ *     summary: Get users with pagination and flexible filters
  *     tags: [Users]
  *     security:
  *       - BearerAuth: []
  *     parameters:
  *       - in: query
  *         name: page
- *         required: false
  *         schema:
  *           type: integer
  *           default: 1
  *         description: Page number (starting from 1)
  *       - in: query
  *         name: pageSize
- *         required: false
  *         schema:
  *           type: integer
  *           default: 10
  *         description: Number of users per page
  *       - in: query
- *         name: access
- *         required: false
+ *         name: fuzzyKeys
  *         schema:
  *           type: string
- *           enum: [ADMIN, TEACHER, STUDENT]
- *           default: STUDENT
- *         description: Filter users by access type
+ *           example: "email,lastName"
+ *         description: Comma-separated list of fields to apply fuzzy search
+ *       - in: query
+ *         name: filters
+ *         schema:
+ *           type: string
+ *           example: '{"email":"bob@","lastName":"Bro", "access":"TEACHER"}'
+ *         description: JSON string of filter fields and values
  *     responses:
  *       200:
  *         description: Get paged users successfully
  *         content:
- *            application/json:
- *              schema:
- *                type: array
- *                items:
- *                  $ref: '#/components/schemas/User'
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 page:
+ *                   type: integer
+ *                 pageSize:
+ *                   type: integer
+ *                 total:
+ *                   type: integer
+ *                 totalPages:
+ *                   type: integer
+ *                 rows:
+ *                   type: array
+ *                   items:
+ *                     $ref: '#/components/schemas/User'
  *       400:
  *         description: Bad request
  *       401:
  *         description: Unauthorized
- *       404:
- *         description: Users with this page information not found
  *       500:
  *         description: Server error
  */
@@ -168,6 +179,8 @@ router.get(
   commonValidate([
     query("page").optional().isInt({ min: 1 }).withMessage("Page must be an integer >= 1"),
     query("pageSize").optional().isInt({ min: 1 }).withMessage("Page size must be an integer >= 1"),
+    query("fuzzyKeys").optional().isString(),
+    query("filters").optional().isString().withMessage("Filters must be a JSON string"),
   ]),
   userController.getUsersByPage
 );

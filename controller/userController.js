@@ -34,11 +34,24 @@ const getUserById = async (req, res) => {
 };
 
 const getUsersByPage = async (req, res) => {
-  let access = req.query.access ?? null;
   const page = parseInt(req.query.page) || 1;
   const pageSize = parseInt(req.query.pageSize) || 10;
 
-  const result = await userService.getUsersByPageAsync(access, page, pageSize);
+  let filters = {};
+  if (typeof req.query.filters === "string") {
+    try {
+      filters = JSON.parse(req.query.filters);
+    } catch (err) {
+      return res.sendCommonValue(400, "Invalid filters format");
+    }
+  }
+
+  let fuzzyKeys = req.query.fuzzyKeys || [];
+  if (typeof fuzzyKeys === "string") {
+    fuzzyKeys = fuzzyKeys.split(",");
+  }
+
+  const result = await userService.getUsersByPageAsync(filters, fuzzyKeys, page, pageSize);
 
   if (result.isSuccess) {
     res.sendCommonValue(200, "success", result.data);
@@ -46,7 +59,6 @@ const getUsersByPage = async (req, res) => {
     res.sendCommonValue(400, "fail");
   }
 };
-
 const updateUser = async (req, res) => {
   const updaterId = getCurrentUser(req).userId;
   const result = await userService.updateUserAsync(req.params.id, req.body, updaterId);
