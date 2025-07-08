@@ -87,10 +87,36 @@ const deleteAsync = async (id) => {
   }
 };
 
+const { paginateModelAsync } = require("../common/pagination");
+const { Course, User } = require("../models");
+
+const getByPageAsync = async (filters = {}, fuzzyKeys = [], page, pageSize) => {
+  try {
+    const result = await paginateModelAsync(CourseOffering, {
+      filters,
+      fuzzyKeys,
+      page,
+      pageSize,
+      include: [
+        { model: Course, as: "course" },
+        { model: User, as: "creator" },
+        { model: User, as: "updater" },
+      ],
+      orderBy: "id",
+      orderDir: "ASC",
+    });
+
+    return { isSuccess: true, data: result };
+  } catch (err) {
+    return { isSuccess: false, message: err.message };
+  }
+};
+
 module.exports = {
   getAllAsync,
   getByIdAsync,
   createAsync,
   updateAsync,
   deleteAsync,
+  getByPageAsync,
 };

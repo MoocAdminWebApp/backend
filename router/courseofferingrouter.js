@@ -1,4 +1,7 @@
 const express = require("express");
+const { body, param } = require("express-validator");
+const { commonValidate } = require("../middleware/expressValidator");
+
 const router = express.Router();
 const controller = require("../controller/courseofferingcontroller");
 
@@ -46,21 +49,59 @@ const controller = require("../controller/courseofferingcontroller");
 
 /**
  * @swagger
+ * /api/courseofferings/by-page:
+ *   get:
+ *     summary: Get paginated list of course offerings
+ *     tags: [CourseOfferings]
+ *     parameters:
+ *       - in: query
+ *         name: page
+ *         schema:
+ *           type: integer
+ *           default: 1
+ *         description: Page number
+ *       - in: query
+ *         name: pageSize
+ *         schema:
+ *           type: integer
+ *           default: 10
+ *         description: Number of records per page
+ *       - in: query
+ *         name: filters
+ *         schema:
+ *           type: string
+ *         description: JSON string for exact match filtering
+ *       - in: query
+ *         name: fuzzyKeys
+ *         schema:
+ *           type: string
+ *         description: Comma-separated keys for fuzzy search
+ *     responses:
+ *       200:
+ *         description: A paginated list of course offerings
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 total:
+ *                   type: integer
+ *                 rows:
+ *                   type: array
+ *                   items:
+ *                     $ref: '#/components/schemas/CourseOffering'
+ */
+router.get("/by-page", controller.getByPage);
+
+/**
+ * @swagger
  * /api/courseofferings:
  *   get:
  *     summary: Get all course offerings
  *     tags: [CourseOfferings]
- *     security:
- *       - BearerAuth: []
  *     responses:
  *       200:
- *         description: List of course offerings
- *         content:
- *           application/json:
- *             schema:
- *               type: array
- *               items:
- *                 $ref: '#/components/schemas/CourseOffering'
+ *         description: A list of course offerings
  */
 router.get("/", controller.getAll);
 
@@ -68,28 +109,26 @@ router.get("/", controller.getAll);
  * @swagger
  * /api/courseofferings/{id}:
  *   get:
- *     summary: Get a course offering by ID
+ *     summary: Get course offering by ID
  *     tags: [CourseOfferings]
- *     security:
- *       - BearerAuth: []
  *     parameters:
  *       - in: path
  *         name: id
+ *         required: true
  *         schema:
  *           type: integer
- *         required: true
  *         description: Course offering ID
  *     responses:
  *       200:
- *         description: Course offering data
- *         content:
- *           application/json:
- *             schema:
- *               $ref: '#/components/schemas/CourseOffering'
- *       404:
- *         description: Course offering not found
+ *         description: A single course offering
  */
-router.get("/:id", controller.getById);
+router.get(
+  "/:id",
+  commonValidate([
+    param("id").notEmpty().isInt({ min: 1 }).withMessage("Invalid course offering ID"),
+  ]),
+  controller.getById
+);
 
 /**
  * @swagger
@@ -97,8 +136,6 @@ router.get("/:id", controller.getById);
  *   post:
  *     summary: Create a new course offering
  *     tags: [CourseOfferings]
- *     security:
- *       - BearerAuth: []
  *     requestBody:
  *       required: true
  *       content:
@@ -107,30 +144,34 @@ router.get("/:id", controller.getById);
  *             $ref: '#/components/schemas/CourseOffering'
  *     responses:
  *       201:
- *         description: Created successfully
- *         content:
- *           application/json:
- *             schema:
- *               $ref: '#/components/schemas/CourseOffering'
- *       400:
- *         description: Bad request
+ *         description: Course offering created
  */
-router.post("/", controller.create);
+router.post(
+  "/",
+  commonValidate([
+    body("courseName").notEmpty().withMessage("courseName is required"),
+    body("teacherName").notEmpty().withMessage("teacherName is required"),
+    body("semester").notEmpty().withMessage("semester is required"),
+    body("capacity").isInt({ min: 1 }).withMessage("capacity must be a positive integer"),
+    body("location").notEmpty().withMessage("location is required"),
+    body("schedule").notEmpty().withMessage("schedule is required"),
+    body("status").isIn([0, 1, 2]).withMessage("status must be 0, 1, or 2"),
+  ]),
+  controller.create
+);
 
 /**
  * @swagger
  * /api/courseofferings/{id}:
  *   put:
- *     summary: Update a course offering by ID
+ *     summary: Update a course offering
  *     tags: [CourseOfferings]
- *     security:
- *       - BearerAuth: []
  *     parameters:
  *       - in: path
  *         name: id
+ *         required: true
  *         schema:
  *           type: integer
- *         required: true
  *         description: Course offering ID
  *     requestBody:
  *       required: true
@@ -140,37 +181,77 @@ router.post("/", controller.create);
  *             $ref: '#/components/schemas/CourseOffering'
  *     responses:
  *       200:
- *         description: Updated successfully
- *         content:
- *           application/json:
- *             schema:
- *               $ref: '#/components/schemas/CourseOffering'
- *       400:
- *         description: Bad request
+ *         description: Course offering updated
  */
-router.put("/:id", controller.update);
+router.put(
+  "/:id",
+  commonValidate([
+    param("id")
+      .notEmpty()
+      .isInt({ min: 1 })
+      .withMessage("Invalid course offering ID"),
+
+    body("courseName")
+      .optional()
+      .notEmpty()
+      .withMessage("courseName is required"),
+
+    body("teacherName")
+      .optional()
+      .notEmpty()
+      .withMessage("teacherName is required"),
+
+    body("semester")
+      .optional()
+      .notEmpty()
+      .withMessage("semester is required"),
+
+    body("capacity")
+      .optional()
+      .isInt({ min: 1 })
+      .withMessage("capacity must be a positive integer"),
+
+    body("location")
+      .optional()
+      .notEmpty()
+      .withMessage("location is required"),
+
+    body("schedule")
+      .optional()
+      .notEmpty()
+      .withMessage("schedule is required"),
+
+    body("status")
+      .optional()
+      .isIn([0, 1, 2])
+      .withMessage("status must be 0, 1, or 2"),
+  ]),
+  controller.update
+);
 
 /**
  * @swagger
  * /api/courseofferings/{id}:
  *   delete:
- *     summary: Delete a course offering by ID
+ *     summary: Delete a course offering
  *     tags: [CourseOfferings]
- *     security:
- *       - BearerAuth: []
  *     parameters:
  *       - in: path
  *         name: id
+ *         required: true
  *         schema:
  *           type: integer
- *         required: true
  *         description: Course offering ID
  *     responses:
- *       200:
- *         description: Deleted successfully
- *       400:
- *         description: Bad request
+ *       204:
+ *         description: Course offering deleted
  */
-router.delete("/:id", controller.deleteOne);
+router.delete(
+  "/:id",
+  commonValidate([
+    param("id").notEmpty().isInt({ min: 1 }).withMessage("Invalid course offering ID"),
+  ]),
+  controller.deleteOne
+);
 
 module.exports = router;
