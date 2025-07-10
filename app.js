@@ -50,7 +50,7 @@ app.use(
       return null;
     },
   }).unless({
-    path: ["/", /^\/api-docs/, "/api/login", "/api/users/by-email"], // login route
+    path: ["/", /^\/api-docs/, "/api/login", "/api/signup", "/api/users/by-email"], // login route
   })
 );
 
@@ -83,7 +83,6 @@ app.use("/api/users", userRouter);
 const courseRouter = require("./router/courseRouter");
 app.use("/api/courses", courseRouter);
 
-
 //config profileRouter
 const profileRouter = require("./router/profileRouter");
 app.use("/api/profiles", profileRouter);
@@ -112,7 +111,7 @@ const mediaRouter = require("./router/mediaRouter");
 app.use("/api/media", mediaRouter);
 
 //config permissionrouter
-const permissionrouter = require("./router/permissionrouter")
+const permissionrouter = require("./router/permissionrouter");
 app.use("/api/permissions", permissionrouter);
 
 module.exports = app;
