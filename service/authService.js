@@ -5,11 +5,15 @@ const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const { EntityNotFoundException } = require("../common/commonError");
 const { jwtConfig } = require("../appConfig");
+const { bcryptConfig } = require("../appConfig");
 
-/**
- *
- * @param {*} email
- */
+const checkNewUserEmailExists = async email => {
+  const user = await User.findOne({ where: { email } });
+  if (user) {
+    throw new EntityNotFoundException("User exists, please use another email");
+  }
+};
+
 const checkEmailExists = async email => {
   const user = await User.findOne({ where: { email } });
   if (!user) {
@@ -52,4 +56,24 @@ const login = async (email, password) => {
   );
   return { isSuccess: true, message: "login success", data: token };
 };
-module.exports = { login };
+
+/**
+ * @param {*} email
+ * @param {*} password
+ * @param {*} firstName
+ * @param {*} lastName
+ * @param {*} access
+ * @returns
+ */
+const signup = async userData => {
+  await checkNewUserEmailExists(userData.email);
+  const hashedPassword = await bcrypt.hash(userData.password, bcryptConfig.saltRounds);
+  const newUser = await User.create({
+    ...userData,
+    password: hashedPassword,
+    createdBy: null,
+  });
+  return { isSuccess: true, message: "Sign Up a New User Successfully", data: newUser };
+};
+
+module.exports = { login, signup };

@@ -1,5 +1,6 @@
 const authService = require("../service/authService");
 const { cookieConfig } = require("../appConfig");
+
 const loginUser = async (req, res) => {
   const { email, password } = req.body;
   try {
@@ -20,4 +21,18 @@ const loginUser = async (req, res) => {
   }
 };
 
-module.exports = { loginUser };
+const signupUser = async (req, res) => {
+  const { email, password } = req.body;
+  try {
+    const result = await authService.signup(req.body);
+
+    if (result.isSuccess == false) {
+      throw new Error(result.message);
+    }
+    res.sendCommonValue(200, result.message, result.data);
+  } catch (err) {
+    res.sendCommonValue(400, err.message, {});
+  }
+};
+
+module.exports = { loginUser, signupUser };
