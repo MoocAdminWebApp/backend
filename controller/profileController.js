@@ -5,45 +5,26 @@ const { getCurrentUser } = require("../common/getCurrentUser");
 const createProfile = async (req, res) => {
   const creatorId = getCurrentUser(req).userId;
   const result = await profileService.createProfileAsync(req.body, creatorId);
-  if (result.isSuccess) {
-    res.sendCommonValue(201, "success", result.data);
-  } else {
-    res.sendCommonValue(400, "fail");
-  }
+  res.sendCommonValue(201, result.message, result.data);
 };
 
 // Get all profiles
 const getAllProfiles = async (req, res) => {
   const result = await profileService.getAllProfilesAsync();
-
-  if (result.isSuccess) {
-    res.sendCommonValue(200, "success", result.data);
-  } else {
-    res.sendCommonValue(500, "fail");
-  }
+  res.sendCommonValue(200, result.message, result.data);
 };
 
 // Get profile by userId
 const getProfileByUserId = async (req, res) => {
   const userId = req.params.userId;
   const result = await profileService.getProfileByUserIdAsync(userId);
-
-  if (result.isSuccess) {
-    res.sendCommonValue(200, "success", result.data);
-  } else {
-    res.sendCommonValue(404, "fail");
-  }
+  res.sendCommonValue(200, result.message, result.data);
 };
 
 // Get profile by profileId
 const getProfileById = async (req, res) => {
   const result = await profileService.getProfileByIdAsync(req.params.id);
-
-  if (result.isSuccess) {
-    res.sendCommonValue(200, "success", result.data);
-  } else {
-    res.sendCommonValue(404, "fail");
-  }
+  res.sendCommonValue(200, result.message, result.data);
 };
 
 // Get profiles by page
@@ -66,35 +47,20 @@ const getProfilesByPage = async (req, res) => {
   }
 
   const result = await profileService.getProfilesByPageAsync(filters, fuzzyKeys, page, pageSize);
-
-  if (result.isSuccess) {
-    res.sendCommonValue(200, "success", result.data);
-  } else {
-    res.sendCommonValue(400, "fail");
-  }
+  res.sendCommonValue(200, result.message, result.data);
 };
 
 // Update profile
 const updateProfile = async (req, res) => {
   const updaterId = getCurrentUser(req).userId;
   const result = await profileService.updateProfileAsync(req.params.id, req.body, updaterId);
-
-  if (result.isSuccess) {
-    res.sendCommonValue(200, "success", result.data);
-  } else {
-    res.sendCommonValue(400, "fail");
-  }
+  res.sendCommonValue(200, result.message, result.data);
 };
 
 // Delete profile
 const deleteProfile = async (req, res) => {
   const result = await profileService.deleteProfileAsync(req.params.id);
-
-  if (result.isSuccess) {
-    res.sendCommonValue(200, "success", result.data);
-  } else {
-    res.sendCommonValue(400, "fail");
-  }
+  res.sendCommonValue(200, result.message, result.data);
 };
 
 module.exports = {

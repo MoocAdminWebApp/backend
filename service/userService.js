@@ -30,7 +30,7 @@ const createUserAsync = async (userData, creatorId) => {
 
   return {
     isSuccess: newUser.id > 0 ? true : false,
-    message: "",
+    message: "create user successfully",
     data: newUser,
   };
 };
@@ -45,10 +45,9 @@ const getAllUsersAsync = async () => {
     include: [{ model: Role, as: "roles", through: { attributes: [] } }],
     order: [["id", "ASC"]],
   });
-  if (allUsers) {
-    //await cacheHelper.setAsync(getALLCacheKey(), JSON.stringify(allUsers), 10);
-    return { isSuccess: true, message: "", data: allUsers };
-  }
+
+  //await cacheHelper.setAsync(getALLCacheKey(), JSON.stringify(allUsers), 10);
+  return { isSuccess: true, message: "get all users successfully", data: allUsers };
 };
 
 // get user by email only used in register, login or reset password
@@ -69,7 +68,7 @@ const getUserByIdAsync = async id => {
 
   if (!user) throw new EntityNotFoundException("User with this id not found");
 
-  return { isSuccess: true, message: "", data: user };
+  return { isSuccess: true, message: "Get user by id successfully", data: user };
 };
 const getUsersByPageAsync = async (filters = {}, fuzzyKeys = [], page, pageSize) => {
   return await paginateModelAsync(User, {
