@@ -35,4 +35,30 @@ const signupUser = async (req, res) => {
   }
 };
 
-module.exports = { loginUser, signupUser };
+const forgotUserPwd = async (req, res) => {
+  const { email } = req.body;
+  try {
+    const result = await authService.sendEmail(email);
+    if (result.isSuccess == false) {
+      throw new Error(result.message);
+    }
+    res.sendCommonValue(200, result.message, result.data);
+  } catch (err) {
+    res.sendCommonValue(400, err.message, {});
+  }
+};
+
+const resetUserPwd = async (req, res) => {
+  const { token, password } = req.body;
+  try {
+    const result = await authService.resetPwd(token, password);
+    if (result.isSuccess == false) {
+      throw new Error(result.message);
+    }
+    res.sendCommonValue(200, result.message, result.data);
+  } catch (err) {
+    res.sendCommonValue(400, err.message, {});
+  }
+};
+
+module.exports = { loginUser, signupUser, forgotUserPwd, resetUserPwd };

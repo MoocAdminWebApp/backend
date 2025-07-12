@@ -5,6 +5,7 @@ const { commonValidate } = require("../middleware/expressValidator");
 const { body } = require("express-validator");
 
 const EUserAccess = ["ADMIN", "TEACHER", "STUDENT"];
+
 /**
  * @swagger
  * /api/login:
@@ -82,6 +83,81 @@ router.post(
     body("access").optional().isIn(EUserAccess).withMessage("Invalid access type"),
   ]),
   authController.signupUser
+);
+
+/**
+ * @swagger
+ * /api/auth/forgotPwd:
+ *   post:
+ *     summary: A user forgot password
+ *     tags: [Authentication]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               email:
+ *                 type: string
+ *                 example: "alice@gmail.com"
+ *     responses:
+ *      200:
+ *        description: login Successfully
+ *      400:
+ *        description: Bad Request
+ *      401:
+ *        description: Unauthorized
+ *      404:
+ *        description: Not Found
+ *      500:
+ *        description: Server Error
+ */
+router.post(
+  "/auth/forgotPwd",
+  commonValidate([body("email").isEmail().withMessage("Please enter a valid email")]),
+  authController.forgotUserPwd
+);
+
+/**
+ * @swagger
+ * /api/auth/resetPwd:
+ *   post:
+ *     summary: A user reset password
+ *     tags: [Authentication]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               token:
+ *                 type: string
+ *                 example: ""
+ *               password:
+ *                 type: string
+ *                 format: password
+ *                 example: "1234567"
+ *     responses:
+ *      200:
+ *        description: login Successfully
+ *      400:
+ *        description: Bad Request
+ *      401:
+ *        description: Unauthorized
+ *      404:
+ *        description: Not Found
+ *      500:
+ *        description: Server Error
+ */
+router.post(
+  "/auth/resetPwd",
+  commonValidate([
+    body("token").isLength().withMessage("token must be at least 50 characters"),
+    body("password").isLength({ min: 6 }).withMessage("Password must be at least 6 characters"),
+  ]),
+  authController.resetUserPwd
 );
 
 module.exports = router;
