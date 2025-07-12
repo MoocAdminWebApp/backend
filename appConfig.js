@@ -1,4 +1,4 @@
-const converHelper = require("./common/convertHelper");
+const convertHelper = require("./common/convertHelper");
 
 require("dotenv").config({
   path: `.env.${process.env.NODE_ENV || "development"}`,
@@ -20,6 +20,7 @@ module.exports = {
     issuer: process.env.JWT_ISSUER,
     algorithms: [process.env.JWT_ALGORITHMS],
     expiresIn: process.env.JWT_EXPIRES_IN,
+    resetPasswordExpiresIn: process.env.JWT_RESET_PASSWORD_EXPIRES_IN,
   },
   mysqlConfig: {
     host: process.env.MYSQL_HOST,
@@ -29,11 +30,16 @@ module.exports = {
     database: process.env.MYSQL_DATABASE,
   },
   cacheConfig: {
-    useReids: converHelper.stringToBoolean(process.env.USE_REDIS),
+    useRedis: convertHelper.stringToBoolean(process.env.USE_REDIS),
     host: process.env.REDIS_HOST,
     port: process.env.REDIS_PORT,
   },
   cookieConfig: {
     maxAge: parseInt(process.env.COOKIE_MAX_AGE, 10),
+  },
+  resetPwdConfig: {
+    userEmail: process.env.GMAIL_USER,
+    appPwd: process.env.GMAIL_APP_PWD,
+    frontendURL: process.env.FE_URL,
   },
 };

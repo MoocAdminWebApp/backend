@@ -50,7 +50,15 @@ app.use(
       return null;
     },
   }).unless({
-    path: ["/", /^\/api-docs/, "/api/login", "/api/signup", "/api/users/by-email"], // login route
+    path: [
+      "/",
+      /^\/api-docs/,
+      "/api/login",
+      "/api/signup",
+      "/api/auth/forgotPwd",
+      "/api/auth/resetPwd",
+      "/api/users/by-email",
+    ], //
   })
 );
 
