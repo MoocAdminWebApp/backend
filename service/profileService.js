@@ -15,7 +15,6 @@ const createProfileAsync = async (profileData, creatorId) => {
   const newProfile = await Profile.create({
     ...profileData,
     createdBy: creatorId || null,
-    updatedBy: creatorId || null,
   });
 
   return {
@@ -35,7 +34,7 @@ const getAllProfilesAsync = async () => {
     order: [["id", "ASC"]],
   });
 
-  return { isSuccess: true, message: "", data: allProfiles };
+  return { isSuccess: true, message: "Get all profiles successfully", data: allProfiles };
 };
 
 const getProfileByIdAsync = async id => {
@@ -49,7 +48,7 @@ const getProfileByIdAsync = async id => {
 
   if (!profile) throw new EntityNotFoundException("Profile with this id not found");
 
-  return { isSuccess: true, message: "", data: profile };
+  return { isSuccess: true, message: "Get profile by id successfully", data: profile };
 };
 
 const getProfileByUserIdAsync = async userId => {
@@ -64,7 +63,7 @@ const getProfileByUserIdAsync = async userId => {
 
   if (!profile) throw new EntityNotFoundException("Profile with this userId not found");
 
-  return { isSuccess: true, message: "", data: profile };
+  return { isSuccess: true, message: "Get profile by user id successfully", data: profile };
 };
 
 const getProfilesByPageAsync = async (filters = {}, fuzzyKeys = [], page = 1, pageSize = 10) => {
