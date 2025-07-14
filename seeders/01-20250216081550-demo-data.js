@@ -20,7 +20,7 @@ module.exports = {
         title: `title${i}`,
         mark: `mark ${i.toString().padStart(6, "0")}`,
         count: i,
-        acitve: i % 2 === 0, //
+        active: i % 2 === 0, //
         dataTime: new Date(baseTime.getTime() + i * 1000),
       });
     }

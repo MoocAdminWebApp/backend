@@ -1,7 +1,7 @@
 const Sequelize = require("sequelize");
 const sequelizeOP = require("../db/sequelizedb");
 const { Op } = require("sequelize");
-const Demo = require("../models/demo");
+const {Demo } = require("../models");
 const cacheHelper = require("../common/cache/cacheHelper");
 const { EntityAlreadyExistsException, EntityNotFoundException } = require("../common/commonError");
 /**
@@ -47,7 +47,7 @@ const checkTitleExists = async (title, id = null) => {
 const createAsync = async demo => {
   await checkTitleExists(demo.title);
 
-  var newDemo = await Demo.create({
+  var newDemo = await demo.create({
     title: demo.title,
     mark: demo.mark,
     count: demo.count,

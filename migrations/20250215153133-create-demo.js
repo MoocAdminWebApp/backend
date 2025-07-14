@@ -23,7 +23,7 @@ module.exports = {
         type: Sequelize.INTEGER,
         allowNull: true,
       },
-      acitve: {
+      active: {
         type: Sequelize.BOOLEAN,
         defaultValue: true,
         allowNull: false,

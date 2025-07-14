@@ -23,7 +23,6 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: true,
       },
       active: {
-        // 修正字段名：原来写成 acitve
         type: DataTypes.BOOLEAN,
         allowNull: false,
         defaultValue: true,
