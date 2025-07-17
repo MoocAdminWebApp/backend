@@ -57,19 +57,16 @@ const getByPage = async (req, res) => {
   const page = parseInt(req.query.page) || 1;
   const pageSize = parseInt(req.query.pageSize) || 10;
 
-  let filters = {};
-  if (typeof req.query.filters === "string") {
-    try {
-      filters = JSON.parse(req.query.filters);
-    } catch (err) {
-      return res.sendCommonValue(400, "Invalid filters format");
-    }
-  }
+  const keyword = req.query.filter || "";
 
   let fuzzyKeys = req.query.fuzzyKeys || [];
   if (typeof fuzzyKeys === "string") {
     fuzzyKeys = fuzzyKeys.split(",");
   }
+
+  const filters = (keyword && fuzzyKeys.length > 0)
+    ? Object.fromEntries(fuzzyKeys.map((key) => [key, keyword]))
+    : {};
 
   const result = await courseofferingService.getByPageAsync(filters, fuzzyKeys, page, pageSize);
 
