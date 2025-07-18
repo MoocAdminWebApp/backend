@@ -28,17 +28,22 @@ const paginateModelAsync = async (
   }
 ) => {
   const whereClause = {};
+  let orConditions=[];
 
   for (const key in filters) {
     const value = filters[key];
     if (value == null || value === "") continue;
 
     if (fuzzyKeys.includes(key)) {
-      whereClause[key] = { [Op.like]: `%${value}%` };
+      orConditions.push({ [key]: { [Op.like]: `%${value}%` } });
     } else {
       whereClause[key] = value;
     }
   }
+
+  if (orConditions.length > 0) {
+  whereClause[Op.or] = orConditions;
+}
 
   const offset = (page - 1) * pageSize;
   const limit = pageSize;
@@ -60,7 +65,7 @@ const paginateModelAsync = async (
       pageSize,
       total: count,
       totalPages: Math.ceil(count / pageSize),
-      rows,
+      items:rows,
     },
   };
 };
