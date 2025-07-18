@@ -102,6 +102,10 @@ app.use("/api", authRouter);
 const questionRouter = require("./router/questionRouter");
 app.use("/api/questions", authorizeRole("admin", "teacher"), questionRouter);
 
+//config optionRouter
+const optionRouter = require("./router/optionRouter");
+app.use("/api/options", optionRouter);
+
 // config categoryRouter
 const categoryRouter = require("./router/categoryrouter");
 app.use("/api/categories", categoryRouter);

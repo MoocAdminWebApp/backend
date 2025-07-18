@@ -12,16 +12,16 @@ const checkQuestionIdExist = async(id) => {
 }
 
 const getAllQuestions = async (query) => {
-  const { page = 1, limit = 10, q } = query;
+  const { page = 1, limit = 10, title } = query;
   const offset = (page - 1) * limit;
   
 
   const where = {};
 
-  if (q) {
+  if (title) {
     where[Op.or] = [
-      { content: { [Op.like]: `%${q}%` } },  
-      { category: { [Op.like]: `%${q}%` } }     
+      { content: { [Op.like]: `%${title}%` } },  
+      { category: { [Op.like]: `%${title}%` } }     
     ];
   }
   const { count, rows } = await Question.findAndCountAll({
@@ -37,16 +37,16 @@ const getAllQuestions = async (query) => {
     ],
     order: [["id", "ASC"]],
   });
-
-  return {
-    data: rows,
-    meta: {
-      total: count,
-      page: parseInt(page),
-      limit: parseInt(limit),
-      pages: Math.ceil(count / limit),
-    },
-  };
+  return { isSuccess: true, message: "", data: { total: count, items: rows } };
+  // return {
+  //   data: rows,
+  //   meta: {
+  //     total: count,
+  //     page: parseInt(page),
+  //     limit: parseInt(limit),
+  //     pages: Math.ceil(count / limit),
+  //   },
+  // };
 };
 
 const getQuestionById = async(id) => {
