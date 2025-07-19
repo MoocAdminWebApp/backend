@@ -34,7 +34,7 @@ router.get("/",
       .isInt({ min: 1 })
       .withMessage("Limit must be a positive integer"),
 
-    query("q")
+    query("title")
       .optional()
       .isString()
       .withMessage("Search query must be a string"),]),

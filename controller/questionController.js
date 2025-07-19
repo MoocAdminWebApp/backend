@@ -7,7 +7,7 @@ const getAllQuestions = async(req, res, next) => {
       data: questions.data,
       metaData: questions.meta
     }
-    res.sendCommonValue(200, "success", data)
+    res.sendCommonValue(200, "success", data.data)
 
   } catch (e) {
     next(e)
