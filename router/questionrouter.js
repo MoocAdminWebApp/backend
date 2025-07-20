@@ -107,11 +107,54 @@ router.post("/",
   ]),
   controller.createQuestion)
 
+
+/**
+ * @swagger
+ * /api/questions/bulk:
+ *   delete:
+ *     summary: Bulk delete questions
+ *     tags: [Questions]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - ids
+ *             properties:
+ *               ids:
+ *                 type: array
+ *                 items:
+ *                   type: integer
+ *                 example:
+ *                   [1, 2, 3]
+ *                 description: Array of question IDs to delete
+ *     responses:
+ *       204:
+ *         description: Questions deleted successfully
+ *       400:
+ *         description: Invalid request (e.g. no IDs provided)
+ *       500:
+ *         description: Internal server error
+ */
+router.delete("/bulk",
+  commonValidate([
+    body("ids")
+      .isArray({ min: 1 })
+      .withMessage("IDs must be a non-empty array"),
+    body("ids.*")
+      .isInt()
+      .withMessage("All ids must be a positive integer")
+  ]),
+  controller.bulkDeleteQuestions
+)
+
 /**
  * @swagger
  * /api/questions/{id}:
  *   delete:
- *     summary: Create a new question
+ *     summary: Delete a question
  *     tags: [Questions]
  *     parameters: 
  *      - name: id
@@ -132,6 +175,7 @@ router.delete("/:id",
       .withMessage("ID must be an positive integer")
   ]), 
   controller.deleteQuestionById)
+
 
 
 /**

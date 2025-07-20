@@ -43,6 +43,15 @@ const deleteQuestionById = async(req, res, next) => {
   }
 }
 
+const bulkDeleteQuestions = async(req, res, next) => {
+  try {
+    const result = await questionService.bulkDeleteQuestions(req.body)
+    res.sendCommonValue(204, "success")
+  } catch (e) {
+    next(e)
+  }
+}
+
 const updateQuestionById = async(req, res, next) => {
   try {
     const questionId = req.params.id
@@ -58,5 +67,6 @@ module.exports = {
   getQuestionById,
   createQuestion,
   deleteQuestionById,
+  bulkDeleteQuestions,
   updateQuestionById
 }
