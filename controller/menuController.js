@@ -40,6 +40,7 @@ const updateMenuById = async(req, res) => {
 };
 
 const deleteMenuById = async(req, res) => {
+    console.log(req.body);
     const userId = getCurrentUser(req).userId ? getCurrentUser(req).userId : null;
     const isPermanent = req.body.permanent === true;
     try {

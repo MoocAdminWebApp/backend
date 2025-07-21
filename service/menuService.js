@@ -1,11 +1,61 @@
 const db = require("../models");
 const {
     SuccessResponse,
+    UnauthoriseException,
     EntityNotFoundException,
     EntityConflictException,
 } = require("../common/response.js");
 const { Op } = require("sequelize");
+const { permission } = require("process");
 const Menu = db.Menu;
+const RoleMenu = db.RoleMenu;
+const RolePermission = db.RolePermission;
+const UserRole = db.UserRole;
+
+/**
+ * Obtain a list of roles that the user has been assigned with
+ */
+const getUserRoleList = async userId => {
+    const userRoles = await UserRole.findAll({
+        where: { userId: userId },
+        attr: ["roleId"],
+    });
+
+    if (!userRoles || userRoles.length === 0) {
+        return null;
+    }
+
+    return userRoles;
+};
+
+/**
+ * Construct a list of menus that accessible by the user
+ */
+const getMenusByUser = async userId => {
+    const userRoles = await UserRole.findAll({
+        where: { userId: userId },
+        attr: ["roleId"],
+    });
+
+    if (!userRoles || userRoles.length === 0) {
+        return userRoles;
+    }
+
+    const rolePermissions = await RolePermission.findAll({
+        where: { roleId: userRoles },
+        attr: ["permissionId"],
+    });
+
+    const roleMenus = await RoleMenu.findAll({
+        where: { roleId: userRoles },
+        attr: ["menuId"],
+    });
+    const menuList = await Menu.findAll({
+        where: { permission: rolePermissions, id: roleMenus },
+    });
+
+    return menuList;
+};
 
 /**
  * getMenus()
@@ -33,6 +83,7 @@ const getMenuById = async id => {
     if (!menu) {
         throw new EntityNotFoundException(`Menu with id ${id} not found`);
     }
+
     return new SuccessResponse(`Successfully retrieve menu ${id}`, menu);
 };
 
@@ -97,6 +148,12 @@ const searchMenus = async query => {
  * @param {number} userId - ID of the user performing the update
  */
 const updateMenuById = async(id, menuData, userId) => {
+    // TODO: fix the logic of checking whether the user has access
+    // const menuAccessList = await getMenusByUser(userId);
+    // if (!menuAccessList || menuAccessList.length === 0 || !menuAccessList.includes(id)) {
+    //     throw new UnauthoriseException(`User is not authorised to update menu with id ${id}`);
+    // }
+
     // check if menu exists
     const menu = await Menu.findByPk(id);
     if (!menu) {
@@ -129,6 +186,12 @@ const updateMenuById = async(id, menuData, userId) => {
  * @param {number} userId - ID of the user performing the deletion (only required for soft delete)
  */
 const deleteMenuById = async(id, permanent = false, userId) => {
+    // TODO: fix the logic of checking whether the user has access
+    // const menuAccessList = await getMenusByUser(userId);
+    // if (!menuAccessList || menuAccessList.length === 0 || !menuAccessList.includes(id)) {
+    //     throw new UnauthoriseException(`User is not authorised to delete menu with id ${id}`);
+    // }
+
     // check if menu exists
     const menu = await Menu.findByPk(id);
     if (!menu) {
@@ -150,6 +213,12 @@ const deleteMenuById = async(id, permanent = false, userId) => {
 };
 
 const createMenu = async(menuData, userId) => {
+    // check whether the user is a super admin (ONLY super admin is allowed to create menu)
+    const userRoles = await getUserRoleList(userId);
+    if (userRoles === null) {
+        throw new UnauthoriseException("User is not authorised to create new menu");
+    }
+
     // check if menu exists
     const menu = await Menu.findOne({
         where: { title: menuData.title },

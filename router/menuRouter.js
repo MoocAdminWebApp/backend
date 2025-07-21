@@ -301,6 +301,18 @@ router.put(
  *        required: true
  *        schema:
  *          type: integer
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - permanent
+ *             properties:
+ *               permanent:
+ *                 type: boolean
+ *                 default: false
  *     responses:
  *      200:
  *        description: Menu Deleted Successfully
