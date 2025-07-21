@@ -32,14 +32,14 @@ const menuControllers = require("../controller/menuController");
  *        description: Internal Server Error
  */
 router.get(
-  "/:id",
-  commonValidate([
-    param("id")
-      .notEmpty()
-      .isInt({ allow_leading_zeroes: false, min: 1 })
-      .withMessage("Not a valid id"),
-  ]),
-  menuControllers.getMenuById
+    "/:id",
+    commonValidate([
+        param("id")
+        .notEmpty()
+        .isInt({ allow_leading_zeroes: false, min: 1 })
+        .withMessage("Not a valid id"),
+    ]),
+    menuControllers.getMenuById
 );
 
 /**
@@ -48,6 +48,32 @@ router.get(
  *   get:
  *     tags: [Menus]
  *     summary: get all accessible menus for the current user
+ *     parameters:
+ *       - name: page
+ *         in: query
+ *         schema:
+ *           type: integer
+ *       - name: pageSize
+ *         in: query
+ *         schema:
+ *           type: integer
+ *       - name: sortBy
+ *         in: query
+ *         schema:
+ *           type: string
+ *       - name: sortOrder
+ *         in: query
+ *         schema:
+ *           type: string
+ *           enum: [asc, desc]
+ *       - name: status
+ *         in: query
+ *         schema:
+ *           type: string
+ *       - name: type
+ *         in: query
+ *         schema:
+ *           type: string
  *     responses:
  *      200:
  *        description: Fetched Successfully
@@ -56,7 +82,70 @@ router.get(
  *      500:
  *        description: Server Error
  */
-router.get("/", menuControllers.getAllMenus);
+router.get("/", menuControllers.getMenus);
+
+/**
+ * @openapi
+ * /api/menus/search:
+ *   get:
+ *     tags:
+ *       - Menus
+ *     summary: Search menus with filters, keyword, pagination and sorting
+ *     parameters:
+ *       - name: search
+ *         in: query
+ *         schema:
+ *           type: string
+ *       - name: permission
+ *         in: query
+ *         schema:
+ *           type: string
+ *       - name: type
+ *         in: query
+ *         schema:
+ *           type: string
+ *       - name: status
+ *         in: query
+ *         schema:
+ *           type: string
+ *       - name: parentId
+ *         in: query
+ *         schema:
+ *           type: integer
+ *       - name: page
+ *         in: query
+ *         schema:
+ *           type: integer
+ *       - name: pageSize
+ *         in: query
+ *         schema:
+ *           type: integer
+ *       - name: sortBy
+ *         in: query
+ *         schema:
+ *           type: string
+ *       - name: sortOrder
+ *         in: query
+ *         schema:
+ *           type: string
+ *           enum: [asc, desc]
+ *       - name: status
+ *         in: query
+ *         schema:
+ *           type: string
+ *       - name: type
+ *         in: query
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: Menus successfully retrieved
+ *       404:
+ *         description: No matching menus found
+ *       500:
+ *         description: Internal server error
+ */
+router.get("/search", menuControllers.searchMenus);
 
 /**
  * @openapi
@@ -101,7 +190,7 @@ router.get("/", menuControllers.getAllMenus);
  *                 default: MENU
  *               parentId:
  *                 type: integer
- *                 default: 0
+ *                 default: 1
  *     responses:
  *      200:
  *        description: Menu Created Successfully
@@ -115,14 +204,14 @@ router.get("/", menuControllers.getAllMenus);
  *        description: Internal Server Error
  */
 router.post(
-  "/",
-  commonValidate([
-    // TODO: fix here
-    body("title").notEmpty().withMessage("Title field is mandatory. "),
-    body("status").notEmpty().withMessage("Status field is mandatory"),
-    body("type").notEmpty().withMessage("Type field is mandatory"),
-  ]),
-  menuControllers.createMenu
+    "/",
+    commonValidate([
+        // TODO: fix here
+        body("title").notEmpty().withMessage("Title field is mandatory. "),
+        body("status").notEmpty().withMessage("Status field is mandatory"),
+        body("type").notEmpty().withMessage("Type field is mandatory"),
+    ]),
+    menuControllers.createMenu
 );
 
 /**
@@ -138,6 +227,44 @@ router.post(
  *        required: true
  *        schema:
  *          type: integer
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - title
+ *               - path
+ *               - component
+ *               - permission
+ *               - status
+ *               - type
+ *               - parentId
+ *             properties:
+ *               title:
+ *                 type: string
+ *                 default: ""
+ *               path:
+ *                 type: string
+ *                 default: ""
+ *               component:
+ *                 type: string
+ *                 default: ""
+ *               permission:
+ *                 type: integer
+ *                 default: null
+ *               status:
+ *                 type: string
+ *                 enum: [ACTIVE, INACTIVE, DRAFT, ARCHIVED]
+ *                 default: ACTIVE
+ *               type:
+ *                 type: string
+ *                 enum: [DIRECTORY, MENU, BUTTON]
+ *                 default: MENU
+ *               parentId:
+ *                 type: integer
+ *                 default: 1
  *     responses:
  *      200:
  *        description: Menu Updated Successfully
@@ -151,14 +278,14 @@ router.post(
  *        description: Internal Server Error
  */
 router.put(
-  "/:id",
-  commonValidate([
-    param("id")
-      .notEmpty()
-      .isInt({ allow_leading_zeroes: false, min: 1 })
-      .withMessage("Not a valid id"),
-  ]),
-  menuControllers.updateMenuById
+    "/:id",
+    commonValidate([
+        param("id")
+        .notEmpty()
+        .isInt({ allow_leading_zeroes: false, min: 1 })
+        .withMessage("Not a valid id"),
+    ]),
+    menuControllers.updateMenuById
 );
 
 /**
@@ -187,14 +314,14 @@ router.put(
  *        description: Internal Server Error
  */
 router.delete(
-  "/:id",
-  commonValidate([
-    param("id")
-      .notEmpty()
-      .isInt({ allow_leading_zeroes: false, min: 1 })
-      .withMessage("Not a valid id"),
-  ]),
-  menuControllers.deleteMenuById
+    "/:id",
+    commonValidate([
+        param("id")
+        .notEmpty()
+        .isInt({ allow_leading_zeroes: false, min: 1 })
+        .withMessage("Not a valid id"),
+    ]),
+    menuControllers.deleteMenuById
 );
 
 module.exports = router;

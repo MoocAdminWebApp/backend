@@ -16,6 +16,7 @@ module.exports = {
       type: {
         type: Sequelize.ENUM("DIRECTORY", "MENU", "BUTTON"),
         allowNull: false,
+        defaultValue: "MENU",
       },
       parentId: {
         type: Sequelize.INTEGER,
@@ -54,9 +55,9 @@ module.exports = {
         defaultValue: false,
       },
       status: {
-        type: Sequelize.ENUM("ACTIVE", "INACTIVE", "DRAFT", "ARCHIVED"),
+        type: Sequelize.ENUM("ACTIVE", "INACTIVE", "DRAFT", "DELETED"),
         allowNull: false,
-        defaultValue: "active",
+        defaultValue: "ACTIVE",
       },
       comment: {
         type: Sequelize.STRING(200),
