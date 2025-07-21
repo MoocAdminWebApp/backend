@@ -1,4 +1,4 @@
-const { EntityNotFoundException } = require('../common/commonError')
+const { EntityNotFoundException, ValidationException } = require('../common/commonError')
 const db = require('../models')
 const Question = db.Question
 const Option = db.Option
@@ -38,15 +38,6 @@ const getAllQuestions = async (query) => {
     order: [["id", "ASC"]],
   });
   return { isSuccess: true, message: "", data: { total: count, items: rows } };
-  // return {
-  //   data: rows,
-  //   meta: {
-  //     total: count,
-  //     page: parseInt(page),
-  //     limit: parseInt(limit),
-  //     pages: Math.ceil(count / limit),
-  //   },
-  // };
 };
 
 const getQuestionById = async(id) => {
@@ -85,6 +76,19 @@ const deleteQuestionById = async(id) => {
   return
 }
 
+const bulkDeleteQuestions = async(body) => {
+  const ids = body.ids
+  if (!Array.isArray(ids) || ids.length === 0) {
+    throw new ValidationException("Questions IDs required")
+  }
+
+  await Question.destroy({
+    where: {id: ids}
+  })
+
+  return
+}
+
 const updateQuestionById = async(id, body) => {
   await checkQuestionIdExist(id)
 
@@ -107,5 +111,6 @@ module.exports = {
   getQuestionById,
   createQuestion,
   deleteQuestionById,
+  bulkDeleteQuestions,
   updateQuestionById
 }
