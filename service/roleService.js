@@ -1,12 +1,9 @@
-const db = require('../models');
-const Menu = db.Menu;
-const Role = db.Role;
-const Permission = db.Permission;
+const { Role, Menu, Permission } = require('../models');
 const { assertFound, assertNotExists } = require("../common/assertions");
+const { paginateModelAsync } = require("../common/pagination");
 
 const validateMenus = async (menuIds) => {
   const menus = await Menu.findAll({ where: { id: menuIds } });
-  console.log("Menus", menuIds, menus);
   return menus.length === menuIds.length ? menus : null;
 };
 
@@ -15,35 +12,97 @@ const validatePermissions = async (permissionIds) => {
   return permissions.length === permissionIds.length ? permissions : null;
 };
 
-const createRole = async (data) => {
-  const role = await Role.findOne({ where: { roleName: data.roleName } });
-  assertNotExists(role, "Role");
-  return await Role.create(data);
+const createRoleAsync = async (data, creatorId) => {
+  const existing = await Role.findOne({ where: { roleName: data.roleName } });
+  assertNotExists(existing, "Role");
+
+  const role = await Role.create({
+    ...data,
+    createdBy: creatorId || null,
+  });
+
+  return {
+    isSuccess: true,
+    message: "Role created successfully",
+    data: role,
+  };
 };
 
-const updateRole = async (id, data) => {
+const updateRoleAsync = async (id, data, updaterId) => {
   const role = await Role.findByPk(id);
   assertFound(role, "Role");
-  await role.update(data);
-  return role;
+
+  await role.update({
+    ...data,
+    updatedBy: updaterId || null,
+  });
+
+  return {
+    isSuccess: true,
+    message: "Role updated successfully",
+    data: role,
+  };
 };
 
-const deleteRole = async (id) => {
+const deleteRoleAsync = async (id) => {
   const role = await Role.findByPk(id);
   assertFound(role, "Role");
+
   await role.destroy();
+
+  return {
+    isSuccess: true,
+    message: "Role deleted successfully",
+    data: role,
+  };
 };
 
-const getAllRoles = async () => {
-  const roles = await Role.findAll();
-  assertFound(roles, "Roles");
-  return roles;
+const getAllRolesAsync = async () => {
+  const roles = await Role.findAll({
+    include: [
+      { model: Menu, as: "menus", through: { attributes: [] } },
+      { model: Permission, as: "permissions", through: { attributes: [] } },
+    ],
+    order: [["id", "ASC"]],
+  });
+
+  return {
+    isSuccess: true,
+    message: "Get all roles successfully",
+    data: roles,
+  };
 };
 
-const getRoleById = async (id) => {
-  const role = await Role.findByPk(id);
+const getRoleByIdAsync = async (id) => {
+  const role = await Role.findByPk(id, {
+    include: [
+      { model: Menu, as: "menus", through: { attributes: [] } },
+      { model: Permission, as: "permissions", through: { attributes: [] } },
+    ],
+  });
+
   assertFound(role, "Role");
-  return role;
+
+  return {
+    isSuccess: true,
+    message: "Get role by id successfully",
+    data: role,
+  };
+};
+
+const getRolesByPageAsync = async (filters = {}, fuzzyKeys = [], page, pageSize) => {
+  return await paginateModelAsync(Role, {
+    filters,
+    fuzzyKeys,
+    page,
+    pageSize,
+    include: [
+      { model: Menu, as: "menus", through: { attributes: [] } },
+      { model: Permission, as: "permissions", through: { attributes: [] } },
+    ],
+    orderBy: "id",
+    orderDir: "ASC",
+  });
 };
 
 const assignMenusAndPermissions = async (roleId, menuIds, permissionIds) => {
@@ -53,21 +112,28 @@ const assignMenusAndPermissions = async (roleId, menuIds, permissionIds) => {
   await role.setMenus(menuIds);
   await role.setPermissions(permissionIds);
 
-  return await Role.findByPk(role.id, {
+  const updated = await Role.findByPk(roleId, {
     include: [
-      { model: Menu, as: "menus" },
-      { model: Permission, as: "permissions" },
+      { model: Menu, as: "menus", through: { attributes: [] } },
+      { model: Permission, as: "permissions", through: { attributes: [] } },
     ],
   });
+
+  return {
+    isSuccess: true,
+    message: "Menus and permissions assigned successfully",
+    data: updated,
+  };
 };
 
 module.exports = {
   validateMenus,
   validatePermissions,
-  createRole,
-  updateRole,
-  deleteRole,
-  getAllRoles,
-  getRoleById,
+  createRoleAsync,
+  updateRoleAsync,
+  deleteRoleAsync,
+  getAllRolesAsync,
+  getRoleByIdAsync,
+  getRolesByPageAsync,
   assignMenusAndPermissions,
 };
