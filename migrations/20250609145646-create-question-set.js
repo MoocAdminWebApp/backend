@@ -19,7 +19,7 @@ module.exports = {
       },
       courseId: {
         type: Sequelize.INTEGER,
-        allowNull: false
+        allowNull: true
       },
       createdBy: {
         type: Sequelize.INTEGER,

@@ -15,7 +15,7 @@ module.exports = (sequelize, DataTypes) => {
     },
     courseId: {
       type: DataTypes.INTEGER,
-      allowNull: false
+      allowNull: true
     },
     createdBy: {
       type: DataTypes.INTEGER,

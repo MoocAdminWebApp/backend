@@ -107,6 +107,7 @@ const updateQuestionById = async(id, body) => {
 }
 
 module.exports = {
+  checkQuestionIdExist,
   getAllQuestions,
   getQuestionById,
   createQuestion,
