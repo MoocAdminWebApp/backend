@@ -37,7 +37,7 @@ const getAllQuestions = async (query) => {
     ],
     order: [["id", "ASC"]],
   });
-  return { isSuccess: true, message: "", data: { total: count, items: rows } };
+  return { data: { total: count, items: rows } };
 };
 
 const getQuestionById = async(id) => {
@@ -107,6 +107,7 @@ const updateQuestionById = async(id, body) => {
 }
 
 module.exports = {
+  checkQuestionIdExist,
   getAllQuestions,
   getQuestionById,
   createQuestion,

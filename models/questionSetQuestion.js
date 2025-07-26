@@ -9,7 +9,7 @@ module.exports = (sequelize, DataTypes) => {
     questionSetId: {
       type: DataTypes.INTEGER,
       allowNull: false,
-      reference: {
+      references: {
         model: "question_sets",
         key: "id"
       },
@@ -19,7 +19,7 @@ module.exports = (sequelize, DataTypes) => {
     questionId: {
       type: DataTypes.INTEGER,
       allowNull: false,
-      reference: {
+      references: {
         model: "questions",
         key: "id"
       },
@@ -46,11 +46,8 @@ module.exports = (sequelize, DataTypes) => {
       onUpdate: "CASCADE",
       onDelete: "SET NULL",
     },
-  },
-  {
-    tableName: "question_set_questions",
-    timestamps: true,
-  })
+  }
+)
 
   return QuestionSetQuestion
 }
