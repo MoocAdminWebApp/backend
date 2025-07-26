@@ -11,7 +11,11 @@ module.exports = (sequelize, DataTypes) => {
       // define association here
       Menu.belongsTo(models.User, { foreignKey: "createdBy", targetKey: "id" });
       Menu.belongsTo(models.User, { foreignKey: "updatedBy", targetKey: "id" });
-      Menu.belongsTo(models.Permission, { foreignKey: "permission", targetKey: "id" });
+      Menu.belongsTo(models.Permission, {
+        foreignKey: "permission",
+        targetKey: "id",
+        as: "permissionInfo",
+      });
 
       Menu.belongsTo(models.Menu, { foreignKey: "parentId", as: "parent" });
       Menu.hasMany(models.Menu, { foreignKey: "parentId", as: "children" });
@@ -39,12 +43,13 @@ module.exports = (sequelize, DataTypes) => {
       type: {
         type: DataTypes.ENUM("DIRECTORY", "MENU", "BUTTON"),
         allowNull: false,
+        defaultValue: "MENU",
         get() {
           const type = this.getDataValue("type");
           const typeToNumber = {
-            directory: 1,
-            menu: 2,
-            button: 3,
+            DIRECTORY: 1,
+            MENU: 2,
+            BUTTON: 3,
           };
           return typeToNumber[type];
         },
@@ -87,7 +92,7 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: true,
       },
       status: {
-        type: DataTypes.ENUM("ACTIVE", "INACTIVE", "DRAFT", "ARCHIVED"),
+        type: DataTypes.ENUM("ACTIVE", "INACTIVE", "DRAFT", "DELETED"),
         allowNull: false,
         defaultValue: "ACTIVE",
         get() {
@@ -96,7 +101,7 @@ module.exports = (sequelize, DataTypes) => {
             ACTIVE: 1,
             INACTIVE: 2,
             DRAFT: 3,
-            ARCHIVED: 4,
+            DELETED: 4,
           };
           return statusToNumber[status];
         },
@@ -138,6 +143,7 @@ module.exports = (sequelize, DataTypes) => {
       sequelize,
       modelName: "Menu",
       tableName: "menus",
+      timestamps: true,
     }
   );
   return Menu;

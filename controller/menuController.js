@@ -1,131 +1,70 @@
 const menuService = require("../service/menuService");
+const { getCurrentUser } = require("../common/getCurrentUser");
 
-const statusCodes = {
-  success: 200,
-  badRequest: 400,
-  authenticationError: 403,
-  notFound: 404,
-  internalError: 500,
-};
-
-const commonRoleId = {
-  superAdmin: 1, // TODO: change to actual superAdmin id in the role table by Role -> GET
-};
-
-const errorMessages = {
-  role: "Role Denied: User must be assigned with at least one of the following roles to",
-  permission: "Permission Denied: User must have the following permission to",
-  syntax: "Syntax Error: Please check the following fields:",
-};
-
-const getMenuById = async (req, res) => {
-  const menuId = req.params.id;
-  // const userId = req.user.id; // TODO: change to req.user.id when authentication is implemented
-  const userId = commonRoleId.superAdmin; // TODO: remove this line when authentication is implemented
-
+const getMenus = async (req, res) => {
   try {
-    const menu = await menuService.getMenuByIdAsync(menuId, userId);
-    return res.status(menu.statusCode).json(menu);
-  } catch (error) {
-    console.error(error);
-
-    const resultStatus = error.statusCode ? error.statusCode : statusCodes.internalError;
-    const resultMessage = error.message ? error.message : "Internal Server Error";
-    return res.status(resultStatus).json({
-      statusCode: resultStatus,
-      message: resultMessage,
-      data: null,
-    });
+    const result = await menuService.getMenus(req.query);
+    res.sendCommonValue(result.statusCode, result.message, result.data);
+  } catch (err) {
+    res.sendCommonValue(err.statusCode ? err.statusCode : 500, err.message);
   }
 };
 
-const getAllMenus = async (req, res) => {
-  // const userId = req.user.id; // TODO: change to req.user.id when authentication is implemented
-  const userId = commonRoleId.superAdmin; // TODO: remove this line when authentication is implemented
-
+const getMenuById = async (req, res) => {
+  console.log(req);
   try {
-    const menus = await menuService.getAllMenusAsync(userId);
-    return res.status(statusCodes.success).json(menus);
-  } catch (error) {
-    console.error(error);
+    const result = await menuService.getMenuById(req.params.id);
+    res.sendCommonValue(result.statusCode, result.message, result.data);
+  } catch (err) {
+    res.sendCommonValue(err.statusCode ? err.statusCode : 500, err.message);
+  }
+};
 
-    const resultStatus = error.statusCode ? error.statusCode : statusCodes.internalError;
-    const resultMessage = error.message ? error.message : "Internal Server Error";
-    return res.status(resultStatus).json({
-      statusCode: resultStatus,
-      message: resultMessage,
-      data: null,
-    });
+const searchMenus = async (req, res) => {
+  try {
+    const result = await menuService.searchMenus(req.query);
+    res.sendCommonValue(result.statusCode, result.message, result.data);
+  } catch (err) {
+    res.sendCommonValue(err.statusCode ? err.statusCode : 500, err.message);
   }
 };
 
 const updateMenuById = async (req, res) => {
-  const menuId = req.params.id;
-  // const userId = req.user.id; // TODO: change to req.user.id when authentication is implemented
-  const userId = commonRoleId.superAdmin; // TODO: remove this line when authentication is implemented
-  const menuData = req.body;
-
+  const userId = getCurrentUser(req).userId ? getCurrentUser(req).userId : null;
   try {
-    const menu = await menuService.updateMenuByIdAsync(menuId, userId, menuData);
-    return res.status(menu.statusCode).json(menu);
-  } catch (error) {
-    console.error(error);
-
-    const resultStatus = error.statusCode ? error.statusCode : statusCodes.internalError;
-    const resultMessage = error.message ? error.message : "Internal Server Error";
-    return res.status(resultStatus).json({
-      statusCode: resultStatus,
-      message: resultMessage,
-      data: null,
-    });
+    const result = await menuService.updateMenuById(req.params.id, req.body, userId);
+    res.sendCommonValue(result.statusCode, result.message, result.data);
+  } catch (err) {
+    res.sendCommonValue(err.statusCode ? err.statusCode : 500, err.message);
   }
 };
 
 const deleteMenuById = async (req, res) => {
-  const menuId = req.params.id;
-  // const userId = req.user.id; // TODO: change to req.user.id when authentication is implemented
-  const userId = commonRoleId.superAdmin; // TODO: remove this line when authentication is implemented
-
+  console.log(req.body);
+  const userId = getCurrentUser(req).userId ? getCurrentUser(req).userId : null;
+  const isPermanent = req.body.permanent === true;
   try {
-    const menu = await menuService.deleteMenuByIdAsync(menuId, userId);
-    return res.status(menu.statusCode).json(menu);
-  } catch (error) {
-    console.error(error);
-
-    const resultStatus = error.statusCode ? error.statusCode : statusCodes.internalError;
-    const resultMessage = error.message ? error.message : "Internal Server Error";
-    return res.status(resultStatus).json({
-      statusCode: resultStatus,
-      message: resultMessage,
-      data: null,
-    });
+    const result = await menuService.deleteMenuById(req.params.id, isPermanent, userId);
+    res.sendCommonValue(result.statusCode, result.message, result.data);
+  } catch (err) {
+    res.sendCommonValue(err.statusCode ? err.statusCode : 500, err.message);
   }
 };
 
 const createMenu = async (req, res) => {
-  // const userId = req.user.id; // TODO: change to req.user.id when authentication is implemented
-  const userId = commonRoleId.superAdmin; // TODO: remove this line when authentication is implemented
-  const menuData = req.body;
-
+  const userId = getCurrentUser(req).userId ? getCurrentUser(req).userId : null;
   try {
-    const menu = await menuService.createMenuAsync(menuId, userId);
-    return res.status(menu.statusCode).json(menu);
-  } catch (error) {
-    console.error(error);
-
-    const resultStatus = error.statusCode ? error.statusCode : statusCodes.internalError;
-    const resultMessage = error.message ? error.message : "Internal Server Error";
-    return res.status(resultStatus).json({
-      statusCode: resultStatus,
-      message: resultMessage,
-      data: null,
-    });
+    const result = await menuService.createMenu(req.body, userId);
+    res.sendCommonValue(result.statusCode, result.message, result.data);
+  } catch (err) {
+    res.sendCommonValue(err.statusCode ? err.statusCode : 500, err.message);
   }
 };
 
 module.exports = {
+  getMenus,
   getMenuById,
-  getAllMenus,
+  searchMenus,
   updateMenuById,
   deleteMenuById,
   createMenu,
