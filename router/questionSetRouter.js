@@ -59,7 +59,7 @@ router.get("/",
  * @swagger
  * /api/question-sets/{id}:
  *   get:
- *     summary: Get all questionSets with matching ID
+ *     summary: Get a questionSets with matching ID
  *     tags: [QuestionSets]
  *     parameters: 
  *      - name: id
@@ -349,7 +349,7 @@ router.post("/:id/questions",
  * @swagger
  * /api/question-sets/{id}/questions:
  *   delete:
- *     summary: Bulk delete questionSets
+ *     summary: Bulk remove questions from questionSets
  *     tags: [QuestionSets]
  *     parameters: 
  *      - name: id
