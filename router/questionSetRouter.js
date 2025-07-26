@@ -8,7 +8,7 @@ const { body, param, query } = require("express-validator")
  * @swagger
  * /api/question-sets/:
  *   get:
- *     summary: Get questionSets with matching ID
+ *     summary: Get all questionSets with optional pagination
  *     tags: [QuestionSets]
  *     parameters: 
  *      - name: page
@@ -59,7 +59,7 @@ router.get("/",
  * @swagger
  * /api/question-sets/{id}:
  *   get:
- *     summary: Get all questionSets with optional pagination
+ *     summary: Get all questionSets with matching ID
  *     tags: [QuestionSets]
  *     parameters: 
  *      - name: id
