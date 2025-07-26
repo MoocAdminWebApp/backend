@@ -58,6 +58,7 @@ app.use(
       "/api/auth/forgotPwd",
       "/api/auth/resetPwd",
       "/api/users/by-email",
+      /^\/api\/menus/,
     ], //
   })
 );
@@ -86,6 +87,10 @@ app.use("/api/courseofferings", courseofferingrouter);
 //config userRouter
 const userRouter = require("./router/userRouter");
 app.use("/api/users", userRouter);
+
+//config menuRouter
+const menuRouter = require("./router/menuRouter");
+app.use("/api/menus", menuRouter);
 
 //config courseRouter
 const courseRouter = require("./router/courseRouter");

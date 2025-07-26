@@ -11,7 +11,11 @@ module.exports = (sequelize, DataTypes) => {
       // define association here
       Menu.belongsTo(models.User, { foreignKey: "createdBy", targetKey: "id" });
       Menu.belongsTo(models.User, { foreignKey: "updatedBy", targetKey: "id" });
-      Menu.belongsTo(models.Permission, { foreignKey: "permission", targetKey: "id" });
+      Menu.belongsTo(models.Permission, {
+        foreignKey: "permission",
+        targetKey: "id",
+        as: "permissionInfo",
+      });
 
       Menu.belongsTo(models.Menu, { foreignKey: "parentId", as: "parent" });
       Menu.hasMany(models.Menu, { foreignKey: "parentId", as: "children" });
