@@ -40,13 +40,8 @@ const getAllAsync = async (req, res) => {
   );
 
   res.sendCommonValue(200, "Categories retrieved successfully", {
-    list: categories,
-    pagination: {
-      total,
-      page,
-      pageSize,
-      totalPages: Math.ceil(total / pageSize),
-    },
+    items: categories,
+    total,
   });
 };
 
@@ -87,18 +82,9 @@ const getChildrenByIdAsync = async (req, res) => {
     keyword
   );
 
-  if (total === 0) {
-    throw new EntityNotFoundException("No child categories found", 404);
-  }
-
   res.sendCommonValue(200, "Child categories retrieved successfully", {
-    list: categories,
-    pagination: {
-      total,
-      page,
-      pageSize,
-      totalPages: Math.ceil(total / pageSize),
-    },
+    items: categories,
+    total,
   });
 };
 
@@ -121,13 +107,8 @@ const getRootCategoriesAsync = async (req, res) => {
   }
 
   res.sendCommonValue(200, "Top-level categories retrieved successfully", {
-    list: categories,
-    pagination: {
-      total,
-      page,
-      pageSize,
-      totalPages: Math.ceil(total / pageSize),
-    },
+    items: categories,
+    total,
   });
 };
 
@@ -223,5 +204,5 @@ module.exports = {
   getRootCategoriesAsync,
   deleteByIdAsync,
   deleteByIdsAsync,
-  updateByIdAsync
+  updateByIdAsync,
 };

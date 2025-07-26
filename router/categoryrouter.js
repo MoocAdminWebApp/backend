@@ -1,7 +1,6 @@
 const express = require("express");
 const router = express.Router();
 
-const { requireAuth } = require("../middleware/authentication");
 const { checkPermissionByRole, getCategoryAccessFilter } = require("../middleware/authorization");
 const { paginationValidator } = require("../middleware/pagination");
 const { commonValidate } = require("../middleware/expressValidator");
@@ -17,8 +16,6 @@ const {
   deleteByIdsAsync,
   updateByIdAsync,
 } = require("../controller/categoryController");
-
-router.use(requireAuth);
 
 /**
  * @swagger
@@ -236,21 +233,13 @@ router.get(
  *                 data:
  *                   type: object
  *                   properties:
- *                     list:
+ *                     items:
  *                       type: array
  *                       items:
  *                         $ref: '#/components/schemas/Category'
- *                     pagination:
- *                       type: object
- *                       properties:
- *                         total:
- *                           type: integer
- *                         page:
- *                           type: integer
- *                         pageSize:
- *                           type: integer
- *                         totalPages:
- *                           type: integer
+ *                     total:
+ *                       type: integer
+ *                       example: 2
  *                 time:
  *                   type: string
  *                   format: date-time
@@ -361,21 +350,13 @@ router.get(
  *                 data:
  *                   type: object
  *                   properties:
- *                     list:
+ *                     items:
  *                       type: array
  *                       items:
  *                         $ref: '#/components/schemas/Category'
- *                     pagination:
- *                       type: object
- *                       properties:
- *                         total:
- *                           type: integer
- *                         page:
- *                           type: integer
- *                         pageSize:
- *                           type: integer
- *                         totalPages:
- *                           type: integer
+ *                     total:
+ *                       type: integer
+ *                       example: 3
  *                 time:
  *                   type: string
  *                   format: date-time
