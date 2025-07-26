@@ -62,47 +62,29 @@ const getMenusByUser = async userId => {
  * getMenus()
  * Function to get a full list of menus
  */
-// const getMenus = async query => {
-//   const page = Number(query.page) ? Number(query.page) : 1;
-//   const pageSize = Number(query.pageSize) ? Number(query.pageSize) : 10;
-//   // const { page = 1, pageSize = 10 } = query;
-//   const menus = await Menu.findAndCountAll({
-//     offset: (page - 1) * pageSize,
-//     limit: pageSize,
-//     include: [
-//       {
-//         model: Permission,
-//         as: "permissionInfo",
-//         attributes: ["id", "permissionName"], // return id and permissionName for frontend readability
-//       },
-//     ],
-//   });
-//   if (!menus || menus.rows.length === 0) {
-//     throw new EntityNotFoundException("No menus found");
-//   }
-//   const returnData = {
-//     items: menus.rows,
-//     total: menus.count,
-//   };
-//   return new SuccessResponse("Successfully retrieved menus.", returnData);
-// };
-const getMenus = async () => {
-  const menus = await Menu.findAll({
-    order: [["orderNum", "ASC"]],
+const getMenus = async query => {
+  const page = Number(query.page) ? Number(query.page) : 1;
+  const pageSize = Number(query.pageSize) ? Number(query.pageSize) : 10;
+  // const { page = 1, pageSize = 10 } = query;
+  const menus = await Menu.findAndCountAll({
+    offset: (page - 1) * pageSize,
+    limit: pageSize,
     include: [
       {
         model: Permission,
         as: "permissionInfo",
-        attributes: ["id", "permissionName"],
+        attributes: ["id", "permissionName"], // return id and permissionName for frontend readability
       },
     ],
   });
   if (!menus || menus.rows.length === 0) {
     throw new EntityNotFoundException("No menus found");
   }
-
-  const treeData = convertDataToTree(menus);
-  return new SuccessResponse("Successfully retrieved menus.", treeData);
+  const returnData = {
+    items: menus.rows,
+    total: menus.count,
+  };
+  return new SuccessResponse("Successfully retrieved menus.", returnData);
 };
 
 /**
