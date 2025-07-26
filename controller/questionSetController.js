@@ -2,7 +2,7 @@ const service = require("../service/questionSetService")
 
 const getAllQuestionSets = async(req, res, next) => {
   try {
-    const sets = await service.getAllQuestionSets()
+    const sets = await service.getAllQuestionSets(req.query)
     res.sendCommonValue(200, "success", sets)
   } catch (e) {
     next(e)

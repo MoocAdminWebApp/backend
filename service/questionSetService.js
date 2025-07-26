@@ -4,7 +4,6 @@ const Question = db.Question
 const Option = db.Option
 const QuestionSet = db.QuestionSet
 const { Op } = require("sequelize")
-const checkQuestionIdExist = require("../service/questionService")
 
 const checkQuestionSetIdExist = async(id) => {
   const set = await QuestionSet.findByPk(id)
@@ -19,8 +18,23 @@ const checkIfArray = async(arr) => {
   }
 }
 
-const getAllQuestionSets = async() => {
-  const sets = await QuestionSet.findAll({
+const getAllQuestionSets = async(query) => {
+  const { page = 1, limit = 10, title} = query
+  const offset = (page - 1) * limit
+
+  const where = {}
+
+  if(title){
+    where[Op.or] = [
+      { title: { [Op.like]: `%${title}%`}},
+      { description: { [Op.like]: `%${title}%`}}
+    ]
+  }
+
+  const {count, rows} = await QuestionSet.findAndCountAll({
+    where,
+    limit: parseInt(limit),
+    offset: parseInt(offset),
     attributes: ["id", "title", "description", "courseId"],
     include: [
       {
@@ -34,10 +48,11 @@ const getAllQuestionSets = async() => {
           }
         ]
       }
-    ]
+    ],
+    order: [["id", "ASC"]]
   })
 
-  return sets
+  return { total: count, rows: rows }
 }
 
 const getQuestionSetById = async(id) => {
@@ -110,11 +125,7 @@ const updateQuestionSetById = async(id, body) => {
 
 const attachQuestionToSet = async(setId, questionId) => {
   await checkQuestionSetIdExist(setId)
-
-  if(existingQuestionIds.includes(Number(questionId))){
-    throw new EntityAlreadyExistsException("no no no")
-  }
-
+  const set = await QuestionSet.findByPk(setId)
   const newSet = await set.addQuestion(questionId)
 
   return newSet

@@ -108,7 +108,7 @@ app.use("/api/options", authorizeRole("admin", "teacher"),optionRouter);
 
 //config questionSetRouter
 const questionSetRouter = require("./router/questionSetRouter")
-app.use("/api/questionSets", authorizeRole("admin", "teacher"), questionSetRouter)
+app.use("/api/question-sets", authorizeRole("admin", "teacher"), questionSetRouter)
 
 // config categoryRouter
 const categoryRouter = require("./router/categoryrouter");
