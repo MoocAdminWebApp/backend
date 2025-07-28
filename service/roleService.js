@@ -1,4 +1,4 @@
-const { Role, Menu, Permission } = require('../models');
+const { Role, Menu, Permission, User } = require('../models');
 const { assertFound, assertNotExists } = require("../common/assertions");
 const { paginateModelAsync } = require("../common/pagination");
 
@@ -62,6 +62,8 @@ const getAllRolesAsync = async () => {
     include: [
       { model: Menu, as: "menus", through: { attributes: [] } },
       { model: Permission, as: "permissions", through: { attributes: [] } },
+      { model: User, as: "creator", attributes: ["id", "firstName", "lastName"] },
+      { model: User, as: "updater", attributes: ["id", "firstName", "lastName"] },
     ],
     order: [["id", "ASC"]],
   });
@@ -78,6 +80,8 @@ const getRoleByIdAsync = async (id) => {
     include: [
       { model: Menu, as: "menus", through: { attributes: [] } },
       { model: Permission, as: "permissions", through: { attributes: [] } },
+      { model: User, as: "creator", attributes: ["id", "firstName", "lastName"] },
+      { model: User, as: "updater", attributes: ["id", "firstName", "lastName"] },
     ],
   });
 
@@ -99,6 +103,8 @@ const getRolesByPageAsync = async (filters = {}, fuzzyKeys = [], page, pageSize)
     include: [
       { model: Menu, as: "menus", through: { attributes: [] } },
       { model: Permission, as: "permissions", through: { attributes: [] } },
+      { model: User, as: "creator", attributes: ["id", "firstName", "lastName"] },
+      { model: User, as: "updater", attributes: ["id", "firstName", "lastName"] },
     ],
     orderBy: "id",
     orderDir: "ASC",
