@@ -8,42 +8,6 @@ const menuControllers = require("../controller/menuController");
 
 /**
  * @openapi
- * /api/menus/{id}:
- *   get:
- *     tags: [Menus]
- *     summary: get a menu by Id
- *     parameters:
- *      - name: id
- *        in: path
- *        description: The id of the menu to retrieve
- *        required: true
- *        schema:
- *          type: integer
- *     responses:
- *      200:
- *        description: Menu Retrieved Successfully
- *      400:
- *        description: Bad Request
- *      403:
- *        description: Unauthorized - Validation Failed
- *      404:
- *        description: Menu Not Found
- *      500:
- *        description: Internal Server Error
- */
-router.get(
-    "/:id",
-    commonValidate([
-        param("id")
-        .notEmpty()
-        .isInt({ allow_leading_zeroes: false, min: 1 })
-        .withMessage("Not a valid id"),
-    ]),
-    menuControllers.getMenuById
-);
-
-/**
- * @openapi
  * /api/menus:
  *   get:
  *     tags: [Menus]
@@ -83,6 +47,40 @@ router.get(
  *        description: Server Error
  */
 router.get("/", menuControllers.getMenus);
+
+/**
+ * @openapi
+ * /api/menus/tree:
+ *   get:
+ *     tags: [Menus]
+ *     summary: get all accessible menus for the current user
+ *     parameters:
+ *       - name: sortBy
+ *         in: query
+ *         schema:
+ *           type: string
+ *       - name: sortOrder
+ *         in: query
+ *         schema:
+ *           type: string
+ *           enum: [asc, desc]
+ *       - name: status
+ *         in: query
+ *         schema:
+ *           type: string
+ *       - name: type
+ *         in: query
+ *         schema:
+ *           type: string
+ *     responses:
+ *      200:
+ *        description: Fetched Successfully
+ *      404:
+ *        description: Not Found
+ *      500:
+ *        description: Server Error
+ */
+router.get("/tree", menuControllers.getMenuTree);
 
 /**
  * @openapi
@@ -149,6 +147,42 @@ router.get("/search", menuControllers.searchMenus);
 
 /**
  * @openapi
+ * /api/menus/{id}:
+ *   get:
+ *     tags: [Menus]
+ *     summary: get a menu by Id
+ *     parameters:
+ *      - name: id
+ *        in: path
+ *        description: The id of the menu to retrieve
+ *        required: true
+ *        schema:
+ *          type: integer
+ *     responses:
+ *      200:
+ *        description: Menu Retrieved Successfully
+ *      400:
+ *        description: Bad Request
+ *      403:
+ *        description: Unauthorized - Validation Failed
+ *      404:
+ *        description: Menu Not Found
+ *      500:
+ *        description: Internal Server Error
+ */
+router.get(
+  "/:id",
+  commonValidate([
+    param("id")
+      .notEmpty()
+      .isInt({ allow_leading_zeroes: false, min: 1 })
+      .withMessage("Not a valid id"),
+  ]),
+  menuControllers.getMenuById
+);
+
+/**
+ * @openapi
  * /api/menus:
  *   post:
  *     tags: [Menus]
@@ -204,14 +238,14 @@ router.get("/search", menuControllers.searchMenus);
  *        description: Internal Server Error
  */
 router.post(
-    "/",
-    commonValidate([
-        // TODO: fix here
-        body("title").notEmpty().withMessage("Title field is mandatory. "),
-        body("status").notEmpty().withMessage("Status field is mandatory"),
-        body("type").notEmpty().withMessage("Type field is mandatory"),
-    ]),
-    menuControllers.createMenu
+  "/",
+  commonValidate([
+    // TODO: fix here
+    body("title").notEmpty().withMessage("Title field is mandatory. "),
+    body("status").notEmpty().withMessage("Status field is mandatory"),
+    body("type").notEmpty().withMessage("Type field is mandatory"),
+  ]),
+  menuControllers.createMenu
 );
 
 /**
@@ -278,14 +312,14 @@ router.post(
  *        description: Internal Server Error
  */
 router.put(
-    "/:id",
-    commonValidate([
-        param("id")
-        .notEmpty()
-        .isInt({ allow_leading_zeroes: false, min: 1 })
-        .withMessage("Not a valid id"),
-    ]),
-    menuControllers.updateMenuById
+  "/:id",
+  commonValidate([
+    param("id")
+      .notEmpty()
+      .isInt({ allow_leading_zeroes: false, min: 1 })
+      .withMessage("Not a valid id"),
+  ]),
+  menuControllers.updateMenuById
 );
 
 /**
@@ -326,14 +360,14 @@ router.put(
  *        description: Internal Server Error
  */
 router.delete(
-    "/:id",
-    commonValidate([
-        param("id")
-        .notEmpty()
-        .isInt({ allow_leading_zeroes: false, min: 1 })
-        .withMessage("Not a valid id"),
-    ]),
-    menuControllers.deleteMenuById
+  "/:id",
+  commonValidate([
+    param("id")
+      .notEmpty()
+      .isInt({ allow_leading_zeroes: false, min: 1 })
+      .withMessage("Not a valid id"),
+  ]),
+  menuControllers.deleteMenuById
 );
 
 module.exports = router;
