@@ -87,6 +87,25 @@ const getMenus = async query => {
   return new SuccessResponse("Successfully retrieved menus.", returnData);
 };
 
+const getMenuTree = async query => {
+  const menus = await Menu.findAll({
+    include: [
+      {
+        model: Permission,
+        as: "permissionInfo",
+        attributes: ["id", "permissionName"], // return id and permissionName for frontend readability
+      },
+    ],
+  });
+  if (!menus || menus.length === 0) {
+    throw new EntityNotFoundException("No menus found");
+  }
+  const returnData = {
+    items: menus,
+  };
+  return new SuccessResponse("Successfully retrieved menus.", returnData);
+};
+
 /**
  * getMenuById(id)
  * Retrieve full details of a menu item by id
@@ -259,4 +278,5 @@ module.exports = {
   deleteMenuById,
   createMenu,
   searchMenus,
+  getMenuTree,
 };
