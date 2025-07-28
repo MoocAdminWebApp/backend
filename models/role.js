@@ -9,6 +9,15 @@ module.exports = sequelize => {
         as: "users",
       });
 
+      Role.belongsTo(models.User, {
+      foreignKey: "createdBy",
+      as: "creator",
+    });
+      Role.belongsTo(models.User, {
+        foreignKey: "updatedBy",
+        as: "updater",
+      });
+
       Role.belongsToMany(models.Menu, {
         foreignKey: "roleId",
         through: "role_menus",
