@@ -38,7 +38,7 @@ const getCategoryAccessFilter = (req, res, next) => {
   );
 
   // Only public categories for non-admins
-  req.accessFilter = userRoles.includes("admin") ? null : { isPublic: true };
+  req.accessFilter = userRoles.includes("admin") ? null : { isPublic: true, isDeleted: false };
 
   next();
 };

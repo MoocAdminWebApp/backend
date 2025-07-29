@@ -1,6 +1,7 @@
 const { Category } = require("../models");
 const { EntityAlreadyExistsException } = require("../common/commonError");
 const { Op } = require("sequelize");
+const { sequelize } = require("../db/sequelizedb");
 
 /**
  * Check if a category with the same name and parentId already exists.
@@ -56,9 +57,32 @@ const getAllCategoriesAsync = async (baseFilter, pagination = {}, keyword = null
     offset,
     limit,
     order: [["createdAt", "DESC"]],
+    attributes: {
+      include: [
+        [
+          sequelize.literal(`(
+          SELECT COUNT(*)
+          FROM Categories AS child
+          WHERE child.parentId = Category.id
+            AND child.isDeleted = false
+            AND child.isPublic = true
+        )`),
+          "childCount",
+        ],
+      ],
+    },
+    raw: true,
   });
 
-  return categories;
+  const mapped = categories.rows.map(cat => ({
+    ...cat,
+    hasChildren: cat.childCount > 0,
+  }));
+
+  return {
+    rows: mapped,
+    count: categories.count,
+  };
 };
 
 /**
