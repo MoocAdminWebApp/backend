@@ -102,17 +102,25 @@ const options = {
             access: {
               type: "string",
               enum: ["ADMIN", "TEACHER", "STUDENT"],
-              example: "STUDENT",
+              example: "ADMIN",
+            },
+            roleIds: {
+              type: "array",
+              items: { type: "integer" },
+              description: "List of role IDs assigned to the user",
+              example: [1, 2],
             },
             createdAt: {
               type: "string",
               format: "date-time",
               example: "2025-05-27T10:00:00Z",
+              readOnly: true,
             },
             updatedAt: {
               type: "string",
               format: "date-time",
               example: "2025-05-27T12:00:00Z",
+              readOnly: true,
             },
           },
           required: ["email", "password", "firstName", "lastName"],
@@ -137,9 +145,15 @@ const options = {
               enum: ["ADMIN", "TEACHER", "STUDENT"],
               default: "TEACHER",
             },
+            roleIds: {
+              type: "array",
+              items: { type: "integer" },
+              description: "List of new role IDs to assign",
+              example: [2],
+            },
           },
           description:
-            "Only password, firstName, lastName, and access can be updated. Id and Email cannot be updated.",
+            "Only password, firstName, lastName, access, and roleIds can be updated. Id and Email cannot be updated.",
         },
         Profile: {
           type: "object",
