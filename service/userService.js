@@ -20,18 +20,57 @@ const createUserAsync = async (userData, creatorId) => {
 
   const hashedPassword = await bcrypt.hash(userData.password, bcryptConfig.saltRounds);
 
+  //Extract the role ID array and remove it from userData
+  const { roleIds, ...userDataWithoutRoles } = userData;
+
   const newUser = await User.create({
-    ...userData,
+    ...userDataWithoutRoles,
     password: hashedPassword,
     createdBy: creatorId || null,
   });
 
   //await cacheHelper.delAsync(getALLCacheKey());
 
+  //If there is role data, set the user role association
+  if (roleIds && Array.isArray(roleIds) && roleIds.length > 0) {
+    //Verify that the role ID exists
+    const validRoles = await Role.findAll({
+      where: { id: { [Op.in]: roleIds } },
+    });
+
+    if (validRoles.length !== roleIds.length) {
+      //If there is an invalid role ID, delete the created user and throw an error
+      await newUser.destroy();
+      throw new EntityNotFoundException("One or more role IDs are invalid");
+    }
+
+    //Setting up user role associations
+    await Promise.all(
+      roleIds.map(roleId => {
+        return newUser.addRole(roleId, {
+          through: { createdBy: creatorId || null },
+        });
+      })
+    );
+  }
+
+  // Re-obtain user data (including role information)
+  const userWithRoles = await User.findByPk(newUser.id, {
+    attributes: { exclude: ["password"] },
+    include: [
+      {
+        model: Role,
+        as: "roles",
+        through: { attributes: [] },
+        attributes: ["id", "roleName", "description"],
+      },
+    ],
+  });
+
   return {
-    isSuccess: newUser.id > 0 ? true : false,
+    isSuccess: userWithRoles.id > 0 ? true : false,
     message: "create user successfully",
-    data: newUser,
+    data: userWithRoles,
   };
 };
 
@@ -43,7 +82,12 @@ const getAllUsersAsync = async () => {
   var allUsers = await User.findAll({
     attributes: { exclude: ["password"] },
     include: [
-      { model: Role, as: "roles", through: { attributes: [] } },
+      {
+        model: Role,
+        as: "roles",
+        through: { attributes: [] },
+        attributes: ["id", "roleName", "description"],
+      },
       { model: User, as: "creator", attributes: ["id", "firstName", "lastName", "access"] },
       { model: User, as: "updater", attributes: ["id", "firstName", "lastName", "access"] },
     ],
@@ -65,7 +109,12 @@ const getUserByIdAsync = async id => {
   const user = await User.findByPk(id, {
     attributes: { exclude: ["password"] },
     include: [
-      { model: Role, as: "roles", through: { attributes: [] } },
+      {
+        model: Role,
+        as: "roles",
+        through: { attributes: [] },
+        attributes: ["id", "roleName", "description"],
+      },
       { model: Profile, as: "profile" },
       { model: User, as: "creator", attributes: ["id", "firstName", "lastName", "access"] },
       { model: User, as: "updater", attributes: ["id", "firstName", "lastName", "access"] },
@@ -84,13 +133,54 @@ const getUsersByPageAsync = async (filters = {}, fuzzyKeys = [], page, pageSize)
     pageSize,
     excludeFields: ["password"],
     include: [
-      { model: Role, as: "roles", through: { attributes: [] } },
+      {
+        model: Role,
+        as: "roles",
+        through: { attributes: [] },
+        attributes: ["id", "roleName", "description"],
+      },
       { model: User, as: "creator", attributes: ["id", "firstName", "lastName", "access"] },
       { model: User, as: "updater", attributes: ["id", "firstName", "lastName", "access"] },
     ],
     orderBy: "id",
     orderDir: "ASC",
   });
+};
+
+const updateUserRoles = async (user, newRoleIds, updaterId) => {
+  // 1. Get existing associations
+  const currentRoles = await user.getRoles({
+    joinTableAttributes: ["id", "createdBy", "updatedBy"],
+  });
+  const currentRoleIds = currentRoles.map(r => r.id);
+
+  // 2. Calculate the difference
+  const rolesToAdd = newRoleIds.filter(id => !currentRoleIds.includes(id));
+  const rolesToRemove = currentRoleIds.filter(id => !newRoleIds.includes(id));
+  const rolesToKeep = currentRoleIds.filter(id => newRoleIds.includes(id));
+
+  // 3. Delete unnecessary role associations
+  if (rolesToRemove.length > 0) {
+    await user.removeRoles(rolesToRemove);
+  }
+
+  // 4. Add a new role and set createdBy and updatedBy
+  for (const roleId of rolesToAdd) {
+    await user.addRole(roleId, {
+      through: { createdBy: updaterId, updatedBy: updaterId },
+    });
+  }
+
+  // 5. For retained roles, update the updatedBy field
+  for (const roleId of rolesToKeep) {
+    // Update the updatedBy field of the intermediate table
+    await user.sequelize.models.UserRole.update(
+      { updatedBy: updaterId },
+      {
+        where: { userId: user.id, roleId },
+      }
+    );
+  }
 };
 
 const updateUserAsync = async (id, updateData, updaterId) => {
@@ -104,13 +194,49 @@ const updateUserAsync = async (id, updateData, updaterId) => {
   if (updateData.password) {
     updateData.password = await bcrypt.hash(updateData.password, bcryptConfig.saltRounds);
   }
+  const { roleIds, ...updateDataWithoutRoles } = updateData;
 
   await user.update({
-    ...updateData,
+    ...updateDataWithoutRoles,
     updatedBy: updaterId,
   });
 
-  return { isSuccess: true, message: "User updated successfully", data: updateData };
+  // If there is role data, update the user role association
+  // Allows passing an empty array to clear all roles
+  if (roleIds !== undefined) {
+    if (Array.isArray(roleIds)) {
+      if (roleIds.length > 0) {
+        // Verify that the role ID exists
+        const validRoles = await Role.findAll({
+          where: { id: { [Op.in]: roleIds } },
+        });
+
+        if (validRoles.length !== roleIds.length) {
+          throw new EntityNotFoundException("One or more role IDs are invalid");
+        }
+      }
+
+      // Update user role associations
+      //donot use await user.setRoles([]); it will clear existing roles,so the createBy info is missing
+      await updateUserRoles(user, roleIds, updaterId);
+    }
+  }
+  // Re-obtain user data (including role information)
+  const updatedUserWithRoles = await User.findByPk(id, {
+    attributes: { exclude: ["password"] },
+    include: [
+      {
+        model: Role,
+        as: "roles",
+        through: { attributes: [] },
+        attributes: ["id", "roleName", "description"],
+      },
+      { model: User, as: "creator", attributes: ["id", "firstName", "lastName", "access"] },
+      { model: User, as: "updater", attributes: ["id", "firstName", "lastName", "access"] },
+    ],
+  });
+
+  return { isSuccess: true, message: "User updated successfully", data: updatedUserWithRoles };
 };
 
 const deleteUserAsync = async id => {

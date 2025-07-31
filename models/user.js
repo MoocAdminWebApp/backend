@@ -20,7 +20,7 @@ module.exports = (sequelize, DataTypes) => {
       // User and Role are many-to-many relationship
       User.belongsToMany(models.Role, {
         foreignKey: "userId",
-        through: "UserRole",
+        through: models.UserRole,
         as: "roles",
       });
 

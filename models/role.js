@@ -5,14 +5,14 @@ module.exports = sequelize => {
     static associate(models) {
       Role.belongsToMany(models.User, {
         foreignKey: "roleId",
-        through: "user_roles",
+        through: models.UserRole,
         as: "users",
       });
 
       Role.belongsTo(models.User, {
-      foreignKey: "createdBy",
-      as: "creator",
-    });
+        foreignKey: "createdBy",
+        as: "creator",
+      });
       Role.belongsTo(models.User, {
         foreignKey: "updatedBy",
         as: "updater",

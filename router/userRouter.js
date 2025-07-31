@@ -47,6 +47,8 @@ router.post(
     body("firstName").notEmpty().withMessage("First name is required"),
     body("lastName").notEmpty().withMessage("Last name is required"),
     body("access").optional().isIn(EUserAccess).withMessage("Invalid access type"),
+    body("roleIds").optional().isArray().withMessage("roleIds must be an array"),
+    body("roleIds.*").optional().isInt().withMessage("Each role ID must be an integer"),
   ]),
   userController.createUser
 );
@@ -267,6 +269,8 @@ router.put(
     body("firstName").optional().notEmpty().withMessage("First name cannot be empty"),
     body("lastName").optional().notEmpty().withMessage("Last name cannot be empty"),
     body("access").optional().isIn(EUserAccess).withMessage("Invalid access type"),
+    body("roleIds").optional().isArray().withMessage("roleIds must be an array"),
+    body("roleIds.*").optional().isInt().withMessage("Each role ID must be an integer"),
   ]),
   userController.updateUser
 );
