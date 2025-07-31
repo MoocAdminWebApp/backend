@@ -42,7 +42,11 @@ const getAllUsersAsync = async () => {
   // }
   var allUsers = await User.findAll({
     attributes: { exclude: ["password"] },
-    include: [{ model: Role, as: "roles", through: { attributes: [] } }],
+    include: [
+      { model: Role, as: "roles", through: { attributes: [] } },
+      { model: User, as: "creator", attributes: ["id", "firstName", "lastName", "access"] },
+      { model: User, as: "updater", attributes: ["id", "firstName", "lastName", "access"] },
+    ],
     order: [["id", "ASC"]],
   });
 
@@ -63,6 +67,8 @@ const getUserByIdAsync = async id => {
     include: [
       { model: Role, as: "roles", through: { attributes: [] } },
       { model: Profile, as: "profile" },
+      { model: User, as: "creator", attributes: ["id", "firstName", "lastName", "access"] },
+      { model: User, as: "updater", attributes: ["id", "firstName", "lastName", "access"] },
     ],
   });
 
@@ -77,7 +83,11 @@ const getUsersByPageAsync = async (filters = {}, fuzzyKeys = [], page, pageSize)
     page,
     pageSize,
     excludeFields: ["password"],
-    include: [{ model: Role, as: "roles", through: { attributes: [] } }],
+    include: [
+      { model: Role, as: "roles", through: { attributes: [] } },
+      { model: User, as: "creator", attributes: ["id", "firstName", "lastName", "access"] },
+      { model: User, as: "updater", attributes: ["id", "firstName", "lastName", "access"] },
+    ],
     orderBy: "id",
     orderDir: "ASC",
   });
