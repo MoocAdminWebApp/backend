@@ -40,12 +40,12 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.STRING,
         allowNull: false,
       },
-      type: {
+      menuType: {
         type: DataTypes.ENUM("DIRECTORY", "MENU", "BUTTON"),
         allowNull: false,
         defaultValue: "MENU",
         get() {
-          const type = this.getDataValue("type");
+          const type = this.getDataValue("menuType");
           const typeToNumber = {
             DIRECTORY: 1,
             MENU: 2,
@@ -69,11 +69,11 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.INTEGER,
         allowNull: true,
       },
-      path: {
+      route: {
         type: DataTypes.STRING,
         allowNull: true,
       },
-      component: {
+      componentPath: {
         type: DataTypes.STRING,
         allowNull: true,
       },
@@ -105,6 +105,12 @@ module.exports = (sequelize, DataTypes) => {
       comment: {
         type: DataTypes.STRING,
         defaultValue: "",
+      },
+
+      icon: {
+        type: DataTypes.STRING,
+        allowNull: true,
+        defaultValue: "Default",
       },
       createdAt: {
         type: DataTypes.DATE,

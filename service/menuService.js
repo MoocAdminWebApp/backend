@@ -65,28 +65,43 @@ const getMenusByUser = async userId => {
  * Function to get a full list of menus
  */
 const getMenus = async query => {
-  const page = Number(query.page) ? Number(query.page) : 1;
-  const pageSize = Number(query.pageSize) ? Number(query.pageSize) : 10;
-  // const { page = 1, pageSize = 10 } = query;
-  const menus = await Menu.findAndCountAll({
-    offset: (page - 1) * pageSize,
-    limit: pageSize,
-    include: [
-      {
-        model: Permission,
-        as: "permissionInfo",
-        attributes: ["id", "permissionName"], // return id and permissionName for frontend readability
-      },
+  // const page = Number(query.page) ? Number(query.page) : 1;
+  // const pageSize = Number(query.pageSize) ? Number(query.pageSize) : 10;
+  // // const { page = 1, pageSize = 10 } = query;
+  // const menus = await Menu.findAndCountAll({
+  //   offset: (page - 1) * pageSize,
+  //   limit: pageSize,
+  //   include: [
+  //     {
+  //       model: Permission,
+  //       as: "permissionInfo",
+  //       attributes: ["id", "permissionName"], // return id and permissionName for frontend readability
+  //     },
+  //   ],
+  // });
+  // if (!menus || menus.rows.length === 0) {
+  //   throw new EntityNotFoundException("No menus found");
+  // }
+  // const returnData = {
+  //   items: menus.rows,
+  //   total: menus.count,
+  // };
+  // return new SuccessResponse("Successfully retrieved menus.", returnData);
+  const dispMenusTypes = ["DIRECTORY", "MENU"];
+  const menus = await Menu.findAll({
+    where: { menuType: dispMenusTypes, status: "ACTIVE" },
+    order: [
+      // ["menuType", "ASC"],
+      ["parentId", "ASC"],
+      ["orderNum", "ASC"],
     ],
   });
-  if (!menus || menus.rows.length === 0) {
+
+  if (!menus || menus.length === 0) {
     throw new EntityNotFoundException("No menus found");
   }
-  const returnData = {
-    items: menus.rows,
-    total: menus.count,
-  };
-  return new SuccessResponse("Successfully retrieved menus.", returnData);
+  console.log(menus);
+  return new SuccessResponse("Successfully retrieved menus.", menus);
 };
 
 const getMenuTree = async query => {

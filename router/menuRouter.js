@@ -11,33 +11,7 @@ const menuControllers = require("../controller/menuController");
  * /api/menus:
  *   get:
  *     tags: [Menus]
- *     summary: get all accessible menus for the current user
- *     parameters:
- *       - name: page
- *         in: query
- *         schema:
- *           type: integer
- *       - name: pageSize
- *         in: query
- *         schema:
- *           type: integer
- *       - name: sortBy
- *         in: query
- *         schema:
- *           type: string
- *       - name: sortOrder
- *         in: query
- *         schema:
- *           type: string
- *           enum: [asc, desc]
- *       - name: status
- *         in: query
- *         schema:
- *           type: string
- *       - name: type
- *         in: query
- *         schema:
- *           type: string
+ *     summary: get all accessible menus that should display on the sidebar
  *     responses:
  *      200:
  *        description: Fetched Successfully

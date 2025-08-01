@@ -13,7 +13,7 @@ module.exports = {
         type: Sequelize.STRING(50),
         allowNull: false,
       },
-      type: {
+      menuType: {
         type: Sequelize.ENUM("DIRECTORY", "MENU", "BUTTON"),
         allowNull: false,
         defaultValue: "MENU",
@@ -32,11 +32,11 @@ module.exports = {
         type: Sequelize.INTEGER,
         allowNull: true,
       },
-      path: {
+      route: {
         type: Sequelize.STRING(100),
         allowNull: true,
       },
-      component: {
+      componentPath: {
         type: Sequelize.STRING(100),
         allowNull: true,
       },
@@ -59,6 +59,11 @@ module.exports = {
         type: Sequelize.STRING(200),
         allowNull: true,
         defaultValue: "",
+      },
+      icon: {
+        type: Sequelize.STRING(200),
+        allowNull: true,
+        defaultValue: "Default",
       },
       createdAt: {
         type: Sequelize.DATE,
