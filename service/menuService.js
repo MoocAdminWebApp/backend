@@ -12,7 +12,9 @@ const RoleMenu = db.RoleMenu;
 const RolePermission = db.RolePermission;
 const UserRole = db.UserRole;
 const Permission = db.Permission;
-const { convertDataToTree } = require("../common/convertDataToTree.js");
+const Role = db.Role;
+const { getPermissionAndRole } = require("../common/crossDBInfoBuilder.js");
+
 /**
  * Obtain a list of roles that the user has been assigned with
  */
@@ -88,6 +90,8 @@ const getMenus = async query => {
 };
 
 const getMenuTree = async query => {
+  const rp = await getPermissionAndRole();
+  console.log(rp);
   const menus = await Menu.findAll({
     include: [
       {

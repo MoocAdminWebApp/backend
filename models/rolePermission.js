@@ -1,9 +1,19 @@
 const { Model, DataTypes } = require("sequelize");
 
-module.exports = (sequelize) => {
+module.exports = sequelize => {
   class RolePermission extends Model {
     static associate(models) {
       // 通常中间表不需要定义关联
+      models.RolePermission.belongsTo(models.Permission, {
+        foreignKey: "permissionId",
+        as: "permissionInfo",
+      });
+
+      // RolePermission -> Role
+      models.RolePermission.belongsTo(models.Role, {
+        foreignKey: "roleId",
+        as: "roleInfo",
+      });
     }
   }
 

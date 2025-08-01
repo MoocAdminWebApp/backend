@@ -87,10 +87,6 @@ module.exports = (sequelize, DataTypes) => {
         onUpdate: "CASCADE",
         onDelete: "SET NULL",
       },
-      hidden: {
-        type: DataTypes.BOOLEAN,
-        allowNull: true,
-      },
       status: {
         type: DataTypes.ENUM("ACTIVE", "INACTIVE", "DRAFT", "DELETED"),
         allowNull: false,

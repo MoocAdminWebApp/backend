@@ -50,10 +50,6 @@ module.exports = {
         onUpdate: "CASCADE",
         onDelete: "SET NULL",
       },
-      hidden: {
-        type: Sequelize.BOOLEAN,
-        defaultValue: false,
-      },
       status: {
         type: Sequelize.ENUM("ACTIVE", "INACTIVE", "DRAFT", "DELETED"),
         allowNull: false,

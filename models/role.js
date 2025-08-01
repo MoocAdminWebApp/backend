@@ -10,9 +10,9 @@ module.exports = sequelize => {
       });
 
       Role.belongsTo(models.User, {
-      foreignKey: "createdBy",
-      as: "creator",
-    });
+        foreignKey: "createdBy",
+        as: "creator",
+      });
       Role.belongsTo(models.User, {
         foreignKey: "updatedBy",
         as: "updater",
@@ -28,6 +28,11 @@ module.exports = sequelize => {
         foreignKey: "roleId",
         through: "role_permissions",
         as: "permissions",
+      });
+
+      Role.hasMany(models.RolePermission, {
+        foreignKey: "roleId",
+        as: "rolePermissions",
       });
     }
   }
