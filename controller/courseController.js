@@ -98,15 +98,16 @@ const updateCourseStatus = async (req, res) => {
 
 const deleteCourse = async (req, res) => {
   try {
-    const success = await courseService.deleteCourse(req.params.id);
-    if (!success) {
-      return res.sendCommonValue(404, "Course not found", null);
+    const result = await courseService.deleteCourse(req.params.id);
+    if (!result.isSuccess) {
+      return res.sendCommonValue(404, result.message || "Course not found", null);
     }
-    res.sendCommonValue(204, "Course deleted", null); // 204无内容
+    return res.sendCommonValue(200, result.message || "Course deleted", null);
   } catch (err) {
-    res.sendCommonValue(500, err.message, null);
+    return res.sendCommonValue(500, err.message || "Delete failed", null);
   }
 };
+
 
 module.exports = {
   createCourse,
