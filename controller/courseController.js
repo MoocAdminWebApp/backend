@@ -1,7 +1,11 @@
 const courseService = require("../service/courseService");
+const { getCurrentUser } = require("../common/getCurrentUser");
 
 const createCourse = async (req, res) => {
   try {
+    // 如果需要创建人信息，可以用 getCurrentUser 获取，比如：
+    // const creatorId = getCurrentUser(req).userId;
+    // 传给 service 方法
     const course = await courseService.createCourse(req.body);
     res.sendCommonValue(201, "Course created", course);
   } catch (err) {
@@ -9,9 +13,9 @@ const createCourse = async (req, res) => {
   }
 };
 
-const getCourses = async (req, res) => {
+const getAllCourses = async (req, res) => {
   try {
-    const courses = await courseService.getCourses(req.query);
+    const courses = await courseService.getAllCourses();
     res.sendCommonValue(200, "Courses retrieved", courses);
   } catch (err) {
     res.sendCommonValue(500, err.message, null);
@@ -30,9 +34,44 @@ const getCourseById = async (req, res) => {
   }
 };
 
+// 支持分页和模糊查询的列表接口
+const getCoursesByPage = async (req, res) => {
+  const page = parseInt(req.query.page) || 1;
+  const pageSize = parseInt(req.query.pageSize) || 10;
+
+  let filters = {};
+  if (typeof req.query.filters === "string" && req.query.filters.trim() !== "") {
+    try {
+      filters = JSON.parse(req.query.filters);
+    } catch (err) {
+      return res.sendCommonValue(400, "Invalid filters format");
+    }
+  }
+
+  let fuzzyKeys = req.query.fuzzyKeys || [];
+  if (typeof fuzzyKeys === "string") {
+    fuzzyKeys = fuzzyKeys.split(",");
+  }
+
+  try {
+    const result = await courseService.getCoursesByPage(filters, fuzzyKeys, page, pageSize);
+    res.sendCommonValue(200, "Courses retrieved", result); // 👈 只传 result.data
+  } catch (err) {
+    res.sendCommonValue(500, err.message || "Failed to retrieve courses", null);
+  }
+};
+
+
+
 const updateCourse = async (req, res) => {
   try {
-    const course = await courseService.updateCourse(req.params.id, req.body);
+    // 如果需要修改人 id，可以用 getCurrentUser 获取
+    const updaterId = getCurrentUser(req).userId;
+    const course = await courseService.updateCourse(
+      req.params.id,
+      req.body,
+      updaterId
+    );
     if (!course) {
       return res.sendCommonValue(404, "Course not found", null);
     }
@@ -63,7 +102,7 @@ const deleteCourse = async (req, res) => {
     if (!success) {
       return res.sendCommonValue(404, "Course not found", null);
     }
-    res.sendCommonValue(204, "Course deleted", null); // No data returned
+    res.sendCommonValue(204, "Course deleted", null); // 204无内容
   } catch (err) {
     res.sendCommonValue(500, err.message, null);
   }
@@ -71,8 +110,9 @@ const deleteCourse = async (req, res) => {
 
 module.exports = {
   createCourse,
-  getCourses,
+  getAllCourses,
   getCourseById,
+  getCoursesByPage,
   updateCourse,
   updateCourseStatus,
   deleteCourse,

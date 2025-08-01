@@ -20,6 +20,12 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.TEXT,
         allowNull: true,
       },
+      
+      courseCode: {
+        type: DataTypes.STRING(50),
+        allowNull: false,
+        unique: true,
+      },
 
       instructorId: {
         type: DataTypes.INTEGER,
