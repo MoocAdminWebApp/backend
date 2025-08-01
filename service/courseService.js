@@ -149,6 +149,7 @@ const deleteCourse = async (id) => {
   };
 };
 
+
 module.exports = {
   createCourse,
   getAllCourses,
