@@ -257,7 +257,7 @@ router.get(
  *       content:
  *         application/json:
  *           schema:
- *             $ref: '#/components/schemas/Profile'
+ *             $ref: '#/components/schemas/ProfileUpdate'
  *     responses:
  *       201:
  *         description: Profile updated

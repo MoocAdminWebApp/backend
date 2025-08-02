@@ -198,6 +198,36 @@ const options = {
             },
           },
         },
+        ProfileUpdate: {
+          type: "object",
+          properties: {
+            countryCode: { type: "string", example: "+61" },
+            phoneNumber: { type: "string", example: "1234567890" },
+            country: { type: "string", example: "Australia" },
+            state: { type: "string", example: "Victoria" },
+            city: { type: "string", example: "Melbourne" },
+            streetAddress: { type: "string", example: "123 Collins Street" },
+            postalCode: { type: "string", example: "3000" },
+            birthdate: {
+              type: "string",
+              format: "date",
+              example: "1990-01-01",
+            },
+            gender: {
+              type: "string",
+              enum: ["MALE", "FEMALE", "OTHER", "PREFER_NOT_TO_SAY"],
+              example: "FEMALE",
+            },
+            avatar: {
+              type: "string",
+              example: "https://example.com/avatar.jpg",
+            },
+            bio: {
+              type: "string",
+              example: "Experienced software engineer with a passion for teaching.",
+            },
+          },
+        },
         Permission: {
           type: "object",
           properties: {
