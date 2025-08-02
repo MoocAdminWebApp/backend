@@ -28,7 +28,7 @@ const paginateModelAsync = async (
   }
 ) => {
   const whereClause = {};
-  let orConditions=[];
+  let orConditions = [];
 
   for (const key in filters) {
     const value = filters[key];
@@ -42,8 +42,8 @@ const paginateModelAsync = async (
   }
 
   if (orConditions.length > 0) {
-  whereClause[Op.or] = orConditions;
-}
+    whereClause[Op.or] = orConditions;
+  }
 
   const offset = (page - 1) * pageSize;
   const limit = pageSize;
@@ -55,6 +55,7 @@ const paginateModelAsync = async (
     order: [[orderBy, orderDir]],
     limit,
     offset,
+    distinct: true,
   });
 
   return {
@@ -65,7 +66,7 @@ const paginateModelAsync = async (
       pageSize,
       total: count,
       totalPages: Math.ceil(count / pageSize),
-      items:rows,
+      items: rows,
     },
   };
 };
