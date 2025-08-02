@@ -45,10 +45,43 @@ const getPermissionById = async (req, res, next) => {
   }
 };
 
+const getPermissionsByRole = async (req, res, next) => {
+  try {
+    const permissions = await permissionService.getPermissionsByRole(req.params.id);
+    res.json(permissions);
+  } catch (err) {
+    next(err);
+  }
+};
+
+const getPermissionsByPage = async (req, res) => {
+  const page = parseInt(req.query.page) || 1;
+  const pageSize = parseInt(req.query.pageSize) || 10;
+
+  let filters = {};
+  if (typeof req.query.filters === "string") {
+    try {
+      filters = JSON.parse(req.query.filters);
+    } catch (err) {
+      return res.sendCommonValue(400, "Invalid filters format");
+    }
+  }
+
+  let fuzzyKeys = req.query.fuzzyKeys || [];
+  if (typeof fuzzyKeys === "string") {
+    fuzzyKeys = fuzzyKeys.split(",");
+  }
+
+  const result = await permissionService.getPermissionsByPageAsync(filters, fuzzyKeys, page, pageSize);
+  res.sendCommonValue(200, result.message, result.data);
+};
+
 module.exports = {
   createPermission,
   updatePermission,
   deletePermission,
   getAllPermissions,
   getPermissionById,
+  getPermissionsByRole,
+  getPermissionsByPage,
 };

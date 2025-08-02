@@ -15,10 +15,12 @@ module.exports = (sequelize, DataTypes) => {
         as: "roles",
       });
 
-      Permission.hasMany(models.RolePermission, {
+        Permission.hasMany(models.RolePermission, {
         foreignKey: "permissionId",
         as: "rolePermissions",
       });
+      Permission.belongsTo(models.User, { foreignKey: "createdBy", targetKey: "id", as: 'creator'});
+      Permission.belongsTo(models.User, { foreignKey: "updatedBy", targetKey: "id" , as: 'updater'});
     }
   }
   Permission.init(
@@ -37,6 +39,26 @@ module.exports = (sequelize, DataTypes) => {
       description: {
         type: DataTypes.STRING(50),
         allowNull: true,
+      },
+        createdBy: {
+        type: DataTypes.INTEGER,
+        allowNull: true,
+        references: {
+          model: "users",
+          key: "id",
+        },
+        onUpdate: "CASCADE",
+        onDelete: "SET NULL",
+      },
+      updatedBy: {
+        type: DataTypes.INTEGER,
+        allowNull: true,
+        references: {
+          model: "users",
+          key: "id",
+        },
+        onUpdate: "CASCADE",
+        onDelete: "SET NULL",
       },
     },
     {
