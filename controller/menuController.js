@@ -10,6 +10,17 @@ const getMenus = async (req, res) => {
   }
 };
 
+const getMenuTree = async (req, res) => {
+  try {
+    const result = await menuService.getMenuTree(req.query);
+    // console.log("getMenuTree result:", result);
+    res.sendCommonValue(result.statusCode, result.message, result.data);
+  } catch (err) {
+    console.error("Error in getMenuTree:", err);
+    res.sendCommonValue(err.statusCode ? err.statusCode : 500, err.message);
+  }
+};
+
 const getMenuById = async (req, res) => {
   console.log(req);
   try {
@@ -68,4 +79,5 @@ module.exports = {
   updateMenuById,
   deleteMenuById,
   createMenu,
+  getMenuTree,
 };
