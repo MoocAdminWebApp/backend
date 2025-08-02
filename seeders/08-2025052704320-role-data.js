@@ -4,8 +4,8 @@ module.exports = {
   up: async (queryInterface, Sequelize) => {
     await queryInterface.bulkInsert("roles", [
       {
-        roleName: "admin",
-        description: "System Administrator",
+        roleName: "Admin",
+        description: "System administrator with full access",
         status: true,
         createdBy: 1,
         updatedBy: 1,
@@ -13,8 +13,18 @@ module.exports = {
         updatedAt: new Date(),
       },
       {
-        roleName: "user",
-        description: "Default user role",
+        roleName: "Teacher",
+        description:
+          "Teachers have full access to the course menu, and READ-ONLY access to user/role/permission/menu",
+        status: true,
+        createdBy: 1,
+        updatedBy: 1,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      },
+      {
+        roleName: "Observer",
+        description: "Default user role that only has READ access to all the modules",
         status: true,
         createdBy: 1,
         updatedBy: 1,
