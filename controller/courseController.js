@@ -65,7 +65,6 @@ const getCoursesByPage = async (req, res) => {
 
 const updateCourse = async (req, res) => {
   try {
-    // 如果需要修改人 id，可以用 getCurrentUser 获取
     const updaterId = getCurrentUser(req).userId;
     const course = await courseService.updateCourse(
       req.params.id,
@@ -75,7 +74,7 @@ const updateCourse = async (req, res) => {
     if (!course) {
       return res.sendCommonValue(404, "Course not found", null);
     }
-    res.sendCommonValue(200, "Course updated", course);
+    res.sendCommonValue(200, "Course updated", course.data);
   } catch (err) {
     res.sendCommonValue(400, err.message, null);
   }
