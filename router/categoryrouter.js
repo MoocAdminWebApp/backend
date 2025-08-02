@@ -17,6 +17,7 @@ const {
   updateByIdAsync,
   restoreByIdAsync,
   getTreeAsync,
+  getPageOfCategoryAsync,
 } = require("../controller/categoryController");
 
 /**
@@ -715,5 +716,67 @@ router.put(
   commonValidate([param("id").exists().bail().isInt({ gt: 0 })]),
   restoreByIdAsync
 );
+
+/**
+ * @swagger
+ * /api/categories/{id}/page:
+ *   get:
+ *     summary: Get the page number where the category with the given ID is located
+ *     tags:
+ *       - Category
+ *     description: >
+ *       Returns the 1-based page number where the specified category appears in the paginated list.
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: The ID of the category to locate
+ *       - in: query
+ *         name: pageSize
+ *         schema:
+ *           type: integer
+ *           default: 10
+ *         description: Number of items per page (used for page calculation)
+ *       - in: query
+ *         name: keyword
+ *         schema:
+ *           type: string
+ *         description: Optional keyword filter (same as /categories search)
+ *     responses:
+ *       200:
+ *         description: Page number located successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 isSuccess:
+ *                   type: boolean
+ *                   example: true
+ *                 status:
+ *                   type: integer
+ *                   example: 200
+ *                 message:
+ *                   type: string
+ *                   example: Page index calculated
+ *                 data:
+ *                   type: object
+ *                   properties:
+ *                     page:
+ *                       type: integer
+ *                       example: 2
+ *                 time:
+ *                   type: string
+ *                   format: date-time
+ *       404:
+ *         description: Category not found or not accessible
+ *       400:
+ *         $ref: '#/components/responses/BadRequest'
+ *       401:
+ *         $ref: '#/components/responses/Unauthorized'
+ */
+router.get("/:id/page", getCategoryAccessFilter, getPageOfCategoryAsync);
 
 module.exports = router;

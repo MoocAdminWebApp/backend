@@ -9,6 +9,7 @@ const {
   getCategoryDetailsForFrontend,
   restoreCategoryByIdAsync,
   getAllCategoriesForTreeAsync,
+  getCategoryPageIndexAsync,
 } = require("../service/categoryservice");
 
 const { parsePagination } = require("../common/pagination");
@@ -252,6 +253,36 @@ const restoreByIdAsync = async (req, res) => {
   res.sendCommonValue(200, "Category restored successfully", restoredCategory);
 };
 
+const getPageOfCategoryAsync = async (req, res) => {
+  const accessFilter = req.accessFilter;
+  const isAdmin = !accessFilter;
+  const pageSize = parseInt(req.query.pageSize) || 10;
+  const keyword = req.query.keyword?.trim() || null;
+  const id = parseInt(req.params.id);
+
+  const targetCategory = await getCategoryByIdAsync(id);
+
+  if (
+    !targetCategory ||
+    (accessFilter && (targetCategory.isDeleted || targetCategory.isPublic === false))
+  ) {
+    throw new EntityNotFoundException("Category not accessible", 404);
+  }
+
+  const baseFilter = {
+    parentId: targetCategory.parentId,
+    ...(accessFilter || {}),
+  };
+
+  const page = await getCategoryPageIndexAsync(id, baseFilter, pageSize, keyword, isAdmin);
+
+  if (page === null) {
+    throw new EntityNotFoundException("Category not found in paginated results", 404);
+  }
+
+  res.sendCommonValue(200, "Page index calculated", { page });
+};
+
 module.exports = {
   createAsync,
   getAllAsync,
@@ -263,4 +294,5 @@ module.exports = {
   deleteByIdsAsync,
   updateByIdAsync,
   restoreByIdAsync,
+  getPageOfCategoryAsync,
 };

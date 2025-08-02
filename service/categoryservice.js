@@ -114,7 +114,7 @@ const getAllCategoriesForTreeAsync = async (isAdmin, accessFilter) => {
 
   const categories = await Category.findAll({
     where: whereClause,
-    order: [["createdAt", "DESC"]],
+    order: [["id"]],
     raw: true,
   });
 
@@ -248,6 +248,34 @@ const restoreCategoryByIdAsync = async (category, userId) => {
   return category;
 };
 
+const getCategoryPageIndexAsync = async (
+  targetId,
+  baseFilter,
+  pageSize = 10,
+  keyword = null,
+  isAdmin = false
+) => {
+  const whereClause = {
+    ...(isAdmin ? {} : { isDeleted: false, isPublic: true }),
+    ...(baseFilter || {}),
+    ...(keyword ? { name: { [Op.like]: `%${keyword}%` } } : {}),
+  };
+
+  const allIds = await Category.findAll({
+    where: whereClause,
+    order: [["createdAt", "DESC"]],
+    attributes: ["id"],
+    raw: true,
+  });
+
+  const index = allIds.findIndex(c => c.id === targetId);
+  if (index === -1) return null;
+
+  const page = Math.floor(index / pageSize) + 1;
+
+  return page;
+};
+
 module.exports = {
   createCategoryAsync,
   getAllCategoriesAsync,
@@ -258,4 +286,5 @@ module.exports = {
   softDeleteCategoriesByIdsAsync,
   updateCategoryByIdAsync,
   restoreCategoryByIdAsync,
+  getCategoryPageIndexAsync,
 };
