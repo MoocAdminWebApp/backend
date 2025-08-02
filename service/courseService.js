@@ -6,7 +6,7 @@ const {
   EntityNotFoundException,
 } = require("../common/commonError.js");
 
-// 创建课程
+
 const createCourse = async (data) => {
   const existing = await Course.findOne({ where: { courseName: data.courseName } });
   if (existing) {
@@ -21,7 +21,7 @@ const createCourse = async (data) => {
   };
 };
 
-// 获取所有课程（包含讲师和章节）
+
 const getAllCourses = async () => {
   try {
     const allCourses = await Course.findAll({
@@ -52,7 +52,6 @@ const getAllCourses = async () => {
 };
 
 
-// 获取分页课程
 const getCoursesByPage = async (filters = {}, fuzzyKeys = [], page = 1, pageSize = 10) => {
   let where = {};
 
@@ -89,8 +88,6 @@ const getCoursesByPage = async (filters = {}, fuzzyKeys = [], page = 1, pageSize
 };
 
 
-
-// 通过ID获取课程
 const getCourseById = async (id) => {
   const course = await Course.findByPk(id);
 
@@ -103,7 +100,7 @@ const getCourseById = async (id) => {
   };
 };
 
-// 更新课程
+
 const updateCourse = async (id, data, updaterId) => {
   const course = await Course.findByPk(id);
   if (!course) throw new EntityNotFoundException("Course with this id not found");
@@ -113,14 +110,9 @@ const updateCourse = async (id, data, updaterId) => {
     updatedBy: updaterId || course.updatedBy,
   });
 
-  return {
-    isSuccess: true,
-    message: "Course updated successfully",
-    data: course,
-  };
+  return course;
 };
 
-// 修改课程状态
 const updateCourseStatus = async (id, status) => {
   const course = await Course.findByPk(id);
   if (!course) throw new EntityNotFoundException("Course with this id not found");
@@ -135,7 +127,6 @@ const updateCourseStatus = async (id, status) => {
   };
 };
 
-// 删除课程
 const deleteCourse = async (id) => {
   const course = await Course.findByPk(id);
   if (!course) throw new EntityNotFoundException("Course with this id not found");

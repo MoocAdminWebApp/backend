@@ -12,7 +12,9 @@ const RoleMenu = db.RoleMenu;
 const RolePermission = db.RolePermission;
 const UserRole = db.UserRole;
 const Permission = db.Permission;
-const { convertDataToTree } = require("../common/convertDataToTree.js");
+const Role = db.Role;
+const { getPermissionAndRole } = require("../common/crossDBInfoBuilder.js");
+
 /**
  * Obtain a list of roles that the user has been assigned with
  */
@@ -63,12 +65,49 @@ const getMenusByUser = async userId => {
  * Function to get a full list of menus
  */
 const getMenus = async query => {
-  const page = Number(query.page) ? Number(query.page) : 1;
-  const pageSize = Number(query.pageSize) ? Number(query.pageSize) : 10;
-  // const { page = 1, pageSize = 10 } = query;
-  const menus = await Menu.findAndCountAll({
-    offset: (page - 1) * pageSize,
-    limit: pageSize,
+  // const page = Number(query.page) ? Number(query.page) : 1;
+  // const pageSize = Number(query.pageSize) ? Number(query.pageSize) : 10;
+  // // const { page = 1, pageSize = 10 } = query;
+  // const menus = await Menu.findAndCountAll({
+  //   offset: (page - 1) * pageSize,
+  //   limit: pageSize,
+  //   include: [
+  //     {
+  //       model: Permission,
+  //       as: "permissionInfo",
+  //       attributes: ["id", "permissionName"], // return id and permissionName for frontend readability
+  //     },
+  //   ],
+  // });
+  // if (!menus || menus.rows.length === 0) {
+  //   throw new EntityNotFoundException("No menus found");
+  // }
+  // const returnData = {
+  //   items: menus.rows,
+  //   total: menus.count,
+  // };
+  // return new SuccessResponse("Successfully retrieved menus.", returnData);
+  const dispMenusTypes = ["DIRECTORY", "MENU"];
+  const menus = await Menu.findAll({
+    where: { menuType: dispMenusTypes, status: "ACTIVE" },
+    order: [
+      // ["menuType", "ASC"],
+      ["parentId", "ASC"],
+      ["orderNum", "ASC"],
+    ],
+  });
+
+  if (!menus || menus.length === 0) {
+    throw new EntityNotFoundException("No menus found");
+  }
+  console.log(menus);
+  return new SuccessResponse("Successfully retrieved menus.", menus);
+};
+
+const getMenuTree = async query => {
+  const rp = await getPermissionAndRole();
+  console.log(rp);
+  const menus = await Menu.findAll({
     include: [
       {
         model: Permission,
@@ -77,12 +116,11 @@ const getMenus = async query => {
       },
     ],
   });
-  if (!menus || menus.rows.length === 0) {
+  if (!menus || menus.length === 0) {
     throw new EntityNotFoundException("No menus found");
   }
   const returnData = {
-    items: menus.rows,
-    total: menus.count,
+    items: menus,
   };
   return new SuccessResponse("Successfully retrieved menus.", returnData);
 };
@@ -259,4 +297,5 @@ module.exports = {
   deleteMenuById,
   createMenu,
   searchMenus,
+  getMenuTree,
 };
