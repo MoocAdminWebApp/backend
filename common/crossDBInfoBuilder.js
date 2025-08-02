@@ -16,6 +16,10 @@ const RolePermission = db.RolePermission;
 const Permission = db.Permission;
 const Role = db.Role;
 
+/**
+ * Returns a map of all the existing permissions and list of roles that have been assigned with corrsponding permission
+ * used to render frontend props
+ */
 const getPermissionAndRole = async () => {
   const permissions = await Permission.findAll({
     attributes: ["id", "permissionName"],
