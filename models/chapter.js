@@ -72,7 +72,6 @@ module.exports = (sequelize, DataTypes) => {
     },
     {
       tableName: "chapters",
-      underscored: true,
       timestamps: true,
     }
   );
@@ -81,6 +80,15 @@ module.exports = (sequelize, DataTypes) => {
     Chapter.belongsTo(models.Course, { foreignKey: "courseId", as: "course" });
 
     Chapter.hasMany(models.Media, { foreignKey: "chapterId", as: "mediaFiles" });
+    Chapter.belongsTo(models.User, {
+  foreignKey: "createdBy",
+  as: "creator",
+});
+
+Chapter.belongsTo(models.User, {
+  foreignKey: "updatedBy",
+  as: "updater",
+});
   };
 
   return Chapter;

@@ -1,104 +1,109 @@
 const express = require("express");
-const router = express.Router();
 const { body, param, query } = require("express-validator");
 const { commonValidate } = require("../middleware/expressValidator");
 const chapterController = require("../controller/chapterController");
+
+const router = express.Router();
+
+/**
+ * @swagger
+ * /api/chapters/course/{courseId}:
+ *   get:
+ *     summary: Get chapters by course ID
+ *     tags: [Chapters]
+ *     parameters:
+ *       - in: path
+ *         name: courseId
+ *         required: true
+ *         schema:
+ *           type: integer
+ *       - in: query
+ *         name: published
+ *         schema:
+ *           type: boolean
+ *     responses:
+ *       200:
+ *         description: List of course chapters
+ */
+router.get(
+  "/course/:courseId",
+  commonValidate([
+    param("courseId").isInt({ min: 1 }),
+    query("published").optional().isBoolean(),
+  ]),
+  chapterController.getChaptersByCourse
+);
+
+/**
+ * @swagger
+ * /api/chapters/page:
+ *   get:
+ *     summary: Paginated chapter list
+ *     tags: [Chapters]
+ *     parameters:
+ *       - in: query
+ *         name: page
+ *         schema:
+ *           type: integer
+ *       - in: query
+ *         name: pageSize
+ *         schema:
+ *           type: integer
+ *       - in: query
+ *         name: filters
+ *         schema:
+ *           type: string
+ *       - in: query
+ *         name: fuzzyKeys
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: Paginated chapters
+ */
+router.get(
+  "/page",
+  commonValidate([
+    query("page").optional().isInt({ min: 1 }),
+    query("pageSize").optional().isInt({ min: 1 }),
+    query("filters").optional().isString(),
+    query("fuzzyKeys").optional().isString(),
+  ]),
+  chapterController.getChapterByPage
+);
+
 
 /**
  * @swagger
  * tags:
  *   name: Chapters
- *   description: Chapter management APIs
- */
-
-/**
- * @swagger
- * components:
- *   schemas:
- *     Chapter:
- *       type: object
- *       required:
- *         - courseId
- *         - title
- *       properties:
- *         id:
- *           type: integer
- *           description: Chapter ID
- *         courseId:
- *           type: integer
- *           description: Course ID this chapter belongs to
- *         title:
- *           type: string
- *           maxLength: 255
- *           description: Chapter title
- *         description:
- *           type: string
- *           maxLength: 1000
- *           description: Chapter description
- *         orderIndex:
- *           type: integer
- *           description: Order index in the course
- *         isPublished:
- *           type: boolean
- *           description: Publication status
- *         content:
- *           type: string
- *           description: Chapter content
- *         videoUrl:
- *           type: string
- *           maxLength: 500
- *           description: Video URL
- *         duration:
- *           type: integer
- *           description: Duration in seconds
- *         createdBy:
- *           type: integer
- *           description: Creator user ID
- *         updatedBy:
- *           type: integer
- *           description: Last updater user ID
+ *   description: Chapter management
  */
 
 /**
  * @swagger
  * /api/chapters:
  *   get:
- *     summary: Get all chapters with optional course filter
+ *     summary: Get all chapters with optional filters
  *     tags: [Chapters]
  *     parameters:
  *       - in: query
  *         name: courseId
  *         schema:
  *           type: integer
- *         description: Filter by course ID
  *       - in: query
  *         name: published
  *         schema:
  *           type: boolean
- *         description: Filter by publication status
  *     responses:
  *       200:
  *         description: List of chapters
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 status:
- *                   type: integer
- *                   example: 200
- *                 message:
- *                   type: string
- *                   example: success
- *                 data:
- *                   type: array
- *                   items:
- *                     $ref: '#/components/schemas/Chapter'
  */
-router.get("/", 
+router.get(
+  "/",
   commonValidate([
-    query("courseId").optional().isInt({ min: 1 }).withMessage("CourseId must be a valid integer"),
-    query("published").optional().isBoolean().withMessage("Published must be a boolean")
+    query("courseId").optional().isInt({ min: 1 }),
+    query("published").optional().isBoolean(),
   ]),
   chapterController.getAllChapters
 );
@@ -107,7 +112,7 @@ router.get("/",
  * @swagger
  * /api/chapters/{id}:
  *   get:
- *     summary: Get a chapter by ID
+ *     summary: Get chapter by ID
  *     tags: [Chapters]
  *     parameters:
  *       - in: path
@@ -115,32 +120,16 @@ router.get("/",
  *         required: true
  *         schema:
  *           type: integer
- *         description: Chapter ID
  *     responses:
  *       200:
- *         description: Chapter data
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 status:
- *                   type: integer
- *                   example: 200
- *                 message:
- *                   type: string
- *                   example: success
- *                 data:
- *                   $ref: '#/components/schemas/Chapter'
- *       404:
- *         description: Chapter not found
+ *         description: Chapter detail
  */
-router.get("/:id",
-  commonValidate([
-    param("id").isInt({ min: 1 }).withMessage("ID must be a valid integer")
-  ]),
+router.get(
+  "/:id",
+  commonValidate([param("id").isInt({ min: 1 })]),
   chapterController.getChapterById
 );
+
 
 /**
  * @swagger
@@ -154,51 +143,31 @@ router.get("/:id",
  *         application/json:
  *           schema:
  *             type: object
- *             required:
- *               - courseId
- *               - title
- *               - createdBy
+ *             required: [courseId, title, createdBy]
  *             properties:
  *               courseId:
  *                 type: integer
- *                 example: 1
  *               title:
  *                 type: string
- *                 example: "Introduction to JavaScript"
- *               description:
- *                 type: string
- *                 example: "Basic concepts of JavaScript programming"
- *               orderIndex:
- *                 type: integer
- *                 example: 1
- *               content:
- *                 type: string
- *                 example: "This chapter covers..."
- *               videoUrl:
- *                 type: string
- *                 example: "https://example.com/video.mp4"
- *               duration:
- *                 type: integer
- *                 example: 3600
  *               createdBy:
  *                 type: integer
- *                 example: 1
  *     responses:
  *       201:
- *         description: Chapter created successfully
- *       400:
- *         description: Validation error
+ *         description: Chapter created
  */
-router.post("/",
+router.post(
+  "/",
   commonValidate([
-    body("courseId").isInt({ min: 1 }).withMessage("CourseId is required and must be a valid integer"),
-    body("title").notEmpty().trim().isLength({ max: 255 }).withMessage("Title is required and max 255 characters"),
-    body("description").optional().isLength({ max: 1000 }).withMessage("Description max 1000 characters"),
-    body("orderIndex").optional().isInt({ min: 0 }).withMessage("OrderIndex must be a non-negative integer"),
-    body("content").optional().isString().withMessage("Content must be a string"),
-    body("videoUrl").optional().isURL().isLength({ max: 500 }).withMessage("VideoUrl must be a valid URL with max 500 characters"),
-    body("duration").optional().isInt({ min: 0 }).withMessage("Duration must be a non-negative integer"),
-    body("createdBy").isInt({ min: 1 }).withMessage("CreatedBy is required and must be a valid integer")
+    body("courseId").isInt({ min: 1 }),
+    body("title").isString().notEmpty().isLength({ max: 255 }),
+    body("description").optional().isString().isLength({ max: 1000 }),
+    body("orderNum").optional().isInt({ min: 0 }),
+    body("chapterNumber").optional().isInt({ min: 1 }),
+    body("status").optional().isIn(["DRAFT", "PUBLISHED", "HIDDEN"]),
+    body("content").optional().isString(),
+    body("videoUrl").optional().isURL().isLength({ max: 500 }),
+    body("duration").optional().isInt({ min: 0 }),
+    body("createdBy").isInt({ min: 1 }),
   ]),
   chapterController.createChapter
 );
@@ -215,59 +184,22 @@ router.post("/",
  *         required: true
  *         schema:
  *           type: integer
- *         description: Chapter ID
  *     requestBody:
  *       required: true
  *       content:
  *         application/json:
  *           schema:
  *             type: object
- *             required:
- *               - updatedBy
- *             properties:
- *               title:
- *                 type: string
- *                 example: "Advanced JavaScript"
- *               description:
- *                 type: string
- *                 example: "Advanced concepts of JavaScript"
- *               orderIndex:
- *                 type: integer
- *                 example: 2
- *               isPublished:
- *                 type: boolean
- *                 example: true
- *               content:
- *                 type: string
- *                 example: "Updated content..."
- *               videoUrl:
- *                 type: string
- *                 example: "https://example.com/updated-video.mp4"
- *               duration:
- *                 type: integer
- *                 example: 4200
- *               updatedBy:
- *                 type: integer
- *                 example: 1
+ *             required: [updatedBy]
  *     responses:
  *       200:
- *         description: Chapter updated successfully
- *       404:
- *         description: Chapter not found
- *       400:
- *         description: Validation error
+ *         description: Chapter updated
  */
-router.put("/:id",
+router.put(
+  "/:id",
   commonValidate([
-    param("id").isInt({ min: 1 }).withMessage("ID must be a valid integer"),
-    body("title").optional().trim().isLength({ max: 255 }).withMessage("Title max 255 characters"),
-    body("description").optional().isLength({ max: 1000 }).withMessage("Description max 1000 characters"),
-    body("orderIndex").optional().isInt({ min: 0 }).withMessage("OrderIndex must be a non-negative integer"),
-    body("isPublished").optional().isBoolean().withMessage("IsPublished must be a boolean"),
-    body("content").optional().isString().withMessage("Content must be a string"),
-    body("videoUrl").optional().isURL().isLength({ max: 500 }).withMessage("VideoUrl must be a valid URL with max 500 characters"),
-    body("duration").optional().isInt({ min: 0 }).withMessage("Duration must be a non-negative integer"),
-    body("updatedBy").isInt({ min: 1 }).withMessage("UpdatedBy is required and must be a valid integer")
+    param("id").isInt({ min: 1 }),
+    body("updatedBy").isInt({ min: 1 }),
   ]),
   chapterController.updateChapter
 );
@@ -284,17 +216,13 @@ router.put("/:id",
  *         required: true
  *         schema:
  *           type: integer
- *         description: Chapter ID
  *     responses:
  *       200:
- *         description: Chapter deleted successfully
- *       404:
- *         description: Chapter not found
+ *         description: Chapter deleted
  */
-router.delete("/:id",
-  commonValidate([
-    param("id").isInt({ min: 1 }).withMessage("ID must be a valid integer")
-  ]),
+router.delete(
+  "/:id",
+  commonValidate([param("id").isInt({ min: 1 })]),
   chapterController.deleteChapter
 );
 
@@ -302,7 +230,7 @@ router.delete("/:id",
  * @swagger
  * /api/chapters/{id}/publish:
  *   patch:
- *     summary: Publish/Unpublish a chapter
+ *     summary: Publish or unpublish chapter
  *     tags: [Chapters]
  *     parameters:
  *       - in: path
@@ -310,66 +238,169 @@ router.delete("/:id",
  *         required: true
  *         schema:
  *           type: integer
- *         description: Chapter ID
  *     requestBody:
  *       required: true
  *       content:
  *         application/json:
  *           schema:
- *             type: object
- *             required:
- *               - isPublished
- *               - updatedBy
+ *             required: [isPublished, updatedBy]
  *             properties:
  *               isPublished:
  *                 type: boolean
- *                 example: true
  *               updatedBy:
  *                 type: integer
- *                 example: 1
  *     responses:
  *       200:
- *         description: Chapter publication status updated
- *       404:
- *         description: Chapter not found
+ *         description: Publish status updated
  */
-router.patch("/:id/publish",
+router.patch(
+  "/:id/publish",
   commonValidate([
-    param("id").isInt({ min: 1 }).withMessage("ID must be a valid integer"),
-    body("isPublished").isBoolean().withMessage("IsPublished is required and must be a boolean"),
-    body("updatedBy").isInt({ min: 1 }).withMessage("UpdatedBy is required and must be a valid integer")
+    param("id").isInt({ min: 1 }),
+    body("isPublished").isBoolean(),
+    body("updatedBy").isInt({ min: 1 }),
   ]),
   chapterController.publishChapter
 );
 
 /**
  * @swagger
- * /api/chapters/course/{courseId}:
+ * /api/chapters/reorder:
+ *   post:
+ *     summary: Reorder chapters
+ *     tags: [Chapters]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             required: [chapterOrders, updatedBy]
+ *             properties:
+ *               chapterOrders:
+ *                 type: array
+ *                 items:
+ *                   type: object
+ *                   properties:
+ *                     id:
+ *                       type: integer
+ *                     orderNum:
+ *                       type: integer
+ *               updatedBy:
+ *                 type: integer
+ *     responses:
+ *       200:
+ *         description: Reorder success
+ */
+router.post(
+  "/reorder",
+  commonValidate([
+    body("chapterOrders").isArray({ min: 1 }),
+    body("chapterOrders.*.id").isInt({ min: 1 }),
+    body("chapterOrders.*.orderNum").isInt({ min: 0 }),
+    body("updatedBy").isInt({ min: 1 }),
+  ]),
+  chapterController.reorderChapters
+);
+
+/**
+ * @swagger
+ * /api/chapters/stats:
  *   get:
- *     summary: Get all chapters for a specific course
+ *     summary: Get chapter statistics
+ *     tags: [Chapters]
+ *     parameters:
+ *       - in: query
+ *         name: courseId
+ *         schema:
+ *           type: integer
+ *     responses:
+ *       200:
+ *         description: Statistics data
+ */
+router.get(
+  "/stats",
+  commonValidate([query("courseId").optional().isInt({ min: 1 })]),
+  chapterController.getChapterStats
+);
+
+/**
+ * @swagger
+ * /api/chapters/{id}/duplicate:
+ *   post:
+ *     summary: Duplicate a chapter
  *     tags: [Chapters]
  *     parameters:
  *       - in: path
- *         name: courseId
+ *         name: id
  *         required: true
  *         schema:
  *           type: integer
- *         description: Course ID
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             required: [createdBy]
+ *             properties:
+ *               createdBy:
+ *                 type: integer
+ *               targetCourseId:
+ *                 type: integer
+ *     responses:
+ *       201:
+ *         description: Chapter duplicated
+ */
+router.post(
+  "/:id/duplicate",
+  commonValidate([
+    param("id").isInt({ min: 1 }),
+    body("createdBy").isInt({ min: 1 }),
+    body("targetCourseId").optional().isInt({ min: 1 }),
+  ]),
+  chapterController.duplicateChapter
+);
+
+/**
+ * @swagger
+ * /api/chapters/search:
+ *   get:
+ *     summary: Search chapters
+ *     tags: [Chapters]
+ *     parameters:
  *       - in: query
- *         name: published
+ *         name: keyword
+ *         schema:
+ *           type: string
+ *       - in: query
+ *         name: courseId
+ *         schema:
+ *           type: integer
+ *       - in: query
+ *         name: isPublished
  *         schema:
  *           type: boolean
- *         description: Filter by publication status
+ *       - in: query
+ *         name: page
+ *         schema:
+ *           type: integer
+ *       - in: query
+ *         name: pageSize
+ *         schema:
+ *           type: integer
  *     responses:
  *       200:
- *         description: List of chapters for the course
+ *         description: Search result
  */
-router.get("/course/:courseId",
+router.get(
+  "/search",
   commonValidate([
-    param("courseId").isInt({ min: 1 }).withMessage("CourseId must be a valid integer"),
-    query("published").optional().isBoolean().withMessage("Published must be a boolean")
+    query("keyword").optional().isString(),
+    query("courseId").optional().isInt({ min: 1 }),
+    query("isPublished").optional().isBoolean(),
+    query("page").optional().isInt({ min: 1 }),
+    query("pageSize").optional().isInt({ min: 1 }),
   ]),
-  chapterController.getChaptersByCourse
+  chapterController.searchChapters
 );
 
 module.exports = router;

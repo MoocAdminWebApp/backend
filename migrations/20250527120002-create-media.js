@@ -1,13 +1,12 @@
 "use strict";
 
-/** @type {import('sequelize-cli').Migration} */
 module.exports = {
-  async up(queryInterface, Sequelize) {
+  up: async (queryInterface, Sequelize) => {
     await queryInterface.createTable("media", {
       id: {
         type: Sequelize.INTEGER,
-        primaryKey: true,
         autoIncrement: true,
+        primaryKey: true,
         allowNull: false,
       },
       chapterId: {
@@ -17,6 +16,7 @@ module.exports = {
           model: "chapters",
           key: "id",
         },
+        onUpdate: "CASCADE",
         onDelete: "CASCADE",
       },
       fileName: {
@@ -43,6 +43,14 @@ module.exports = {
         type: Sequelize.ENUM("VIDEO", "DOCUMENT"),
         allowNull: false,
       },
+      resourceType: {
+        type: Sequelize.ENUM("COURSE", "CHAPTER", "SECTION"),
+        allowNull: false,
+      },
+      resourceId: {
+        type: Sequelize.INTEGER,
+        allowNull: false,
+      },
       duration: {
         type: Sequelize.INTEGER,
         allowNull: true,
@@ -54,22 +62,40 @@ module.exports = {
           model: "users",
           key: "id",
         },
+        onUpdate: "CASCADE",
+        onDelete: "SET NULL",
+      },
+      status: {
+        type: Sequelize.ENUM("UPLOADING", "PROCESSING", "READY", "ERROR"),
+        allowNull: false,
+        defaultValue: "UPLOADING",
+      },
+      thumbnail: {
+        type: Sequelize.STRING(500),
+        allowNull: true,
+      },
+      isProcessed: {
+        type: Sequelize.BOOLEAN,
+        allowNull: false,
+        defaultValue: false,
       },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE,
-        defaultValue: Sequelize.literal("CURRENT_TIMESTAMP"),
+        defaultValue: Sequelize.fn("NOW"),
       },
       updatedAt: {
-        allowNull: true,
+        allowNull: false,
         type: Sequelize.DATE,
-        defaultValue: Sequelize.literal("CURRENT_TIMESTAMP"),
+        defaultValue: Sequelize.fn("NOW"),
       },
     });
-    console.log("Table Media Created");
   },
 
-  async down(queryInterface, Sequelize) {
+  down: async (queryInterface, Sequelize) => {
     await queryInterface.dropTable("media");
+    await queryInterface.sequelize.query(`DROP TYPE IF EXISTS "enum_media_mediaType"`);
+    await queryInterface.sequelize.query(`DROP TYPE IF EXISTS "enum_media_resourceType"`);
+    await queryInterface.sequelize.query(`DROP TYPE IF EXISTS "enum_media_status"`);
   },
 };
