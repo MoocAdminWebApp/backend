@@ -133,7 +133,7 @@ router.get(
 
 /**
  * @swagger
- * /api/permissions/role/{id}:
+ * /api/permissions/role/{id}/permissions:
  *   get:
  *     summary: Get a permission by roleId
  *     tags: [Permissions]
