@@ -1,7 +1,6 @@
 const express = require("express");
 const router = express.Router();
 
-const { requireAuth } = require("../middleware/authentication");
 const { checkPermissionByRole, getCategoryAccessFilter } = require("../middleware/authorization");
 const { paginationValidator } = require("../middleware/pagination");
 const { commonValidate } = require("../middleware/expressValidator");
@@ -16,9 +15,10 @@ const {
   deleteByIdAsync,
   deleteByIdsAsync,
   updateByIdAsync,
+  restoreByIdAsync,
+  getTreeAsync,
+  getPageOfCategoryAsync,
 } = require("../controller/categoryController");
-
-router.use(requireAuth);
 
 /**
  * @swagger
@@ -194,6 +194,42 @@ router.get(
 
 /**
  * @swagger
+ * /api/categories/tree:
+ *   get:
+ *     summary: Retrieve all categories for building the tree view.
+ *     description: Returns a flat list of all categories. Admins receive all records; regular users only get categories that are public and not deleted.
+ *     tags:
+ *       - Category
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: Successfully retrieved list of all categories.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 isSuccess:
+ *                   type: boolean
+ *                 status:
+ *                   type: number
+ *                 message:
+ *                   type: string
+ *                 time:
+ *                   type: string
+ *                   format: date-time
+ *                 data:
+ *                   type: array
+ *                   items:
+ *                     $ref: '#/components/schemas/Category'
+ *       401:
+ *         description: Unauthorized – access token is missing or invalid.
+ */
+router.get("/tree", getCategoryAccessFilter, getTreeAsync);
+
+/**
+ * @swagger
  * /api/categories/root:
  *   get:
  *     summary: Get all top-level course categories
@@ -236,21 +272,13 @@ router.get(
  *                 data:
  *                   type: object
  *                   properties:
- *                     list:
+ *                     items:
  *                       type: array
  *                       items:
  *                         $ref: '#/components/schemas/Category'
- *                     pagination:
- *                       type: object
- *                       properties:
- *                         total:
- *                           type: integer
- *                         page:
- *                           type: integer
- *                         pageSize:
- *                           type: integer
- *                         totalPages:
- *                           type: integer
+ *                     total:
+ *                       type: integer
+ *                       example: 2
  *                 time:
  *                   type: string
  *                   format: date-time
@@ -361,21 +389,13 @@ router.get(
  *                 data:
  *                   type: object
  *                   properties:
- *                     list:
+ *                     items:
  *                       type: array
  *                       items:
  *                         $ref: '#/components/schemas/Category'
- *                     pagination:
- *                       type: object
- *                       properties:
- *                         total:
- *                           type: integer
- *                         page:
- *                           type: integer
- *                         pageSize:
- *                           type: integer
- *                         totalPages:
- *                           type: integer
+ *                     total:
+ *                       type: integer
+ *                       example: 3
  *                 time:
  *                   type: string
  *                   format: date-time
@@ -650,5 +670,113 @@ router.put(
   ]),
   updateByIdAsync
 );
+
+/**
+ * @swagger
+ * /api/categories/{id}/restore:
+ *   put:
+ *     summary: Restore a soft-deleted category
+ *     tags:
+ *       - Category
+ *     description: Restore a category that was previously soft-deleted (isDeleted = true). Only admins are allowed to perform this operation.
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *           minimum: 1
+ *         description: ID of the category to restore
+ *     responses:
+ *       200:
+ *         description: Category restored successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/CategoryResponse'
+ *       400:
+ *         description: Invalid request or category not deleted
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ErrorResponse'
+ *       401:
+ *         description: Unauthorized (no token or invalid token)
+ *       403:
+ *         description: Forbidden (only admin can restore categories)
+ *       404:
+ *         description: Category not found
+ */
+
+router.put(
+  "/:id/restore",
+  checkPermissionByRole("admin"),
+  commonValidate([param("id").exists().bail().isInt({ gt: 0 })]),
+  restoreByIdAsync
+);
+
+/**
+ * @swagger
+ * /api/categories/{id}/page:
+ *   get:
+ *     summary: Get the page number where the category with the given ID is located
+ *     tags:
+ *       - Category
+ *     description: >
+ *       Returns the 1-based page number where the specified category appears in the paginated list.
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: The ID of the category to locate
+ *       - in: query
+ *         name: pageSize
+ *         schema:
+ *           type: integer
+ *           default: 10
+ *         description: Number of items per page (used for page calculation)
+ *       - in: query
+ *         name: keyword
+ *         schema:
+ *           type: string
+ *         description: Optional keyword filter (same as /categories search)
+ *     responses:
+ *       200:
+ *         description: Page number located successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 isSuccess:
+ *                   type: boolean
+ *                   example: true
+ *                 status:
+ *                   type: integer
+ *                   example: 200
+ *                 message:
+ *                   type: string
+ *                   example: Page index calculated
+ *                 data:
+ *                   type: object
+ *                   properties:
+ *                     page:
+ *                       type: integer
+ *                       example: 2
+ *                 time:
+ *                   type: string
+ *                   format: date-time
+ *       404:
+ *         description: Category not found or not accessible
+ *       400:
+ *         $ref: '#/components/responses/BadRequest'
+ *       401:
+ *         $ref: '#/components/responses/Unauthorized'
+ */
+router.get("/:id/page", getCategoryAccessFilter, getPageOfCategoryAsync);
 
 module.exports = router;
