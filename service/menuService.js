@@ -16,6 +16,7 @@ const Role = db.Role;
 const { getPermissionAndRole } = require("../common/crossDBInfoBuilder.js");
 
 /**
+ * getUserRoleList(userId)
  * Obtain a list of roles that the user has been assigned with
  */
 const getUserRoleList = async userId => {
@@ -32,61 +33,10 @@ const getUserRoleList = async userId => {
 };
 
 /**
- * Construct a list of menus that accessible by the user
- */
-const getMenusByUser = async userId => {
-  const userRoles = await UserRole.findAll({
-    where: { userId: userId },
-    attr: ["roleId"],
-  });
-
-  if (!userRoles || userRoles.length === 0) {
-    return userRoles;
-  }
-
-  const rolePermissions = await RolePermission.findAll({
-    where: { roleId: userRoles },
-    attr: ["permissionId"],
-  });
-
-  const roleMenus = await RoleMenu.findAll({
-    where: { roleId: userRoles },
-    attr: ["menuId"],
-  });
-  const menuList = await Menu.findAll({
-    where: { permission: rolePermissions, id: roleMenus },
-  });
-
-  return menuList;
-};
-
-/**
  * getMenus()
- * Function to get a full list of menus
+ * Function to get a list of menus that can be displayed in the sidemenu
  */
 const getMenus = async query => {
-  // const page = Number(query.page) ? Number(query.page) : 1;
-  // const pageSize = Number(query.pageSize) ? Number(query.pageSize) : 10;
-  // // const { page = 1, pageSize = 10 } = query;
-  // const menus = await Menu.findAndCountAll({
-  //   offset: (page - 1) * pageSize,
-  //   limit: pageSize,
-  //   include: [
-  //     {
-  //       model: Permission,
-  //       as: "permissionInfo",
-  //       attributes: ["id", "permissionName"], // return id and permissionName for frontend readability
-  //     },
-  //   ],
-  // });
-  // if (!menus || menus.rows.length === 0) {
-  //   throw new EntityNotFoundException("No menus found");
-  // }
-  // const returnData = {
-  //   items: menus.rows,
-  //   total: menus.count,
-  // };
-  // return new SuccessResponse("Successfully retrieved menus.", returnData);
   const dispMenusTypes = ["DIRECTORY", "MENU"];
   const menus = await Menu.findAll({
     where: { menuType: dispMenusTypes, status: "ACTIVE" },
@@ -104,6 +54,10 @@ const getMenus = async query => {
   return new SuccessResponse("Successfully retrieved menus.", menus);
 };
 
+/**
+ * getMenuTree()
+ * Function to get a list of all the menus that will be used for frontend tree-structure rendering
+ */
 const getMenuTree = async query => {
   const rp = await getPermissionAndRole();
   console.log(rp);
@@ -137,6 +91,29 @@ const getMenuById = async id => {
   }
 
   return new SuccessResponse(`Successfully retrieve menu ${id}`, menu);
+};
+
+/**
+ * getMenuPermissionPrefixById(menuId)
+ * Get permission prefix (e.g., "user" from "user:view") by menuId
+ */
+const getMenuPermissionPrefixById = async menuId => {
+  const menu = await Menu.findByPk(menuId);
+  if (!menu) {
+    throw new EntityNotFoundException(`menu with id=${menuId} not found in the database`);
+  }
+  if (menu.permission) {
+    const permission = await Permission.findByPk(menu.permission);
+    if (!permission) {
+      throw new EntityNotFoundException(
+        `permission with id=${menu.permission} not found in the database`
+      );
+    }
+    const prefix = permission.permissionName.split(":")[0];
+    return new SuccessResponse(`Premission prefix obtained as ${prefix}`, prefix);
+  } else {
+    return new SuccessResponse("Premission prefix obtained as empty", "");
+  }
 };
 
 /**
@@ -298,4 +275,5 @@ module.exports = {
   createMenu,
   searchMenus,
   getMenuTree,
+  getMenuPermissionPrefixById,
 };

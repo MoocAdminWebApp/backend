@@ -157,6 +157,42 @@ router.get(
 
 /**
  * @openapi
+ * /api/menus/permissionprefix/{id}:
+ *   get:
+ *     tags: [Menus]
+ *     summary: get a menu's permission prefix by Id
+ *     parameters:
+ *      - name: id
+ *        in: path
+ *        description: The id of the menu to retrieve
+ *        required: true
+ *        schema:
+ *          type: integer
+ *     responses:
+ *      200:
+ *        description: Menu Retrieved Successfully
+ *      400:
+ *        description: Bad Request
+ *      403:
+ *        description: Unauthorized - Validation Failed
+ *      404:
+ *        description: Menu Not Found
+ *      500:
+ *        description: Internal Server Error
+ */
+router.get(
+  "/permissionprefix/:id",
+  commonValidate([
+    param("id")
+      .notEmpty()
+      .isInt({ allow_leading_zeroes: false, min: 1 })
+      .withMessage("Not a valid id"),
+  ]),
+  menuControllers.getMenuPermissionPrefixById
+);
+
+/**
+ * @openapi
  * /api/menus:
  *   post:
  *     tags: [Menus]

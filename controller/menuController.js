@@ -31,6 +31,16 @@ const getMenuById = async (req, res) => {
   }
 };
 
+const getMenuPermissionPrefixById = async (req, res) => {
+  console.log(req);
+  try {
+    const result = await menuService.getMenuPermissionPrefixById(req.params.id);
+    res.sendCommonValue(result.statusCode, result.message, result.data);
+  } catch (err) {
+    res.sendCommonValue(err.statusCode ? err.statusCode : 500, err.message);
+  }
+};
+
 const searchMenus = async (req, res) => {
   try {
     const result = await menuService.searchMenus(req.query);
@@ -80,4 +90,5 @@ module.exports = {
   deleteMenuById,
   createMenu,
   getMenuTree,
+  getMenuPermissionPrefixById,
 };
