@@ -7,6 +7,13 @@ const router = express.Router();
 
 /**
  * @swagger
+ * tags:
+ *   name: Chapters
+ *   description: Chapter management
+ */
+
+/**
+ * @swagger
  * /api/chapters/course/{courseId}:
  *   get:
  *     summary: Get chapters by course ID
@@ -17,10 +24,12 @@ const router = express.Router();
  *         required: true
  *         schema:
  *           type: integer
+ *           example: 1
  *       - in: query
  *         name: published
  *         schema:
  *           type: boolean
+ *           default: true
  *     responses:
  *       200:
  *         description: List of course chapters
@@ -45,18 +54,22 @@ router.get(
  *         name: page
  *         schema:
  *           type: integer
+ *           default: 1
  *       - in: query
  *         name: pageSize
  *         schema:
  *           type: integer
+ *           default: 10
  *       - in: query
  *         name: filters
  *         schema:
  *           type: string
+ *           default: "{}"
  *       - in: query
  *         name: fuzzyKeys
  *         schema:
  *           type: string
+ *           default: '["title","description"]'
  *     responses:
  *       200:
  *         description: Paginated chapters
@@ -72,14 +85,6 @@ router.get(
   chapterController.getChapterByPage
 );
 
-
-/**
- * @swagger
- * tags:
- *   name: Chapters
- *   description: Chapter management
- */
-
 /**
  * @swagger
  * /api/chapters:
@@ -91,10 +96,12 @@ router.get(
  *         name: courseId
  *         schema:
  *           type: integer
+ *           default: 1
  *       - in: query
  *         name: published
  *         schema:
  *           type: boolean
+ *           default: true
  *     responses:
  *       200:
  *         description: List of chapters
@@ -120,6 +127,7 @@ router.get(
  *         required: true
  *         schema:
  *           type: integer
+ *           example: 1
  *     responses:
  *       200:
  *         description: Chapter detail
@@ -129,7 +137,6 @@ router.get(
   commonValidate([param("id").isInt({ min: 1 })]),
   chapterController.getChapterById
 );
-
 
 /**
  * @swagger
@@ -147,10 +154,36 @@ router.get(
  *             properties:
  *               courseId:
  *                 type: integer
+ *                 default: 1
  *               title:
  *                 type: string
+ *                 default: "New Chapter Title"
  *               createdBy:
  *                 type: integer
+ *                 default: 1
+ *               description:
+ *                 type: string
+ *                 default: "章节描述示例"
+ *               orderNum:
+ *                 type: integer
+ *                 default: 0
+ *               chapterNumber:
+ *                 type: integer
+ *                 default: 1
+ *               status:
+ *                 type: string
+ *                 enum: [DRAFT, PUBLISHED, HIDDEN]
+ *                 default: DRAFT
+ *               content:
+ *                 type: string
+ *                 default: "章节内容示例"
+ *               videoUrl:
+ *                 type: string
+ *                 format: url
+ *                 default: "https://example.com/video.mp4"
+ *               duration:
+ *                 type: integer
+ *                 default: 0
  *     responses:
  *       201:
  *         description: Chapter created
@@ -184,6 +217,7 @@ router.post(
  *         required: true
  *         schema:
  *           type: integer
+ *           example: 1
  *     requestBody:
  *       required: true
  *       content:
@@ -191,6 +225,36 @@ router.post(
  *           schema:
  *             type: object
  *             required: [updatedBy]
+ *             properties:
+ *               updatedBy:
+ *                 type: integer
+ *                 default: 1
+ *               title:
+ *                 type: string
+ *                 default: "Updated Chapter Title"
+ *               description:
+ *                 type: string
+ *                 default: "更新后的章节描述"
+ *               orderNum:
+ *                 type: integer
+ *                 default: 1
+ *               chapterNumber:
+ *                 type: integer
+ *                 default: 1
+ *               status:
+ *                 type: string
+ *                 enum: [DRAFT, PUBLISHED, HIDDEN]
+ *                 default: PUBLISHED
+ *               content:
+ *                 type: string
+ *                 default: "更新后的章节内容"
+ *               videoUrl:
+ *                 type: string
+ *                 format: url
+ *                 default: "https://example.com/updated-video.mp4"
+ *               duration:
+ *                 type: integer
+ *                 default: 120
  *     responses:
  *       200:
  *         description: Chapter updated
@@ -216,6 +280,7 @@ router.put(
  *         required: true
  *         schema:
  *           type: integer
+ *           example: 1
  *     responses:
  *       200:
  *         description: Chapter deleted
@@ -238,6 +303,7 @@ router.delete(
  *         required: true
  *         schema:
  *           type: integer
+ *           example: 1
  *     requestBody:
  *       required: true
  *       content:
@@ -247,8 +313,10 @@ router.delete(
  *             properties:
  *               isPublished:
  *                 type: boolean
+ *                 default: true
  *               updatedBy:
  *                 type: integer
+ *                 default: 1
  *     responses:
  *       200:
  *         description: Publish status updated
@@ -283,10 +351,13 @@ router.patch(
  *                   properties:
  *                     id:
  *                       type: integer
+ *                       example: 1
  *                     orderNum:
  *                       type: integer
+ *                       example: 2
  *               updatedBy:
  *                 type: integer
+ *                 default: 1
  *     responses:
  *       200:
  *         description: Reorder success
@@ -313,6 +384,7 @@ router.post(
  *         name: courseId
  *         schema:
  *           type: integer
+ *           default: 1
  *     responses:
  *       200:
  *         description: Statistics data
@@ -335,6 +407,7 @@ router.get(
  *         required: true
  *         schema:
  *           type: integer
+ *           example: 1
  *     requestBody:
  *       required: true
  *       content:
@@ -344,8 +417,10 @@ router.get(
  *             properties:
  *               createdBy:
  *                 type: integer
+ *                 default: 1
  *               targetCourseId:
  *                 type: integer
+ *                 default: 1
  *     responses:
  *       201:
  *         description: Chapter duplicated
@@ -371,22 +446,27 @@ router.post(
  *         name: keyword
  *         schema:
  *           type: string
+ *           default: "example keyword"
  *       - in: query
  *         name: courseId
  *         schema:
  *           type: integer
+ *           default: 1
  *       - in: query
  *         name: isPublished
  *         schema:
  *           type: boolean
+ *           default: true
  *       - in: query
  *         name: page
  *         schema:
  *           type: integer
+ *           default: 1
  *       - in: query
  *         name: pageSize
  *         schema:
  *           type: integer
+ *           default: 10
  *     responses:
  *       200:
  *         description: Search result

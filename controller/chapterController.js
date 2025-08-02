@@ -62,7 +62,7 @@ const getChapterByPage = async (req, res, next) => {
     let fuzzyKeys = req.query.fuzzyKeys || [];
     if (typeof fuzzyKeys === 'string') fuzzyKeys = fuzzyKeys.split(',');
 
-    const result = await chapterService.getChapterByPage(filters, fuzzyKeys, page, pageSize);
+    const result = await chapterService.getChaptersByPage(filters, fuzzyKeys, page, pageSize);
 
     res.sendCommonValue(200, "Success", result);
   } catch (error) {

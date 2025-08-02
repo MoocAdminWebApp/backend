@@ -6,6 +6,54 @@ const {
   EntityNotFoundException,
 } = require("../common/commonError.js");
 
+const getChaptersByPage = async (filters = {}, fuzzyKeys = [], page = 1, pageSize = 10) => {
+  let where = {};
+
+  // 处理精确过滤字段（除 filter 以外）
+  for (const key in filters) {
+    if (key !== "filter" && filters[key] !== undefined && filters[key] !== null) {
+      where[key] = filters[key];
+    }
+  }
+
+  // 处理模糊搜索 filter
+  if (fuzzyKeys.length > 0 && filters.filter && filters.filter.trim() !== "") {
+    where[Op.or] = fuzzyKeys.map(key => ({
+      [key]: { [Op.like]: `%${filters.filter.trim()}%` }
+    }));
+  }
+
+  const result = await paginateModelAsync(Chapter, {
+    filters: where,
+    fuzzyKeys,
+    page,
+    pageSize,
+    orderBy: "orderNum", // 按章节排序字段排序，跟模型一致
+    orderDir: "ASC",
+    include: [
+      {
+        model: Course,
+        as: "course",
+        attributes: ["id", "courseName", "courseDescription"],
+      },
+      {
+        model: Media,
+        as: "mediaFiles",
+        attributes: ["id", "fileName", "originalName", "mediaType", "fileSize"],
+      },
+      {
+        model: User,
+        as: "creator",
+        attributes: ["id", "firstName", "lastName"],
+      },
+    ],
+  });
+
+  // 返回分页数据对象，包括 data、total 等
+  return result.data;
+};
+
+
 // 获取所有章节，带过滤条件（支持分页可用 paginateModelAsync）
 const getAllChapters = async (filters = {}, fuzzyKeys = [], page = 1, pageSize = 10) => {
   try {
@@ -43,7 +91,7 @@ const getAllChapters = async (filters = {}, fuzzyKeys = [], page = 1, pageSize =
         {
           model: User,
           as: "creator",
-          attributes: ["id", "firstName", "lastName", "email"],
+          attributes: ["id", "firstName", "lastName"],
           foreignKey: "createdBy"
         }
       ],
@@ -340,4 +388,5 @@ module.exports = {
   reorderChapters,
   getChapterStats,
   duplicateChapter,
+  getChaptersByPage
 };
