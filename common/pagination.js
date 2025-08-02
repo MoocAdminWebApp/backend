@@ -1,6 +1,22 @@
 const { Op } = require("sequelize");
 
 /**
+ * Parse pagination parameters from query.
+ * Defaults: page = 1, pageSize = 10
+ * Returns offset and limit for database queries, along with original values.
+ */
+const parsePagination = (query = {}) => {
+  const page = parseInt(query.page) || 1;
+  const pageSize = parseInt(query.pageSize) || 10;
+  return {
+    page,
+    pageSize,
+    offset: (page - 1) * pageSize,
+    limit: pageSize,
+  };
+};
+
+/**
  * Generic pagination query function with support for mixed fuzzy and exact filters.
  * @param {Model} model Sequelize model (e.g. User, Profile)
  * @param {Object} options Query options
@@ -72,5 +88,6 @@ const paginateModelAsync = async (
 };
 
 module.exports = {
+  parsePagination,
   paginateModelAsync,
 };

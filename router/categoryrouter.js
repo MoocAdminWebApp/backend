@@ -15,6 +15,8 @@ const {
   deleteByIdAsync,
   deleteByIdsAsync,
   updateByIdAsync,
+  restoreByIdAsync,
+  getTreeAsync,
 } = require("../controller/categoryController");
 
 /**
@@ -188,6 +190,42 @@ router.get(
   ]),
   getAllAsync
 );
+
+/**
+ * @swagger
+ * /api/categories/tree:
+ *   get:
+ *     summary: Retrieve all categories for building the tree view.
+ *     description: Returns a flat list of all categories. Admins receive all records; regular users only get categories that are public and not deleted.
+ *     tags:
+ *       - Category
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: Successfully retrieved list of all categories.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 isSuccess:
+ *                   type: boolean
+ *                 status:
+ *                   type: number
+ *                 message:
+ *                   type: string
+ *                 time:
+ *                   type: string
+ *                   format: date-time
+ *                 data:
+ *                   type: array
+ *                   items:
+ *                     $ref: '#/components/schemas/Category'
+ *       401:
+ *         description: Unauthorized – access token is missing or invalid.
+ */
+router.get("/tree", getCategoryAccessFilter, getTreeAsync);
 
 /**
  * @swagger
@@ -630,6 +668,52 @@ router.put(
     body("isPublic").optional().isBoolean(),
   ]),
   updateByIdAsync
+);
+
+/**
+ * @swagger
+ * /api/categories/{id}/restore:
+ *   put:
+ *     summary: Restore a soft-deleted category
+ *     tags:
+ *       - Category
+ *     description: Restore a category that was previously soft-deleted (isDeleted = true). Only admins are allowed to perform this operation.
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *           minimum: 1
+ *         description: ID of the category to restore
+ *     responses:
+ *       200:
+ *         description: Category restored successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/CategoryResponse'
+ *       400:
+ *         description: Invalid request or category not deleted
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ErrorResponse'
+ *       401:
+ *         description: Unauthorized (no token or invalid token)
+ *       403:
+ *         description: Forbidden (only admin can restore categories)
+ *       404:
+ *         description: Category not found
+ */
+
+router.put(
+  "/:id/restore",
+  checkPermissionByRole("admin"),
+  commonValidate([param("id").exists().bail().isInt({ gt: 0 })]),
+  restoreByIdAsync
 );
 
 module.exports = router;
