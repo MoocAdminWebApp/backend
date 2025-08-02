@@ -1,6 +1,7 @@
 const db = require("../models");
 const User = db.User;
 const Role = db.Role;
+const Profile =db.Profile;
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const { EntityNotFoundException } = require("../common/commonError");
@@ -22,14 +23,19 @@ const checkEmailExists = async email => {
     throw new EntityNotFoundException("User not exists");
   }
   /*get user with roles*/
-  const userWithRoles = await User.findByPk(user.id, {
-    include: {
+  const userWithRolesAndProfile = await User.findByPk(user.id, {
+    include:[ {
       model: Role,
       as: "roles",
       through: { attributes: [] },
+      attributes: ["roleName"]
     },
+    { model: Profile, as: "profile",
+        attributes: ["id","phoneNumber", "gender", "birthdate", "streetAddress"], },
+    ]
   });
-  return userWithRoles;
+
+  return userWithRolesAndProfile;
 };
 
 /**
@@ -45,11 +51,16 @@ const login = async (email, password) => {
   }
   const token = jwt.sign(
     {
-      id: user.id,
+      userId: user.id,
+      profileId: user.profile.id,
       firstName: user.firstName,
       lastName: user.lastName,
       email: user.email,
       roles: user.roles,
+      phone: user.profile.phoneNumber,
+      address: user.profile.streetAddress,
+      gender: user.profile.gender,
+      birthdate:user.profile.birthdate
     },
     jwtConfig.secret,
     {
