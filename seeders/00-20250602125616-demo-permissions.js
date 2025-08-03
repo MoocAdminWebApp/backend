@@ -379,6 +379,48 @@ module.exports = {
           createdAt: new Date(),
           updatedAt: new Date(),
         },
+        {
+          id: 53,
+          permissionName: "dummy:create",
+          description: "Dummy page create button permission",
+          createdAt: new Date(),
+          updatedAt: new Date(),
+        },
+        {
+          id: 54,
+          permissionName: "dummy:view",
+          description: "Dummy page view button permission",
+          createdAt: new Date(),
+          updatedAt: new Date(),
+        },
+        {
+          id: 55,
+          permissionName: "dummy:viewall",
+          description: "Dummy page viewall permission",
+          createdAt: new Date(),
+          updatedAt: new Date(),
+        },
+        {
+          id: 56,
+          permissionName: "dummy:update",
+          description: "Dummy page update button permission",
+          createdAt: new Date(),
+          updatedAt: new Date(),
+        },
+        {
+          id: 57,
+          permissionName: "dummy:delete",
+          description: "Dummy page delete button permission",
+          createdAt: new Date(),
+          updatedAt: new Date(),
+        },
+        {
+          id: 58,
+          permissionName: "dummy:assign",
+          description: "Dummy page assign button permission",
+          createdAt: new Date(),
+          updatedAt: new Date(),
+        },
       ],
       {}
     );
