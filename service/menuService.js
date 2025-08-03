@@ -33,6 +33,27 @@ const getUserRoleList = async userId => {
 };
 
 /**
+ * getMenuRoute()
+ * Function to get a list of menus' corresponding route
+ */
+const getMenuRoute = async query => {
+  const menus = await Menu.findAll({
+    where: {
+      route: {
+        [Op.ne]: "", // Finds records where 'route' is not an empty string
+      },
+    },
+    attributes: ["id", "route"],
+  });
+
+  if (!menus || menus.length === 0) {
+    throw new EntityNotFoundException("No menus found");
+  }
+  console.log(menus);
+  return new SuccessResponse("Successfully retrieved menus-route mapping.", menus);
+};
+
+/**
  * getMenus()
  * Function to get a list of menus that can be displayed in the sidemenu
  */
@@ -269,4 +290,5 @@ module.exports = {
   searchMenus,
   getMenuTree,
   getMenuPermissionPrefixById,
+  getMenuRoute,
 };

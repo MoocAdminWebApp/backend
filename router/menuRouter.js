@@ -24,6 +24,22 @@ router.get("/", menuControllers.getMenus);
 
 /**
  * @openapi
+ * /api/menus/route:
+ *   get:
+ *     tags: [Menus]
+ *     summary: get a list of menu id and its corrsponding route
+ *     responses:
+ *      200:
+ *        description: Fetched Successfully
+ *      404:
+ *        description: Not Found
+ *      500:
+ *        description: Server Error
+ */
+router.get("/route", menuControllers.getMenuRoute);
+
+/**
+ * @openapi
  * /api/menus/tree:
  *   get:
  *     tags: [Menus]
