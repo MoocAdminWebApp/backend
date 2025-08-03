@@ -164,11 +164,8 @@ const createChapter = async (chapterData) => {
 
     const createdChapter = await getChapterById(newChapter.id);
 
-    return {
-      isSuccess: true,
-      message: "Chapter created successfully",
-      data: createdChapter.data,
-    };
+    return createdChapter;
+
   } catch (error) {
     console.error("Error in createChapter:", error);
     return {
@@ -189,11 +186,7 @@ const updateChapter = async (id, updateData) => {
 
     const updatedChapter = await getChapterById(id);
 
-    return {
-      isSuccess: true,
-      message: "Chapter updated successfully",
-      data: updatedChapter.data,
-    };
+    return updatedChapter;
   } catch (error) {
     console.error("Error in updateChapter:", error);
     return {
