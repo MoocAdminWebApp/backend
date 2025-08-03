@@ -368,14 +368,14 @@ module.exports = {
         {
           id: 51,
           permissionName: "user:assign",
-          description: "Permission to assign user",
+          description: "Permission to assign role to user",
           createdAt: new Date(),
           updatedAt: new Date(),
         },
         {
           id: 52,
-          permissionName: "role:assign",
-          description: "Permission to assign role",
+          permissionName: "permission:assign",
+          description: "Permission to grant permission to role",
           createdAt: new Date(),
           updatedAt: new Date(),
         },
