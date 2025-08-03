@@ -3,9 +3,6 @@ const { getCurrentUser } = require("../common/getCurrentUser");
 
 const createCourse = async (req, res) => {
   try {
-    // 如果需要创建人信息，可以用 getCurrentUser 获取，比如：
-    // const creatorId = getCurrentUser(req).userId;
-    // 传给 service 方法
     const course = await courseService.createCourse(req.body);
     res.sendCommonValue(201, "Course created", course);
   } catch (err) {
@@ -16,7 +13,7 @@ const createCourse = async (req, res) => {
 const getAllCourses = async (req, res) => {
   try {
     const courses = await courseService.getAllCourses();
-    res.sendCommonValue(200, "Courses retrieved", courses);
+    res.sendCommonValue(200, "Courses retrieved", courses.data);
   } catch (err) {
     res.sendCommonValue(500, err.message, null);
   }
@@ -34,7 +31,6 @@ const getCourseById = async (req, res) => {
   }
 };
 
-// 支持分页和模糊查询的列表接口
 const getCoursesByPage = async (req, res) => {
   const page = parseInt(req.query.page) || 1;
   const pageSize = parseInt(req.query.pageSize) || 10;
