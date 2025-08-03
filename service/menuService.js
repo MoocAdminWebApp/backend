@@ -59,20 +59,13 @@ const getMenus = async query => {
  * Function to get a list of all the menus that will be used for frontend tree-structure rendering
  */
 const getMenuTree = async query => {
-  const rp = await getPermissionAndRole();
-  console.log(rp);
   const menus = await Menu.findAll({
-    include: [
-      {
-        model: Permission,
-        as: "permissionInfo",
-        attributes: ["id", "permissionName"], // return id and permissionName for frontend readability
-      },
-    ],
+    include: {
+      model: Permission,
+      as: "permissionInfo",
+      attributes: ["permissionName"],
+    },
   });
-  if (!menus || menus.length === 0) {
-    throw new EntityNotFoundException("No menus found");
-  }
   const returnData = {
     items: menus,
   };

@@ -14,7 +14,7 @@ const updatePermission = async (req, res, next) => {
     const permission = await permissionService.updatePermission(req.params.id, req.body);
     res.sendCommonValue(200, "Permission updated", permission);
   } catch (err) {
-     next(err);
+    next(err);
   }
 };
 
@@ -32,7 +32,7 @@ const getAllPermissions = async (req, res, next) => {
     const permissions = await permissionService.getAllPermissionsAsync();
     res.json(permissions);
   } catch (err) {
-     next(err);
+    next(err);
   }
 };
 
@@ -72,8 +72,23 @@ const getPermissionsByPage = async (req, res) => {
     fuzzyKeys = fuzzyKeys.split(",");
   }
 
-  const result = await permissionService.getPermissionsByPageAsync(filters, fuzzyKeys, page, pageSize);
+  const result = await permissionService.getPermissionsByPageAsync(
+    filters,
+    fuzzyKeys,
+    page,
+    pageSize
+  );
   res.sendCommonValue(200, result.message, result.data);
+};
+
+const getPermissionByUserId = async (req, res) => {
+  console.log(req);
+  try {
+    const result = await permissionService.getPermissionByUserId(req.params.id);
+    res.sendCommonValue(result.statusCode, result.message, result.data);
+  } catch (err) {
+    res.sendCommonValue(err.statusCode ? err.statusCode : 500, err.message);
+  }
 };
 
 module.exports = {
@@ -84,4 +99,5 @@ module.exports = {
   getPermissionById,
   getPermissionsByRole,
   getPermissionsByPage,
+  getPermissionByUserId,
 };
