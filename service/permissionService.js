@@ -1,6 +1,7 @@
-const { Permission, Role } = require("../models");
+const { Permission, Role, RolePermission, UserRole, User } = require("../models");
 const { paginateModelAsync } = require("../common/pagination");
 const { EntityAlreadyExistsException, EntityNotFoundException } = require("../common//commonError");
+const { SuccessResponse } = require("../common/response");
 const { Op } = require("sequelize");
 
 const createPermission = async data => {
@@ -38,7 +39,9 @@ const updatePermission = async (permitId, data) => {
   const existing = await Permission.findOne({
     where: {
       permissionName: data.permissionName,
-      id: { [Op.ne]: permitId },
+      id: {
+        [Op.ne]: permitId,
+      },
     },
   });
 
@@ -91,17 +94,64 @@ const getPermissionsByRole = async roleId => {
 
   if (!role) return [];
   const rolePermissions = {
-    "permissions": role.permissions.map(p => ({
-    permissionId: p.id,
-    permissionName: p.permissionName,
-  }))
-};
+    permissions: role.permissions.map(p => ({
+      permissionId: p.id,
+      permissionName: p.permissionName,
+    })),
+  };
   // return rolePermissions;
-    return { isSuccess: true, message: "Get permissions by role id successful", data: rolePermissions };
-
+  return {
+    isSuccess: true,
+    message: "Get permissions by role id successful",
+    data: rolePermissions,
+  };
 };
 
-const { User } = require('../models');
+/**
+ * getPermissionByUserId(userId)
+ * function to return a list of user's permissions that has been granted to user's role
+ * @param {number} userId
+ */
+const getPermissionByUserId = async userId => {
+  // Check whether the user exists
+  const user = await User.findByPk(userId);
+  if (!user) {
+    throw new EntityNotFoundException(`User with id ${userId} doesn't exist`);
+  }
+
+  // Check the role(s) that the user has been assigned with
+  // TODO: check whether the user can have more than one role
+  const userRoles = await UserRole.findAll({
+    where: { userId: userId },
+  });
+  if (userRoles.length < 1) {
+    throw new EntityNotFoundException(`User with id ${userId} hasn't been granted with any role`);
+  }
+  const roleIds = userRoles.map(r => r.roleId);
+
+  // Check the unique permission(s) that has been granted to the role(s) that user has been assign with
+  const rolePermissions = await RolePermission.findAll({
+    where: { roleId: roleIds },
+  });
+  if (rolePermissions.length < 1) {
+    throw new EntityNotFoundException(
+      `User ${userId} has been garnted with following role(s): [${roleIds.join(", ")}], but no permission has been granted to any of these roles.`
+    );
+  }
+  const permissionIds = [...new Set(rolePermissions.map(rp => rp.permissionId))];
+
+  // Retrieve the permission(s) detail
+  const permissionList = await Permission.findAll({
+    where: { id: permissionIds },
+    attributes: ["id", "permissionName"],
+  });
+
+  return new SuccessResponse(
+    `Successfully retrieved ${permissionList.length} permission(s) for user ${userId}.`,
+    permissionList
+  );
+};
+
 const getPermissionsByPageAsync = async (filters = {}, fuzzyKeys = [], page, pageSize) => {
   return await paginateModelAsync(Permission, {
     filters,
@@ -109,9 +159,15 @@ const getPermissionsByPageAsync = async (filters = {}, fuzzyKeys = [], page, pag
     page,
     pageSize,
     include: [
-      { model: User, as: "creator", attributes: ['id', 'firstName', 'lastName'],
+      {
+        model: User,
+        as: "creator",
+        attributes: ["id", "firstName", "lastName"],
       },
-      { model: User, as: "updater", attributes: ['id', 'firstName', 'lastName'],
+      {
+        model: User,
+        as: "updater",
+        attributes: ["id", "firstName", "lastName"],
       },
     ],
     orderBy: "id",
@@ -127,4 +183,5 @@ module.exports = {
   getPermissionById,
   getPermissionsByRole,
   getPermissionsByPageAsync,
+  getPermissionByUserId,
 };

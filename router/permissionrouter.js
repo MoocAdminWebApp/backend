@@ -32,6 +32,43 @@ const { body, param, query } = require("express-validator");
 router.get("/", permissionController.getAllPermissions);
 
 /**
+ * @openapi
+ * /api/permissions/user/{id}:
+ *   get:
+ *     tags: [Permissions]
+ *     summary: get a list of permissions that has been granted to the user's role(s)
+ *     parameters:
+ *      - name: id
+ *        in: path
+ *        description: The id of the user
+ *        required: true
+ *        schema:
+ *          type: integer
+ *     responses:
+ *      200:
+ *        description: Permissions Retrieved Successfully
+ *      400:
+ *        description: Bad Request
+ *      403:
+ *        description: Unauthorized - Validation Failed
+ *      404:
+ *        description: Menu Not Found
+ *      500:
+ *        description: Internal Server Error
+ */
+
+router.get(
+  "/user/:id",
+  commonValidate([
+    param("id")
+      .notEmpty()
+      .isInt({ allow_leading_zeroes: false, min: 1 })
+      .withMessage("Not a valid id"),
+  ]),
+  permissionController.getPermissionByUserId
+);
+
+/**
  * @swagger
  * /api/permissions/page:
  *   get:
@@ -155,8 +192,6 @@ router.get(
  *         description: Permission not found
  */
 router.get("/role/:id/permissions", permissionController.getPermissionsByRole);
-
-
 
 /**
  * @swagger
