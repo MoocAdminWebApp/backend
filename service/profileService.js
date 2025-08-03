@@ -115,6 +115,20 @@ const deleteProfileAsync = async id => {
   };
 };
 
+const updateProfileAvatarAsync = async (userId, avatarUrl) => {
+  const profile = await Profile.findOne({ where: { userId } });
+  if (!profile) throw new EntityNotFoundException("Profile not found for user");
+
+  // just update the avatar url field
+  await profile.update({ avatar: avatarUrl });
+
+  return {
+    isSuccess: true,
+    message: "Avatar uploaded and profile updated",
+    data: { avatar: avatarUrl },
+  };
+};
+
 module.exports = {
   createProfileAsync,
   getAllProfilesAsync,
@@ -123,4 +137,5 @@ module.exports = {
   getProfilesByPageAsync,
   updateProfileAsync,
   deleteProfileAsync,
+  updateProfileAvatarAsync,
 };

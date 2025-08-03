@@ -53,8 +53,31 @@ const getProfilesByPage = async (req, res) => {
 // Update profile
 const updateProfile = async (req, res) => {
   const updaterId = getCurrentUser(req).userId;
+  console.log("User ID:", updaterId);
   const result = await profileService.updateProfileAsync(req.params.id, req.body, updaterId);
   res.sendCommonValue(200, result.message, result.data);
+};
+
+// Upload avatar image and update profile
+const uploadProfileAvatar = async (req, res) => {
+  try {
+    const userId = getCurrentUser(req).userId;
+    const file = req.file;
+
+    if (!file) {
+      return res.sendCommonValue(400, "No file uploaded");
+    }
+
+    // get the path of the uploaded file,the file is saved in the uploads/avatars directory by multer
+    const avatarUrl = `/uploads/avatars/${file.filename}`;
+
+    // just update profile with avatar path
+    const result = await profileService.updateProfileAvatarAsync(userId, avatarUrl);
+    res.sendCommonValue(200, result.message, result.data);
+  } catch (error) {
+    console.error("Upload avatar error:", error);
+    res.sendCommonValue(500, error.message);
+  }
 };
 
 // Delete profile
@@ -70,5 +93,6 @@ module.exports = {
   getProfileById,
   getProfilesByPage,
   updateProfile,
+  uploadProfileAvatar,
   deleteProfile,
 };

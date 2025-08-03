@@ -3,6 +3,7 @@ const router = express.Router();
 const { body, param, query } = require("express-validator");
 const profileController = require("../controller/profileController");
 const { commonValidate } = require("../middleware/expressValidator");
+const upload = require("../middleware/uploadAvatar");
 
 /**
  * @openapi
@@ -289,6 +290,38 @@ router.put(
     body("bio").optional().isString(),
   ]),
   profileController.updateProfile
+);
+
+/**
+ * @openapi
+ * /api/profiles/upload-avatar:
+ *   post:
+ *     summary: Upload profile avatar
+ *     tags: [Profiles]
+ *     security:
+ *       - BearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         multipart/form-data:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               avatar:
+ *                 type: string
+ *                 format: binary
+ *     responses:
+ *       200:
+ *         description: Avatar uploaded successfully
+ *       400:
+ *         description: No file uploaded
+ *       500:
+ *         description: Upload failed
+ */
+router.post(
+  "/upload-avatar",
+  upload.single("avatar"), // expect a single file upload with the field name "avatar"
+  profileController.uploadProfileAvatar
 );
 
 /**
