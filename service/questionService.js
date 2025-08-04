@@ -25,6 +25,7 @@ const getAllQuestions = async (query) => {
     ];
   }
   const { count, rows } = await Question.findAndCountAll({
+    distinct: true,
     where,
     limit: parseInt(limit),
     offset: parseInt(offset),
