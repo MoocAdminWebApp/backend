@@ -106,7 +106,7 @@ app.use("/api", authRouter);
 
 //config questionRouter
 const questionRouter = require("./router/questionRouter");
-app.use("/api/questions", authorizeRole("admin", "teacher"), questionRouter);
+app.use("/api/questions", authorizeRole(["admin", "teacher"]), questionRouter);
 
 //config optionRouter
 const optionRouter = require("./router/optionRouter");
