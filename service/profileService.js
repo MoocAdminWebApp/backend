@@ -86,9 +86,21 @@ const updateProfileAsync = async (id, updateData, updaterId) => {
   const profile = await Profile.findByPk(id);
   if (!profile) throw new EntityNotFoundException("Profile with this id not found");
 
-  // change id and userId are forbidden
-  delete updateData.id;
-  delete updateData.userId;
+  await profile.update({
+    ...updateData,
+    updatedBy: updaterId,
+  });
+
+  return {
+    isSuccess: true,
+    message: "Profile updated successfully",
+    data: profile,
+  };
+};
+
+const updateProfileByUserIdAsync = async (userId, updateData, updaterId) => {
+  const profile = await Profile.findOne({ where: { userId } });
+  if (!profile) throw new EntityNotFoundException("Profile not found for user");
 
   await profile.update({
     ...updateData,
@@ -99,6 +111,20 @@ const updateProfileAsync = async (id, updateData, updaterId) => {
     isSuccess: true,
     message: "Profile updated successfully",
     data: profile,
+  };
+};
+
+const updateProfileAvatarAsync = async (userId, avatarUrl) => {
+  const profile = await Profile.findOne({ where: { userId } });
+  if (!profile) throw new EntityNotFoundException("Profile not found for user");
+
+  // just update the avatar url field
+  await profile.update({ avatar: avatarUrl });
+
+  return {
+    isSuccess: true,
+    message: "Avatar uploaded and profile updated",
+    data: { avatar: avatarUrl },
   };
 };
 
@@ -122,5 +148,7 @@ module.exports = {
   getProfileByUserIdAsync,
   getProfilesByPageAsync,
   updateProfileAsync,
+  updateProfileByUserIdAsync,
+  updateProfileAvatarAsync,
   deleteProfileAsync,
 };

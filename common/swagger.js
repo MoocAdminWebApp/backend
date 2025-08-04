@@ -155,10 +155,9 @@ const options = {
           description:
             "Only password, firstName, lastName, access, and roleIds can be updated. Id and Email cannot be updated.",
         },
-        Profile: {
+        ProfileBase: {
           type: "object",
           properties: {
-            userId: { type: "integer", example: 6 },
             countryCode: { type: "string", example: "+61" },
             phoneNumber: { type: "string", example: "1234567890" },
             country: { type: "string", example: "Australia" },
@@ -183,50 +182,52 @@ const options = {
             bio: {
               type: "string",
               example: "Experienced software engineer with a passion for teaching.",
-            },
-            createdBy: { type: "integer", example: 1 },
-            updatedBy: { type: "integer", example: 1 },
-            createdAt: {
-              type: "string",
-              format: "date-time",
-              example: "2025-06-27T08:00:00Z",
-            },
-            updatedAt: {
-              type: "string",
-              format: "date-time",
-              example: "2025-07-01T14:30:00Z",
             },
           },
         },
+        ProfileCreate: {
+          allOf: [
+            {
+              type: "object",
+              required: ["userId"],
+              properties: {
+                userId: { type: "integer", example: 6 },
+              },
+            },
+            { $ref: "#/components/schemas/ProfileBase" },
+          ],
+        },
         ProfileUpdate: {
-          type: "object",
-          properties: {
-            countryCode: { type: "string", example: "+61" },
-            phoneNumber: { type: "string", example: "1234567890" },
-            country: { type: "string", example: "Australia" },
-            state: { type: "string", example: "Victoria" },
-            city: { type: "string", example: "Melbourne" },
-            streetAddress: { type: "string", example: "123 Collins Street" },
-            postalCode: { type: "string", example: "3000" },
-            birthdate: {
-              type: "string",
-              format: "date",
-              example: "1990-01-01",
+          $ref: "#/components/schemas/ProfileBase",
+        },
+        Profile: {
+          allOf: [
+            {
+              type: "object",
+              properties: {
+                id: { type: "integer", example: 1 },
+                userId: { type: "integer", example: 6 },
+              },
             },
-            gender: {
-              type: "string",
-              enum: ["MALE", "FEMALE", "OTHER", "PREFER_NOT_TO_SAY"],
-              example: "FEMALE",
+            { $ref: "#/components/schemas/ProfileBase" },
+            {
+              type: "object",
+              properties: {
+                createdBy: { type: "integer", example: 1 },
+                updatedBy: { type: "integer", example: 1 },
+                createdAt: {
+                  type: "string",
+                  format: "date-time",
+                  example: "2025-06-27T08:00:00Z",
+                },
+                updatedAt: {
+                  type: "string",
+                  format: "date-time",
+                  example: "2025-07-01T14:30:00Z",
+                },
+              },
             },
-            avatar: {
-              type: "string",
-              example: "https://example.com/avatar.jpg",
-            },
-            bio: {
-              type: "string",
-              example: "Experienced software engineer with a passion for teaching.",
-            },
-          },
+          ],
         },
         Permission: {
           type: "object",

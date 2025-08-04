@@ -3,6 +3,7 @@ const router = express.Router();
 const { body, param, query } = require("express-validator");
 const profileController = require("../controller/profileController");
 const { commonValidate } = require("../middleware/expressValidator");
+const upload = require("../middleware/uploadAvatar");
 
 /**
  * @openapi
@@ -24,7 +25,7 @@ const { commonValidate } = require("../middleware/expressValidator");
  *       content:
  *         application/json:
  *           schema:
- *             $ref: '#/components/schemas/Profile'
+ *             $ref: '#/components/schemas/ProfileCreate'
  *     responses:
  *       201:
  *         description: Profile created
@@ -241,7 +242,7 @@ router.get(
  * @openapi
  * /api/profiles/{id}:
  *   put:
- *     summary: Update profile by ID
+ *     summary: Update profile by Profile ID
  *     tags: [Profiles]
  *     security:
  *       - BearerAuth: []
@@ -272,7 +273,6 @@ router.put(
   "/:id",
   commonValidate([
     param("id").isInt().withMessage("Profile ID must be an integer"),
-    body("userId").optional().isInt().withMessage("userId must be an integer"),
     body("countryCode").optional().isString(),
     body("phoneNumber").optional().isString(),
     body("country").optional().isString(),
@@ -289,6 +289,92 @@ router.put(
     body("bio").optional().isString(),
   ]),
   profileController.updateProfile
+);
+
+/**
+ * @openapi
+ * /api/profiles/by-user/{userId}:
+ *   put:
+ *     summary: Update profile by User ID
+ *     tags: [Profiles]
+ *     security:
+ *       - BearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: userId
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: User ID
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/ProfileUpdate'
+ *     responses:
+ *       201:
+ *         description: Profile updated
+ *       400:
+ *         description: Bad request
+ *       404:
+ *         description: Profile with this id not found
+ *       500:
+ *         description: Server error
+ */
+
+router.put(
+  "/by-user/:userId",
+  commonValidate([
+    param("userId").isInt().withMessage("User ID must be an integer"),
+    body("countryCode").optional().isString(),
+    body("phoneNumber").optional().isString(),
+    body("country").optional().isString(),
+    body("state").optional().isString(),
+    body("city").optional().isString(),
+    body("streetAddress").optional().isString(),
+    body("postalCode").optional().isString(),
+    body("birthdate").optional().isISO8601().withMessage("Invalid birthdate"),
+    body("gender")
+      .optional()
+      .isIn(["MALE", "FEMALE", "OTHER", "PREFER_NOT_TO_SAY"])
+      .withMessage("Invalid gender value"),
+    body("avatar").optional().isString(),
+    body("bio").optional().isString(),
+  ]),
+  profileController.updateProfileByUserId
+);
+
+/**
+ * @openapi
+ * /api/profiles/upload-avatar:
+ *   post:
+ *     summary: Upload profile avatar
+ *     tags: [Profiles]
+ *     security:
+ *       - BearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         multipart/form-data:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               avatar:
+ *                 type: string
+ *                 format: binary
+ *     responses:
+ *       200:
+ *         description: Avatar uploaded successfully
+ *       400:
+ *         description: No file uploaded
+ *       500:
+ *         description: Upload failed
+ */
+router.post(
+  "/upload-avatar",
+  upload.single("avatar"), // expect a single file upload with the field name "avatar"
+  profileController.uploadProfileAvatar
 );
 
 /**
