@@ -21,7 +21,7 @@ if (appConfig.corsConfig.origin) {
   app.use(cors());
 }
 
-app.use(express.static(path.join(__dirname, "public")));
+app.use("/public", express.static(path.join(__dirname, "public")));
 
 //config commonresult
 const returnvalue = require("./middleware/returnvalue");
