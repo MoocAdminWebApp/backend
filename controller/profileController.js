@@ -78,8 +78,8 @@ const uploadProfileAvatar = async (req, res) => {
       return res.sendCommonValue(400, "No file uploaded");
     }
 
-    // get the path of the uploaded file,the file is saved in the uploads/avatars directory by multer
-    const avatarUrl = `/uploads/avatars/${file.filename}`;
+    // get the path of the uploaded file,the file is saved in the upload/avatar directory by multer
+    const avatarUrl = `/public/upload/avatar/${file.filename}`;
 
     // just update profile with avatar path
     const result = await profileService.updateProfileAvatarAsync(userId, avatarUrl);

@@ -3,7 +3,7 @@ const path = require("path");
 const fs = require("fs");
 
 // ensure uploads/avatars directory exists
-const uploadDir = path.join(__dirname, "../uploads/avatars");
+const uploadDir = path.join(__dirname, "../public/upload/avatar");
 fs.mkdirSync(uploadDir, { recursive: true });
 
 const storage = multer.diskStorage({
