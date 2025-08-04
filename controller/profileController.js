@@ -53,8 +53,18 @@ const getProfilesByPage = async (req, res) => {
 // Update profile
 const updateProfile = async (req, res) => {
   const updaterId = getCurrentUser(req).userId;
-  console.log("User ID:", updaterId);
   const result = await profileService.updateProfileAsync(req.params.id, req.body, updaterId);
+  res.sendCommonValue(200, result.message, result.data);
+};
+
+// Update profile by userId
+const updateProfileByUserId = async (req, res) => {
+  const updaterId = getCurrentUser(req).userId;
+  const result = await profileService.updateProfileByUserIdAsync(
+    req.params.userId,
+    req.body,
+    updaterId
+  );
   res.sendCommonValue(200, result.message, result.data);
 };
 
@@ -93,6 +103,7 @@ module.exports = {
   getProfileById,
   getProfilesByPage,
   updateProfile,
+  updateProfileByUserId,
   uploadProfileAvatar,
   deleteProfile,
 };

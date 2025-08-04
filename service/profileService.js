@@ -86,10 +86,6 @@ const updateProfileAsync = async (id, updateData, updaterId) => {
   const profile = await Profile.findByPk(id);
   if (!profile) throw new EntityNotFoundException("Profile with this id not found");
 
-  // change id and userId are forbidden
-  delete updateData.id;
-  delete updateData.userId;
-
   await profile.update({
     ...updateData,
     updatedBy: updaterId,
@@ -102,15 +98,18 @@ const updateProfileAsync = async (id, updateData, updaterId) => {
   };
 };
 
-const deleteProfileAsync = async id => {
-  const profile = await Profile.findByPk(id);
-  if (!profile) throw new EntityNotFoundException("Profile with this id not found");
+const updateProfileByUserIdAsync = async (userId, updateData, updaterId) => {
+  const profile = await Profile.findOne({ where: { userId } });
+  if (!profile) throw new EntityNotFoundException("Profile not found for user");
 
-  await profile.destroy();
+  await profile.update({
+    ...updateData,
+    updatedBy: updaterId,
+  });
 
   return {
     isSuccess: true,
-    message: "Profile deleted successfully",
+    message: "Profile updated successfully",
     data: profile,
   };
 };
@@ -129,6 +128,19 @@ const updateProfileAvatarAsync = async (userId, avatarUrl) => {
   };
 };
 
+const deleteProfileAsync = async id => {
+  const profile = await Profile.findByPk(id);
+  if (!profile) throw new EntityNotFoundException("Profile with this id not found");
+
+  await profile.destroy();
+
+  return {
+    isSuccess: true,
+    message: "Profile deleted successfully",
+    data: profile,
+  };
+};
+
 module.exports = {
   createProfileAsync,
   getAllProfilesAsync,
@@ -136,6 +148,7 @@ module.exports = {
   getProfileByUserIdAsync,
   getProfilesByPageAsync,
   updateProfileAsync,
-  deleteProfileAsync,
+  updateProfileByUserIdAsync,
   updateProfileAvatarAsync,
+  deleteProfileAsync,
 };
