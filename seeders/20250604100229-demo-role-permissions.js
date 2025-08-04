@@ -4,6 +4,7 @@
 module.exports = {
   up: async (queryInterface, Sequelize) => {
     await queryInterface.bulkInsert("role_permissions", [
+      // Role 1 (Admin)
       {
         roleId: 1,
         permissionId: 1,
@@ -420,6 +421,7 @@ module.exports = {
         createdAt: new Date("2025-08-01T14:38:12.049764Z"),
         updatedAt: new Date("2025-08-01T14:38:12.049764Z"),
       },
+      // Role 2 (Teacher)
       {
         roleId: 2,
         permissionId: 1,
@@ -732,6 +734,8 @@ module.exports = {
         createdAt: new Date("2025-08-01T14:38:12.049764Z"),
         updatedAt: new Date("2025-08-01T14:38:12.049764Z"),
       },
+
+      // Role 3 (Observer)
       {
         roleId: 3,
         permissionId: 6,
@@ -799,6 +803,512 @@ module.exports = {
       {
         roleId: 3,
         permissionId: 46,
+        createdBy: 1,
+        updatedBy: 1,
+        createdAt: new Date("2025-08-01T14:38:12.049764Z"),
+        updatedAt: new Date("2025-08-01T14:38:12.049764Z"),
+      },
+
+      // Role 4 (Student)
+      {
+        roleId: 4,
+        permissionId: 1,
+        createdBy: 1,
+        updatedBy: 1,
+        createdAt: new Date("2025-08-01T14:38:12.049764Z"),
+        updatedAt: new Date("2025-08-01T14:38:12.049764Z"),
+      },
+      {
+        roleId: 4,
+        permissionId: 6,
+        createdBy: 1,
+        updatedBy: 1,
+        createdAt: new Date("2025-08-01T14:38:12.049764Z"),
+        updatedAt: new Date("2025-08-01T14:38:12.049764Z"),
+      },
+      {
+        roleId: 4,
+        permissionId: 11,
+        createdBy: 1,
+        updatedBy: 1,
+        createdAt: new Date("2025-08-01T14:38:12.049764Z"),
+        updatedAt: new Date("2025-08-01T14:38:12.049764Z"),
+      },
+      {
+        roleId: 4,
+        permissionId: 16,
+        createdBy: 1,
+        updatedBy: 1,
+        createdAt: new Date("2025-08-01T14:38:12.049764Z"),
+        updatedAt: new Date("2025-08-01T14:38:12.049764Z"),
+      },
+      {
+        roleId: 4,
+        permissionId: 21,
+        createdBy: 1,
+        updatedBy: 1,
+        createdAt: new Date("2025-08-01T14:38:12.049764Z"),
+        updatedAt: new Date("2025-08-01T14:38:12.049764Z"),
+      },
+      {
+        roleId: 4,
+        permissionId: 23,
+        createdBy: 1,
+        updatedBy: 1,
+        createdAt: new Date("2025-08-01T14:38:12.049764Z"),
+        updatedAt: new Date("2025-08-01T14:38:12.049764Z"),
+      },
+      {
+        roleId: 4,
+        permissionId: 26,
+        createdBy: 1,
+        updatedBy: 1,
+        createdAt: new Date("2025-08-01T14:38:12.049764Z"),
+        updatedAt: new Date("2025-08-01T14:38:12.049764Z"),
+      },
+      {
+        roleId: 4,
+        permissionId: 28,
+        createdBy: 1,
+        updatedBy: 1,
+        createdAt: new Date("2025-08-01T14:38:12.049764Z"),
+        updatedAt: new Date("2025-08-01T14:38:12.049764Z"),
+      },
+      {
+        roleId: 4,
+        permissionId: 31,
+        createdBy: 1,
+        updatedBy: 1,
+        createdAt: new Date("2025-08-01T14:38:12.049764Z"),
+        updatedAt: new Date("2025-08-01T14:38:12.049764Z"),
+      },
+      {
+        roleId: 4,
+        permissionId: 33,
+        createdBy: 1,
+        updatedBy: 1,
+        createdAt: new Date("2025-08-01T14:38:12.049764Z"),
+        updatedAt: new Date("2025-08-01T14:38:12.049764Z"),
+      },
+      {
+        roleId: 4,
+        permissionId: 36,
+        createdBy: 1,
+        updatedBy: 1,
+        createdAt: new Date("2025-08-01T14:38:12.049764Z"),
+        updatedAt: new Date("2025-08-01T14:38:12.049764Z"),
+      },
+      {
+        roleId: 4,
+        permissionId: 38,
+        createdBy: 1,
+        updatedBy: 1,
+        createdAt: new Date("2025-08-01T14:38:12.049764Z"),
+        updatedAt: new Date("2025-08-01T14:38:12.049764Z"),
+      },
+      {
+        roleId: 4,
+        permissionId: 41,
+        createdBy: 1,
+        updatedBy: 1,
+        createdAt: new Date("2025-08-01T14:38:12.049764Z"),
+        updatedAt: new Date("2025-08-01T14:38:12.049764Z"),
+      },
+      {
+        roleId: 4,
+        permissionId: 43,
+        createdBy: 1,
+        updatedBy: 1,
+        createdAt: new Date("2025-08-01T14:38:12.049764Z"),
+        updatedAt: new Date("2025-08-01T14:38:12.049764Z"),
+      },
+      {
+        roleId: 4,
+        permissionId: 46,
+        createdBy: 1,
+        updatedBy: 1,
+        createdAt: new Date("2025-08-01T14:38:12.049764Z"),
+        updatedAt: new Date("2025-08-01T14:38:12.049764Z"),
+      },
+      {
+        roleId: 4,
+        permissionId: 48,
+        createdBy: 1,
+        updatedBy: 1,
+        createdAt: new Date("2025-08-01T14:38:12.049764Z"),
+        updatedAt: new Date("2025-08-01T14:38:12.049764Z"),
+      },
+
+      {
+        roleId: 4,
+        permissionId: 54, //dummy:view
+        createdBy: 1,
+        updatedBy: 1,
+        createdAt: new Date("2025-08-01T14:38:12.049764Z"),
+        updatedAt: new Date("2025-08-01T14:38:12.049764Z"),
+      },
+      {
+        roleId: 4,
+        permissionId: 55, //dummy:viewall
+        createdBy: 1,
+        updatedBy: 1,
+        createdAt: new Date("2025-08-01T14:38:12.049764Z"),
+        updatedAt: new Date("2025-08-01T14:38:12.049764Z"),
+      },
+
+      // Role 7 (Support)
+      {
+        roleId: 7,
+        permissionId: 1,
+        createdBy: 1,
+        updatedBy: 1,
+        createdAt: new Date("2025-08-01T14:38:12.049764Z"),
+        updatedAt: new Date("2025-08-01T14:38:12.049764Z"),
+      },
+      {
+        roleId: 7,
+        permissionId: 3,
+        createdBy: 1,
+        updatedBy: 1,
+        createdAt: new Date("2025-08-01T14:38:12.049764Z"),
+        updatedAt: new Date("2025-08-01T14:38:12.049764Z"),
+      },
+      {
+        roleId: 7,
+        permissionId: 4,
+        createdBy: 1,
+        updatedBy: 1,
+        createdAt: new Date("2025-08-01T14:38:12.049764Z"),
+        updatedAt: new Date("2025-08-01T14:38:12.049764Z"),
+      },
+      {
+        roleId: 7,
+        permissionId: 5,
+        createdBy: 1,
+        updatedBy: 1,
+        createdAt: new Date("2025-08-01T14:38:12.049764Z"),
+        updatedAt: new Date("2025-08-01T14:38:12.049764Z"),
+      },
+      {
+        roleId: 7,
+        permissionId: 6,
+        createdBy: 1,
+        updatedBy: 1,
+        createdAt: new Date("2025-08-01T14:38:12.049764Z"),
+        updatedAt: new Date("2025-08-01T14:38:12.049764Z"),
+      },
+      {
+        roleId: 7,
+        permissionId: 8,
+        createdBy: 1,
+        updatedBy: 1,
+        createdAt: new Date("2025-08-01T14:38:12.049764Z"),
+        updatedAt: new Date("2025-08-01T14:38:12.049764Z"),
+      },
+      {
+        roleId: 7,
+        permissionId: 9,
+        createdBy: 1,
+        updatedBy: 1,
+        createdAt: new Date("2025-08-01T14:38:12.049764Z"),
+        updatedAt: new Date("2025-08-01T14:38:12.049764Z"),
+      },
+      {
+        roleId: 7,
+        permissionId: 10,
+        createdBy: 1,
+        updatedBy: 1,
+        createdAt: new Date("2025-08-01T14:38:12.049764Z"),
+        updatedAt: new Date("2025-08-01T14:38:12.049764Z"),
+      },
+      {
+        roleId: 7,
+        permissionId: 11,
+        createdBy: 1,
+        updatedBy: 1,
+        createdAt: new Date("2025-08-01T14:38:12.049764Z"),
+        updatedAt: new Date("2025-08-01T14:38:12.049764Z"),
+      },
+      {
+        roleId: 7,
+        permissionId: 13,
+        createdBy: 1,
+        updatedBy: 1,
+        createdAt: new Date("2025-08-01T14:38:12.049764Z"),
+        updatedAt: new Date("2025-08-01T14:38:12.049764Z"),
+      },
+      {
+        roleId: 7,
+        permissionId: 14,
+        createdBy: 1,
+        updatedBy: 1,
+        createdAt: new Date("2025-08-01T14:38:12.049764Z"),
+        updatedAt: new Date("2025-08-01T14:38:12.049764Z"),
+      },
+      {
+        roleId: 7,
+        permissionId: 15,
+        createdBy: 1,
+        updatedBy: 1,
+        createdAt: new Date("2025-08-01T14:38:12.049764Z"),
+        updatedAt: new Date("2025-08-01T14:38:12.049764Z"),
+      },
+      {
+        roleId: 7,
+        permissionId: 16,
+        createdBy: 1,
+        updatedBy: 1,
+        createdAt: new Date("2025-08-01T14:38:12.049764Z"),
+        updatedAt: new Date("2025-08-01T14:38:12.049764Z"),
+      },
+      {
+        roleId: 7,
+        permissionId: 18,
+        createdBy: 1,
+        updatedBy: 1,
+        createdAt: new Date("2025-08-01T14:38:12.049764Z"),
+        updatedAt: new Date("2025-08-01T14:38:12.049764Z"),
+      },
+      {
+        roleId: 7,
+        permissionId: 19,
+        createdBy: 1,
+        updatedBy: 1,
+        createdAt: new Date("2025-08-01T14:38:12.049764Z"),
+        updatedAt: new Date("2025-08-01T14:38:12.049764Z"),
+      },
+      {
+        roleId: 7,
+        permissionId: 20,
+        createdBy: 1,
+        updatedBy: 1,
+        createdAt: new Date("2025-08-01T14:38:12.049764Z"),
+        updatedAt: new Date("2025-08-01T14:38:12.049764Z"),
+      },
+
+      // course & exam
+      {
+        roleId: 7,
+        permissionId: 21,
+        createdBy: 1,
+        updatedBy: 1,
+        createdAt: new Date("2025-08-01T14:38:12.049764Z"),
+        updatedAt: new Date("2025-08-01T14:38:12.049764Z"),
+      },
+      {
+        roleId: 7,
+        permissionId: 23,
+        createdBy: 1,
+        updatedBy: 1,
+        createdAt: new Date("2025-08-01T14:38:12.049764Z"),
+        updatedAt: new Date("2025-08-01T14:38:12.049764Z"),
+      },
+      {
+        roleId: 7,
+        permissionId: 24,
+        createdBy: 1,
+        updatedBy: 1,
+        createdAt: new Date("2025-08-01T14:38:12.049764Z"),
+        updatedAt: new Date("2025-08-01T14:38:12.049764Z"),
+      },
+      {
+        roleId: 7,
+        permissionId: 26,
+        createdBy: 1,
+        updatedBy: 1,
+        createdAt: new Date("2025-08-01T14:38:12.049764Z"),
+        updatedAt: new Date("2025-08-01T14:38:12.049764Z"),
+      },
+      {
+        roleId: 7,
+        permissionId: 28,
+        createdBy: 1,
+        updatedBy: 1,
+        createdAt: new Date("2025-08-01T14:38:12.049764Z"),
+        updatedAt: new Date("2025-08-01T14:38:12.049764Z"),
+      },
+      {
+        roleId: 7,
+        permissionId: 29,
+        createdBy: 1,
+        updatedBy: 1,
+        createdAt: new Date("2025-08-01T14:38:12.049764Z"),
+        updatedAt: new Date("2025-08-01T14:38:12.049764Z"),
+      },
+      {
+        roleId: 7,
+        permissionId: 31,
+        createdBy: 1,
+        updatedBy: 1,
+        createdAt: new Date("2025-08-01T14:38:12.049764Z"),
+        updatedAt: new Date("2025-08-01T14:38:12.049764Z"),
+      },
+      {
+        roleId: 7,
+        permissionId: 33,
+        createdBy: 1,
+        updatedBy: 1,
+        createdAt: new Date("2025-08-01T14:38:12.049764Z"),
+        updatedAt: new Date("2025-08-01T14:38:12.049764Z"),
+      },
+      {
+        roleId: 7,
+        permissionId: 34,
+        createdBy: 1,
+        updatedBy: 1,
+        createdAt: new Date("2025-08-01T14:38:12.049764Z"),
+        updatedAt: new Date("2025-08-01T14:38:12.049764Z"),
+      },
+      {
+        roleId: 7,
+        permissionId: 36,
+        createdBy: 1,
+        updatedBy: 1,
+        createdAt: new Date("2025-08-01T14:38:12.049764Z"),
+        updatedAt: new Date("2025-08-01T14:38:12.049764Z"),
+      },
+      {
+        roleId: 7,
+        permissionId: 38,
+        createdBy: 1,
+        updatedBy: 1,
+        createdAt: new Date("2025-08-01T14:38:12.049764Z"),
+        updatedAt: new Date("2025-08-01T14:38:12.049764Z"),
+      },
+      {
+        roleId: 7,
+        permissionId: 39,
+        createdBy: 1,
+        updatedBy: 1,
+        createdAt: new Date("2025-08-01T14:38:12.049764Z"),
+        updatedAt: new Date("2025-08-01T14:38:12.049764Z"),
+      },
+      {
+        roleId: 7,
+        permissionId: 41,
+        createdBy: 1,
+        updatedBy: 1,
+        createdAt: new Date("2025-08-01T14:38:12.049764Z"),
+        updatedAt: new Date("2025-08-01T14:38:12.049764Z"),
+      },
+      {
+        roleId: 7,
+        permissionId: 43,
+        createdBy: 1,
+        updatedBy: 1,
+        createdAt: new Date("2025-08-01T14:38:12.049764Z"),
+        updatedAt: new Date("2025-08-01T14:38:12.049764Z"),
+      },
+      {
+        roleId: 7,
+        permissionId: 44,
+        createdBy: 1,
+        updatedBy: 1,
+        createdAt: new Date("2025-08-01T14:38:12.049764Z"),
+        updatedAt: new Date("2025-08-01T14:38:12.049764Z"),
+      },
+      {
+        roleId: 7,
+        permissionId: 46,
+        createdBy: 1,
+        updatedBy: 1,
+        createdAt: new Date("2025-08-01T14:38:12.049764Z"),
+        updatedAt: new Date("2025-08-01T14:38:12.049764Z"),
+      },
+      {
+        roleId: 7,
+        permissionId: 48,
+        createdBy: 1,
+        updatedBy: 1,
+        createdAt: new Date("2025-08-01T14:38:12.049764Z"),
+        updatedAt: new Date("2025-08-01T14:38:12.049764Z"),
+      },
+      {
+        roleId: 7,
+        permissionId: 49,
+        createdBy: 1,
+        updatedBy: 1,
+        createdAt: new Date("2025-08-01T14:38:12.049764Z"),
+        updatedAt: new Date("2025-08-01T14:38:12.049764Z"),
+      },
+
+      // TODO: delete following dummy access
+      {
+        roleId: 7, //Support
+        permissionId: 53, //dummy:create
+        createdBy: 1,
+        updatedBy: 1,
+        createdAt: new Date("2025-08-01T14:38:12.049764Z"),
+        updatedAt: new Date("2025-08-01T14:38:12.049764Z"),
+      },
+      {
+        roleId: 7, //Support
+        permissionId: 54, //dummy:view
+        createdBy: 1,
+        updatedBy: 1,
+        createdAt: new Date("2025-08-01T14:38:12.049764Z"),
+        updatedAt: new Date("2025-08-01T14:38:12.049764Z"),
+      },
+      {
+        roleId: 7, //Support
+        permissionId: 55, //dummy:viewall
+        createdBy: 1,
+        updatedBy: 1,
+        createdAt: new Date("2025-08-01T14:38:12.049764Z"),
+        updatedAt: new Date("2025-08-01T14:38:12.049764Z"),
+      },
+      {
+        roleId: 7, //Support
+        permissionId: 56, //dummy:update
+        createdBy: 1,
+        updatedBy: 1,
+        createdAt: new Date("2025-08-01T14:38:12.049764Z"),
+        updatedAt: new Date("2025-08-01T14:38:12.049764Z"),
+      },
+      {
+        roleId: 7, //Support
+        permissionId: 57, //dummy:delete
+        createdBy: 1,
+        updatedBy: 1,
+        createdAt: new Date("2025-08-01T14:38:12.049764Z"),
+        updatedAt: new Date("2025-08-01T14:38:12.049764Z"),
+      },
+      {
+        roleId: 7, //Support
+        permissionId: 58, //dummy:assign
+        createdBy: 1,
+        updatedBy: 1,
+        createdAt: new Date("2025-08-01T14:38:12.049764Z"),
+        updatedAt: new Date("2025-08-01T14:38:12.049764Z"),
+      },
+
+      {
+        roleId: 3, //Observe
+        permissionId: 54, //dummy:view
+        createdBy: 1,
+        updatedBy: 1,
+        createdAt: new Date("2025-08-01T14:38:12.049764Z"),
+        updatedAt: new Date("2025-08-01T14:38:12.049764Z"),
+      },
+      {
+        roleId: 3, //Observe
+        permissionId: 55, //dummy:viewall
+        createdBy: 1,
+        updatedBy: 1,
+        createdAt: new Date("2025-08-01T14:38:12.049764Z"),
+        updatedAt: new Date("2025-08-01T14:38:12.049764Z"),
+      },
+      {
+        roleId: 3, //Observe
+        permissionId: 56, //dummy:update
+        createdBy: 1,
+        updatedBy: 1,
+        createdAt: new Date("2025-08-01T14:38:12.049764Z"),
+        updatedAt: new Date("2025-08-01T14:38:12.049764Z"),
+      },
+      {
+        roleId: 3, //Observe
+        permissionId: 58, //dummy:assign
         createdBy: 1,
         updatedBy: 1,
         createdAt: new Date("2025-08-01T14:38:12.049764Z"),

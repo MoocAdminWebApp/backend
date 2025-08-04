@@ -21,6 +21,16 @@ const getMenuTree = async (req, res) => {
   }
 };
 
+const getMenuRoute = async (req, res) => {
+  try {
+    const result = await menuService.getMenuRoute(req.query);
+    res.sendCommonValue(result.statusCode, result.message, result.data);
+  } catch (err) {
+    console.error("Error in getMenuRoute:", err);
+    res.sendCommonValue(err.statusCode ? err.statusCode : 500, err.message);
+  }
+};
+
 const getMenuById = async (req, res) => {
   console.log(req);
   try {
@@ -91,4 +101,5 @@ module.exports = {
   createMenu,
   getMenuTree,
   getMenuPermissionPrefixById,
+  getMenuRoute,
 };
