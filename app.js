@@ -21,7 +21,26 @@ if (appConfig.corsConfig.origin) {
   app.use(cors());
 }
 
-app.use("/public", express.static(path.join(__dirname, "public")));
+// config cors for static files including avatar uploads
+app.use(
+  "/public",
+  cors({
+    origin: "*", // for static files, allow all origins
+    credentials: false, // static files do not need credentials
+    methods: ["GET", "OPTIONS"],
+    allowedHeaders: ["Content-Type", "Authorization"],
+    exposedHeaders: ["Content-Length", "Content-Type"], // expose these headers to the client
+  }),
+  (req, res, next) => {
+    // add cache control headers for static files
+    res.setHeader("Cache-Control", "public, max-age=86400"); // cash for 1 day
+    res.setHeader("Access-Control-Allow-Origin", "*");
+    res.setHeader("Access-Control-Allow-Methods", "GET, OPTIONS");
+    res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization");
+    next();
+  },
+  express.static(path.join(__dirname, "public"))
+);
 
 //config commonresult
 const returnvalue = require("./middleware/returnvalue");
@@ -60,7 +79,7 @@ app.use(
       "/api/users/by-email",
       /^\/api\/menus/,
       /^\/api\/permissions/,
-    ], //
+    ],
   })
 );
 
