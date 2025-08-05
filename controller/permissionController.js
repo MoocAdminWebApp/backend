@@ -91,6 +91,15 @@ const getPermissionByUserId = async (req, res) => {
   }
 };
 
+const getPermissionAndRole = async (req, res) => {
+  try {
+    const result = await permissionService.getPermissionAndRole();
+    res.sendCommonValue(result.statusCode, result.message, result.data);
+  } catch (err) {
+    res.sendCommonValue(err.statusCode ? err.statusCode : 500, err.message);
+  }
+};
+
 module.exports = {
   createPermission,
   updatePermission,
@@ -100,4 +109,5 @@ module.exports = {
   getPermissionsByRole,
   getPermissionsByPage,
   getPermissionByUserId,
+  getPermissionAndRole,
 };

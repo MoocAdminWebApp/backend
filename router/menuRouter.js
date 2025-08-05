@@ -137,38 +137,33 @@ router.get("/search", menuControllers.searchMenus);
 
 /**
  * @openapi
- * /api/menus/{id}:
+ * /api/menus/checkinputs:
  *   get:
  *     tags: [Menus]
- *     summary: get a menu by Id
+ *     summary: check whether the given inputs (title, route) are valid
  *     parameters:
- *      - name: id
- *        in: path
- *        description: The id of the menu to retrieve
- *        required: true
- *        schema:
- *          type: integer
+ *       - name: title
+ *         in: query
+ *         schema:
+ *           type: string
+ *           default: ""
+ *       - name: route
+ *         in: query
+ *         schema:
+ *           type: string
+ *           default: null
  *     responses:
  *      200:
- *        description: Menu Retrieved Successfully
- *      400:
- *        description: Bad Request
- *      403:
- *        description: Unauthorized - Validation Failed
- *      404:
- *        description: Menu Not Found
+ *        description: Check Successfully Completed
+ *      409:
+ *        description: Enitty Conflict - Given inputs failed the uniqueness check
  *      500:
  *        description: Internal Server Error
  */
 router.get(
-  "/:id",
-  commonValidate([
-    param("id")
-      .notEmpty()
-      .isInt({ allow_leading_zeroes: false, min: 1 })
-      .withMessage("Not a valid id"),
-  ]),
-  menuControllers.getMenuById
+  "/checkinputs",
+  commonValidate([query("title").notEmpty().withMessage("Title field is mandatory. ")]),
+  menuControllers.checkTitleAndRouteUnique
 );
 
 /**
@@ -205,6 +200,42 @@ router.get(
       .withMessage("Not a valid id"),
   ]),
   menuControllers.getMenuPermissionPrefixById
+);
+
+/**
+ * @openapi
+ * /api/menus/{id}:
+ *   get:
+ *     tags: [Menus]
+ *     summary: get a menu by Id
+ *     parameters:
+ *      - name: id
+ *        in: path
+ *        description: The id of the menu to retrieve
+ *        required: true
+ *        schema:
+ *          type: integer
+ *     responses:
+ *      200:
+ *        description: Menu Retrieved Successfully
+ *      400:
+ *        description: Bad Request
+ *      403:
+ *        description: Unauthorized - Validation Failed
+ *      404:
+ *        description: Menu Not Found
+ *      500:
+ *        description: Internal Server Error
+ */
+router.get(
+  "/:id",
+  commonValidate([
+    param("id")
+      .notEmpty()
+      .isInt({ allow_leading_zeroes: false, min: 1 })
+      .withMessage("Not a valid id"),
+  ]),
+  menuControllers.getMenuById
 );
 
 /**
@@ -301,6 +332,7 @@ router.post(
  *               - status
  *               - type
  *               - parentId
+ *               - orderNum
  *             properties:
  *               title:
  *                 type: string
@@ -325,6 +357,9 @@ router.post(
  *               parentId:
  *                 type: integer
  *                 default: 1
+ *               orderNum:
+ *                 type: integer
+ *                 default: null
  *     responses:
  *      200:
  *        description: Menu Updated Successfully

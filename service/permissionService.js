@@ -175,6 +175,53 @@ const getPermissionsByPageAsync = async (filters = {}, fuzzyKeys = [], page, pag
   });
 };
 
+/**
+ * Returns a map of all the existing permissions and list of roles that have been assigned with corrsponding permission
+ * used to render frontend props
+ */
+const getPermissionAndRole = async () => {
+  const permissions = await Permission.findAll({
+    attributes: ["id", "permissionName"],
+    include: [
+      {
+        model: RolePermission,
+        as: "rolePermissions",
+        required: false,
+        include: [
+          {
+            model: Role,
+            as: "roleInfo",
+            attributes: ["id", "roleName"],
+          },
+        ],
+      },
+    ],
+  });
+
+  const resultMap = {};
+  for (const permission of permissions) {
+    const permissionId = permission.id;
+    const permissionName = permission.permissionName;
+    const rolePermissions = permission.rolePermissions;
+    const roleList = (permission.rolePermissions || []).map(r => {
+      if (r.roleInfo && r.roleInfo.roleName) {
+        return r.roleInfo.roleName;
+      } else {
+        return "Unknown";
+      }
+    });
+    console.log(
+      `Permission ${permissionId}- ${permissionName} has been assigned to following roles: ${roleList}`
+    );
+    resultMap[permissionId] = {
+      permissionId: permissionId,
+      permissionName: permissionName,
+      roleList: roleList,
+    };
+  }
+  return new SuccessResponse("Successfully build permission-role map", resultMap);
+};
+
 module.exports = {
   createPermission,
   updatePermission,
@@ -184,4 +231,5 @@ module.exports = {
   getPermissionsByRole,
   getPermissionsByPageAsync,
   getPermissionByUserId,
+  getPermissionAndRole,
 };

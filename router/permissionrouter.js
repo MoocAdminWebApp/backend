@@ -32,6 +32,18 @@ const { body, param, query } = require("express-validator");
 router.get("/", permissionController.getAllPermissions);
 
 /**
+ * @swagger
+ * /api/permissions/rolemap:
+ *   get:
+ *     summary: Get all permissions
+ *     tags: [Permissions]
+ *     responses:
+ *       200:
+ *         description: List of all permissions and corresponding roles that have been granted with this permission
+ */
+router.get("/rolemap", permissionController.getPermissionAndRole);
+
+/**
  * @openapi
  * /api/permissions/user/{id}:
  *   get:
@@ -56,7 +68,6 @@ router.get("/", permissionController.getAllPermissions);
  *      500:
  *        description: Internal Server Error
  */
-
 router.get(
   "/user/:id",
   commonValidate([

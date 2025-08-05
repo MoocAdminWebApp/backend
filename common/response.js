@@ -18,6 +18,7 @@ class SuccessResponse {
 class BadRequestException extends Error {
   /**
    * BadRequestException
+   * @param {*} data
    * @param {*} message
    * @param {*} statusCode
    */
@@ -84,10 +85,12 @@ class EntityConflictException extends Error {
    * EntityConflictException
    * @param {*} message
    * @param {*} statusCode
+   * @param {*} data
    */
-  constructor(message, statusCode = 409) {
+  constructor(message, data = null, statusCode = 409) {
     super(message);
     this.name = "EntityConflictException";
+    this.data = data;
     this.statusCode = statusCode; // HTTP  status
     // Maintain incorrect stack tracing
     Error.captureStackTrace(this, this.constructor);
