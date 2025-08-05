@@ -1,6 +1,15 @@
 const menuService = require("../service/menuService");
 const { getCurrentUser } = require("../common/getCurrentUser");
 
+const checkTitleAndRouteUnique = async (req, res) => {
+  try {
+    const result = await menuService.isTitleAndRouteUnique(req.query);
+    res.sendCommonValue(result.statusCode, result.message, result.data);
+  } catch (err) {
+    res.sendCommonValue(err.statusCode ? err.statusCode : 500, err.message);
+  }
+};
+
 const getMenus = async (req, res) => {
   try {
     const result = await menuService.getMenus(req.query);
@@ -102,4 +111,5 @@ module.exports = {
   getMenuTree,
   getMenuPermissionPrefixById,
   getMenuRoute,
+  checkTitleAndRouteUnique,
 };
